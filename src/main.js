@@ -22,8 +22,6 @@ Vue.use(Vue2Filters)
 
 Vue.config.productionTip = false
 
-console.log('env', JSON.stringify(process.env))
-
 router.beforeEach(async (to, from, next) => {
   axios.defaults.baseURL = process.env.VUE_APP_ROOT_API
   axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest'
@@ -88,8 +86,10 @@ new Vue({
     localStorage.clear();
   },
   beforeCreate() {
+    //
   },
   methods: {
+    ...mapMutations(['changeImages', 'propertyUpdate']),
     compare( a, b ) {
       if ( a.sort < b.sort ){
         return -1;
@@ -99,7 +99,6 @@ new Vue({
       }
       return 0;
     },
-    ...mapMutations(['changeImages', 'propertyUpdate']),
 
     leaving() {
       this.accessToken ? localStorage.Authorization = this.accessToken : '';

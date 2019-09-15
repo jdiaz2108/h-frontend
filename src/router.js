@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from './views/Home.vue'
-import Map from './components/index.vue'
+import Map from './components/map/map.vue'
 import index from './components/index.vue'
 
 import mapeishion from '@/components/map/layout'

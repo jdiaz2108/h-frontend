@@ -5,6 +5,7 @@ import Vuex from 'vuex'
 Vue.use(Vuex, axios)
 
 export default new Vuex.Store({
+  
   state: {
     accessToken: null,
     count: 0,
@@ -187,7 +188,6 @@ export default new Vuex.Store({
     },
     propertyUpdate(state, property) {
       state.build = property;
-      console.log(property)
     }
   },
   actions: {

@@ -15,7 +15,7 @@ export default {
     };
   },
   created() {
-          var myHtml = document.getElementsByTagName('html')[0];
+      var myHtml = document.getElementsByTagName('html')[0];
       myHtml.classList.add('overHidden');
   },
 };

@@ -39,6 +39,11 @@
             </div>
           </div>
           <div class="card-body">
+          <div  v-if="Object.keys(errors).length" >
+                <v-alert v-for="(error, index) in errors" :key="index+'-alert'" dense outlined type="error">
+                  {{error}}
+                </v-alert>
+            </div>
             <form @submit.prevent="doLogin()">
               <div class="input-group mb-3"><input name="email" v-model="email" type="email"
                   placeholder="Correo electrónico" aria-describedby="basic-addon2" required="required"
@@ -59,7 +64,7 @@
 
                 <div class="d-flex mb-3">
                   <div class="p-2">
-                    <button type="submit" class="btn btn-green btn-block">Iniciar Sesión</button></div>
+                    <button type="submit" class="btn btn-green btn-block" :disabled="loading">Iniciar Sesión</button></div>
                   <div class="p-2 align-self-center">
                     <router-link style="color: #00ADEF !important" to="/login">Olvidó su contraseña?</router-link>
                   </div>
@@ -80,7 +85,8 @@
         email: null,
         password: null,
         key: 'value',
-        errors: [],
+        errors: {},
+        loading: false,
       }
     },
     created() {
@@ -92,6 +98,7 @@
     },
     methods: {
       doLogin: function () {
+        this.loading = true;
         this.$axios.post('/auth/login', {
             email: this.email,
             password: this.password
@@ -104,17 +111,11 @@
             });
           })
           .catch(error => {
-            //     this.errors = error.response.data;
-            //         if (this.errors.errors.email) {
-            //             this.Swal(this.errors.errors.email[0], 'error');
-            //         }
-            //         if (this.errors.errors.password) {
-            //             this.Swal(this.errors.errors.password[0], 'error');
-            //         }
-            // this.alertSwal('error', error)
-            console.log(error)
-
+            this.errors = error.response.data;
           })
+          .finally(() => {
+            this.loading = false
+          }); 
       },
       alertSwal(type, title) {
         // Use sweetalert2
