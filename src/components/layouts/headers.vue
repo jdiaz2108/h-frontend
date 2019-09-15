@@ -85,9 +85,8 @@ export default {
     ...mapActions(['logOutUser']),
 
     logout: function (root) {
+        this.logOutUser()
     this.alertSwal('success', 'has cerrado sesión correctamente.')
-    this.logOutUser()
-    this.$router.push({ path: '/' });
   },
           alertSwal(type, title){
             // Use sweetalert2

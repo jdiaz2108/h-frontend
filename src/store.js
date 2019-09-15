@@ -175,11 +175,11 @@ export default new Vuex.Store({
       state.count++
     },
     loadUser(state, data) {
-      state.user = data.user;
-      state.property = data.property;
-      if (data.user == null) {
+      if (data == null) {
         state.auth = false
       } else {
+        state.property = data.property;
+        state.user = data.user;
         state.auth = true
       }
     },
@@ -192,7 +192,7 @@ export default new Vuex.Store({
   },
   actions: {
     logOutUser({
-      commit
+      commit, state
     }) {
       axios.get('/auth/logout')
       commit('loadUser', null)
