@@ -4,9 +4,9 @@
     <v-card class="fullHeightModal">
       <div class="row m-0 bg-light">
         <div class="col-7 p-0">
-          <img :src="showBuildObj.image" class="img-fluid w-100" alt="">
+          <img :src="property.image" class="img-fluid w-100" alt="">
           <div class="row m-0" id="selector1">
-            <div class="col-6 p-1" v-for="(images, index) in showBuildObj.images" :key="index">
+            <div class="col-6 p-1" v-for="(images, index) in property.images" :key="index">
               <div class="item" :data-src="images.src">
                 <img :src="images.src" @click="showModal" class="img-fluid w-100" />
               </div>
@@ -18,9 +18,9 @@
             <div class="col-12 p-1">
               <div class="card shadow">
                 <div class="card-body">
-                  <h5 class="card-title">{{showBuildObj.name}}</h5>
+                  <h5 class="card-title">{{property.name}}</h5>
                   <h5 class="card-title">
-                    {{showBuildObj.priceSale | currency('$', 0, { thousandsSeparator: '.', spaceBetweenAmountAndSymbol: true }) }}
+                    {{property.priceSale | currency('$', 0, { thousandsSeparator: '.', spaceBetweenAmountAndSymbol: true }) }}
                   </h5>
                 </div>
               </div>
@@ -29,6 +29,9 @@
         </div>
       </div>
     </v-card>
+    <v-btn fab dark small class="button-close-float" @click="gotoMap">
+      <i aria-hidden="true" class="fa fa-times fa-lg"></i>
+    </v-btn>
     </v-dialog>
   </div>
 </template>
@@ -39,13 +42,13 @@ export default {
   data() {
     return {
       dialog: true,
-      showBuildObj: {},
+      property: {},
       lightbox: false,
     }
   },
   mounted() {
     console.log(this)
-    this.showBuild(this.$route.params.id)
+    this.showProperty(this.$route.params.id)
   },
   methods: {
     gotoMap(esc) {
@@ -65,12 +68,12 @@ export default {
           el.lightbox = false;
         });
       },
-      showBuild(id) {
+      showProperty(id) {
         axios
-          .get('/builds/' + id)
+          .get('/property/' + id)
           .then(response => {
             console.log(response);
-            this.showBuildObj = response.data.data;
+            this.property = response.data.data;
           })
           .catch(error => {
             console.log(error)
@@ -81,5 +84,9 @@ export default {
 </script>
 
 <style>
-
+  .button-close-float {
+      right: 5%;
+      position: absolute !important;
+      top: 2rem;
+  }
 </style>

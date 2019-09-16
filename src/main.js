@@ -22,7 +22,46 @@ Vue.use(Vue2Filters)
 
 Vue.config.productionTip = false
 
+// This callback runs before every route change, including on page load.
+router.beforeEach((to, from, next) => {
+  // This goes through the matched routes from last to first, finding the closest route with a title.
+  // eg. if we have /some/deep/nested/route and /some, /deep, and /nested have titles, nested's will be chosen.
+  const nearestWithTitle = to.matched.slice().reverse().find(r => r.meta && r.meta.title);
+
+  // Find the nearest route element with meta tags.
+  const nearestWithMeta = to.matched.slice().reverse().find(r => r.meta && r.meta.metaTags);
+  const previousNearestWithMeta = from.matched.slice().reverse().find(r => r.meta && r.meta.metaTags);
+
+  // If a route with a title was found, set the document (page) title to that value.
+  if(nearestWithTitle) document.title = nearestWithTitle.meta.title;
+
+  // Remove any stale meta tags from the document using the key attribute we set below.
+  Array.from(document.querySelectorAll('[data-vue-router-controlled]')).map(el => el.parentNode.removeChild(el));
+
+  // Skip rendering meta tags if there are none.
+  if(!nearestWithMeta) return next();
+
+  // Turn the meta tag definitions into actual elements in the head.
+  nearestWithMeta.meta.metaTags.map(tagDef => {
+    const tag = document.createElement('meta');
+
+    Object.keys(tagDef).forEach(key => {
+      tag.setAttribute(key, tagDef[key]);
+    });
+
+    // We use this to track which meta tags we create, so we don't interfere with other ones.
+    tag.setAttribute('data-vue-router-controlled', '');
+
+    return tag;
+  })
+  // Add the meta tags to the document head.
+  .forEach(tag => document.head.appendChild(tag));
+
+  next();
+});
+
 router.beforeEach(async (to, from, next) => {
+  
   axios.defaults.baseURL = process.env.VUE_APP_ROOT_API
   axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest'
   axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
@@ -43,19 +82,7 @@ if (to.meta.requiresAuth && store.state.auth == false) {
   if (to.name == 'login' && store.state.user || to.name == 'register' && store.state.user) {
     next('/');
   } else {
-    if(to.meta.validateOwnProperty) {
-      axios.defaults.headers.common['Authorization'] = store.state.accessToken
-      axios
-      .get('/verify/property/'+to.params.slug)
-      .then(response => {
-        next();
-      })
-      .catch(error => {
-        next('/')
-      })
-    } else {
       next();
-    }
   }
 }
 // ...
@@ -81,7 +108,7 @@ new Vue({
     }
     if (localStorage.property) {
       let property =  JSON.parse(localStorage.property)
-      property ? this.propertyUpdate(property) : '';
+      property ? this.propertyUpdate(property) : this.resetProperty();
     }
     localStorage.clear();
   },
@@ -89,7 +116,7 @@ new Vue({
     //
   },
   methods: {
-    ...mapMutations(['changeImages', 'propertyUpdate']),
+    ...mapMutations(['changeImages', 'propertyUpdate', 'resetProperty']),
     compare( a, b ) {
       if ( a.sort < b.sort ){
         return -1;
@@ -103,11 +130,11 @@ new Vue({
     leaving() {
       this.accessToken ? localStorage.Authorization = this.accessToken : '';
       this.propertyImages.length ? localStorage.propertyImagess = JSON.stringify(this.propertyImages) : '';
-      localStorage.property = JSON.stringify(this.build);
+      localStorage.property = JSON.stringify(this.property);
     },
   },
   computed: {
-    ...mapState(['accessToken', 'propertyImages', 'build'])
+    ...mapState(['accessToken', 'propertyImages', 'property'])
   },
   render: h => h(App)
 }).$mount('#app')

@@ -6,7 +6,7 @@
           <form @submit.prevent="formSend" method="POST" class="form-group mb-0">
 
             <div class="card-header">
-              <h2 class="card-header-title my-1">titulo</h2>
+              <h2 class="card-header-title my-1">Publicar Predio </h2>
             </div>
 
             <div class="card-body">
@@ -15,7 +15,7 @@
                 <div class="py-2 d-flex col-12 row justify-content-start">
                   <div class="col-12 col-md-4" :key="buildForType.value+'buildForType'"
                     v-for="buildForType of buildForTypes">
-                    <v-radio-group v-model="build.type_id" class="" :disabled="disabled">
+                    <v-radio-group v-model="property.type_id" class="" :disabled="disabled">
                       <v-radio :label="buildForType.label" :value="buildForType.value" color="blue"></v-radio>
                     </v-radio-group>
                   </div>
@@ -27,14 +27,14 @@
                 <!-- Start Property Type Zone -->
                 <div class="py-2 d-flex col-12 row justify-content-start">
                   <div class="col-6 col-md-3" :key="properType.value+'properType'" v-for="properType of properTypes">
-                    <v-radio-group v-model="build.typeId" class="" :disabled="disabled">
+                    <v-radio-group v-model="property.typeId" class="" :disabled="disabled">
                       <v-radio :label="properType.label" :value="properType.value" color="blue"></v-radio>
                     </v-radio-group>
                   </div>
                 </div>
                 <!-- End Property Type Zone -->
                 <div class="py-2 d-flex col-10">
-                  <v-checkbox v-model="build.rulePH">
+                  <v-checkbox v-model="property.rulePH">
                     <template v-slot:label>
                       <div>
                         Regido por el
@@ -53,7 +53,7 @@
                 <!-- Start Horizontal Property Rules Zone -->
                 <div class="py-2 d-flex col-12 row justify-content-start">
                   <div class="col-6 col-md-3" :key="rulerPH.value+'properType'" v-for="rulerPH of rulersPH">
-                    <v-radio-group v-model="build.rulerPH" class="" :disabled="disabled || !build.rulePH">
+                    <v-radio-group v-model="property.rulerPH" class="" :disabled="disabled || !property.rulePH">
                       <v-radio :label="rulerPH.label" :value="rulerPH.value" color="blue"></v-radio>
                     </v-radio-group>
                   </div>
@@ -65,7 +65,7 @@
                 <!-- Start Stratum Component -->
                 <div class="py-2 d-flex col-12 row">
                   <div class="col-4 col-md-2" :key="stratum.value + 'stratum'" v-for="stratum in stratums">
-                    <v-radio-group v-model="build.stratum" class="justify-center" :disabled="disabled">
+                    <v-radio-group v-model="property.stratum" class="justify-center" :disabled="disabled">
                       <v-radio :label="stratum.label" :value="stratum.value" color="blue"></v-radio>
                     </v-radio-group>
                   </div>
@@ -81,13 +81,13 @@
                     <div class="py-2 col-4"><label for="priceSale" class="form-control-label">Valor Inmueble:</label>
                     </div>
                     <div class="py-2 col-8">
-                      <input type="text" id="priceSale" placeholder="0" v-model="build.priceSale" class="form-control"
-                        :disabled="disabled || build.type_id == 2">
+                      <input type="text" id="priceSale" placeholder="0" v-model="property.priceSale" class="form-control"
+                        :disabled="disabled || property.type_id == 2">
                     </div>
 
                     <div class="col-4"></div>
                     <div class="col-8">
-                      <v-checkbox v-model="build.negotiable" :disabled="disabled || build.type_id == 2">
+                      <v-checkbox v-model="property.negotiable" :disabled="disabled || property.type_id == 2">
                         <template v-slot:label>
                           <div>
                             <v-tooltip bottom>
@@ -110,13 +110,13 @@
                       </label>
                     </div>
                     <div class="py-2 col-8">
-                      <input type="text" id="priceRent" v-model="build.priceRent" placeholder="0" class="form-control"
-                        :disabled="disabled || build.type_id == 1">
+                      <input type="text" id="priceRent" v-model="property.priceRent" placeholder="0" class="form-control"
+                        :disabled="disabled || property.type_id == 1">
                     </div>
 
                     <div class="col-4"></div>
                     <div class="col-8">
-                      <v-checkbox v-model="build.adminIncludedV" :disabled="disabled || build.type_id == 1">
+                      <v-checkbox v-model="property.adminIncludedV" :disabled="disabled || property.type_id == 1">
                         <template v-slot:label>
                           <!-- <div>
   Valor de
@@ -140,8 +140,8 @@
                       </label>
                     </div>
                     <div class="py-2 col-8">
-                      <input type="text" id="adminValue" v-model="build.adminValue" placeholder="0" class="form-control"
-                        :disabled="disabled || build.type_id == 1 || build.adminIncludedV">
+                      <input type="text" id="adminValue" v-model="property.adminValue" placeholder="0" class="form-control"
+                        :disabled="disabled || property.type_id == 1 || property.adminIncludedV">
                     </div>
 
                   </div>
@@ -193,7 +193,7 @@
                     <div class="py-2 col-8">
                       <div class="input-group">
                         <input type="text" class="form-control" id="priceSale" placeholder="Ej: Calle 12 # 18 - 64"
-                          @blur="geocoder()" v-model="build.streetAddress">
+                          @blur="geocoder()" v-model="property.streetAddress">
                       </div>
                     </div>
 
@@ -204,7 +204,7 @@
                     <div class="py-2 col-8">
                       <div class="input-group">
                         <input type="text" class="form-control" id="priceSale" placeholder="Ej: Santa Bárbara"
-                          v-model="build.neighborhood">
+                          v-model="property.neighborhood">
                       </div>
                     </div>
 
@@ -228,9 +228,9 @@
 
                       <gmap-marker icon="https://api.habitemos.com/images/icono1.png" v-if="marker" :draggable="true"
                         @dragend="updateCoordinates" :labelClass="'gmap-marker'" :title="'m.name'"
-                        :position="{'lat': build.latitude, 'lng': build.longitude}"></gmap-marker>
+                        :position="{'lat': property.latitude, 'lng': property.longitude}"></gmap-marker>
                       <gmap-info-window v-if="marker" :options="{maxWidth: 220}"
-                        :position="{'lat': build.latitude, 'lng': build.longitude}" :opened="marker">
+                        :position="{'lat': property.latitude, 'lng': property.longitude}" :opened="marker">
                         <div class="row m-0">
                           <div class="col-3 m-0 p-0">
                             <img class="img-fluid mb-2" style="height: 40px; width: 40px"
@@ -241,7 +241,7 @@
                               <span>{{ 'maker.name' }}</span>
                             </div>
                             <div>
-                              <span>{{build.priceSale | currency('$', 0, { thousandsSeparator: '.', spaceBetweenAmountAndSymbol: true }) }}</span>
+                              <span>{{property.priceSale | currency('$', 0, { thousandsSeparator: '.', spaceBetweenAmountAndSymbol: true }) }}</span>
                             </div>
                           </div>
                         </div>
@@ -276,7 +276,7 @@
                         <div class="d-flex rounded shadow" style="background-color: #b2b2b2; height: 100px; height: 100%; cursor: grab;">
                           <img
                             :src="props.item.image"
-                            class="img-fluid my-auto" :style="'object-fit: contain; pointer-events: none; max-height: calc('+cellHeight+'px - 16px)'" alt="">
+                            class="img-fluid my-auto mx-auto" :style="'object-fit: contain; pointer-events: none; max-height: calc('+cellHeight+'px - 16px)'" alt="">
                         </div>
                       </div>
                     </template>
@@ -294,7 +294,7 @@
                     </div>
                     <div class="py-2 col-8">
                       <div class="input-group">
-                        <input type="text" class="form-control" id="buildArea" v-model="build.buildArea">
+                        <input type="text" class="form-control" id="buildArea" v-model="property.buildArea">
                         <div class="input-group-append">
                           <span class="input-group-text" id="basic-addon2">Mts<sup>2</sup></span>
                         </div>
@@ -307,7 +307,7 @@
                     </div>
                     <div class="py-2 col-8">
                       <div class="input-group">
-                        <input type="text" class="form-control" id="LandArea" v-model="build.LandArea">
+                        <input type="text" class="form-control" id="LandArea" v-model="property.LandArea">
                         <div class="input-group-append">
                           <span class="input-group-text" id="basic-addon2">Mts<sup>2</sup></span>
                         </div>
@@ -327,7 +327,7 @@
                     </div>
                     <div class="py-2 col-8">
 
-                      <v-select v-model="build.rooms" :items="rooms" item-text="value" :hide-details="true"
+                      <v-select v-model="property.rooms" :items="rooms" item-text="value" :hide-details="true"
                         :height="'29px'" solo flat :style="'border: 1px solid #ced4da;'"></v-select>
 
 
@@ -339,7 +339,7 @@
                     </div>
                     <div class="py-2 col-8">
 
-                      <v-select v-model="build.bRooms" :items="rooms" item-text="value" :hide-details="true"
+                      <v-select v-model="property.bRooms" :items="rooms" item-text="value" :hide-details="true"
                         :height="'29px'" solo flat :style="'border: 1px solid #ced4da;'"></v-select>
 
                     </div>
@@ -428,7 +428,7 @@
         gridWidth: 200,
         myFiles: [],
         server: {
-          url: process.env.ROOT_API + '/buildImages',
+          url: process.env.VUE_APP_ROOT_API + '/H/property-image',
           process: {
             method: 'POST',
             withCredentials: false,
@@ -545,29 +545,29 @@
         this.$refs.pond.removeFile(file.id);
       },
       updateCoordinates(location) {
-        this.build.latitude = location.latLng.lat();
-        this.build.longitude = location.latLng.lng()
+        this.property.latitude = location.latLng.lat();
+        this.property.longitude = location.latLng.lng()
       },
       onLoaded(response) {
         console.log(response)
         this.items.push({
           title: 'd',
-          image: process.env.ROOT_RES + response
+          image: process.env.VUE_APP_ROOT_RES + response
         })
         console.log(this.$refs.pond.getFiles())
       },
       geocoder() {
         var geocoder = new google.maps.Geocoder();
         geocoder.geocode({
-          'address': this.build.streetAddress
+          'address': this.property.streetAddress
         }, (results, status) => {
           if (status === 'OK') {
             this.center = {
               lat: results[0].geometry.location.lat(),
               lng: results[0].geometry.location.lng()
             }
-            this.build.latitude = results[0].geometry.location.lat(),
-              this.build.longitude = results[0].geometry.location.lng()
+            this.property.latitude = results[0].geometry.location.lat(),
+              this.property.longitude = results[0].geometry.location.lng()
             this.zoom = 16;
             this.marker = true;
           }
@@ -605,19 +605,19 @@
         }
 
         if (valor == 'sale') {
-          this.build.priceSale = number;
+          this.property.priceSale = number;
         } else if (valor == 'rent') {
-          this.build.priceRent = number;
+          this.property.priceRent = number;
         }
 
       },
       formSend() {
-        console.log(this.build)
+        console.log(this.property)
         this.$axios({
              method: 'post',
-             url: '/storeBuild',
+             url: '/H/property',
              data: {
-               build: this.build,
+               property: this.property,
                images: this.images
              },
            })
@@ -645,7 +645,7 @@
       },
     },
     computed: {
-      ...mapState(['properTypes', 'buildForTypes', 'rulersPH', 'stratums', 'rooms', 'propertyImages', 'build'])
+      ...mapState(['properTypes', 'buildForTypes', 'rulersPH', 'stratums', 'rooms', 'propertyImages', 'property'])
     },
     watch: {
       // build: {
@@ -656,7 +656,7 @@
       //   deep: true
       // },
       citySelected() {
-        this.build.city_id = this.citySelected;
+        this.property.city_id = this.citySelected;
         var position = this.cities.findIndex(obj => obj.id == this.citySelected);
         if (position == 0) {
           this.cityModel = null
@@ -668,11 +668,11 @@
           };
         }
       },
-      'build.priceSale'() {
-        this.validateNumber(this.build.priceSale, 'sale')
+      'property.priceSale'() {
+        this.validateNumber(this.property.priceSale, 'sale')
       },
-      'build.priceRent'() {
-        this.validateNumber(this.build.priceRent, 'rent')
+      'property.priceRent'() {
+        this.validateNumber(this.property.priceRent, 'rent')
       },
     },
   }

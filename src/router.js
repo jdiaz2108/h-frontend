@@ -1,16 +1,17 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from './views/Home.vue'
-import Map from './components/map/map.vue'
-import index from './components/index.vue'
+import showMap from './components/map/map.vue'
 
 import mapeishion from '@/components/map/layout'
 
-import showModal from '@/components/builds/showModal'
+import showModal from '@/components/property/showModal'
 import login from '@/components/auth/login'
 import register from '@/components/auth/register'
 import profile from '@/components/user/profile'
-import crudBuild from '@/components/builds/crudBuild'
+import crudBuild from '@/components/property/crudBuild'
+
+import store from './store'
 
 Vue.use(Router)
 
@@ -21,7 +22,20 @@ export default new Router({
     {
       path: '/',
       name: 'index',
-      component: index
+      component: showMap,
+      meta: {
+        title: 'Home Page - Example App',
+        metaTags: [
+          {
+            name: 'description',
+            content: 'The home page of our example app.'
+          },
+          {
+            property: 'og:description',
+            content: 'The home page of our example app.'
+          }
+        ]
+      }
     },
     {
       path: '/H',
@@ -32,7 +46,7 @@ export default new Router({
           path: 'mapa',
           name: 'mapahj',
           components: {
-            page: index
+            page: showMap
           },
           meta: {
             showModal: false
@@ -41,11 +55,22 @@ export default new Router({
         {
           path: 'mapa/:id',
           components: {
-            page: index,
+            page: showMap,
             rule: showModal
           },
           meta: {
-            showModal: true
+            showModal: true,
+            title: 'map Page - Example og:id'+store.state.root,
+            metaTags: [
+              {
+                name: 'description',
+                content: 'The home page of our example app.'
+              },
+              {
+                property: 'og:description',
+                content: 'The home page of our example app.'
+              }
+            ]
           }
         },
       ]
@@ -54,7 +79,20 @@ export default new Router({
       path: '/login',
       name: 'login',
       component: login,
-      meta: {status: 'login'}
+      meta: {
+        status: 'login',
+        title: 'Login Page - Example App',
+        metaTags: [
+          {
+            name: 'description',
+            content: 'The home page of our example app.'
+          },
+          {
+            property: 'og:description',
+            content: 'The home page of our example app.'
+          }
+        ]
+      }
     },
     {
       path: '/register',
@@ -69,10 +107,13 @@ export default new Router({
       meta: {requiresAuth: true}
     },
     {
-      path: '/build',
-      name: 'build',
+      path: '/publicar-predio',
+      name: 'property',
       component: crudBuild,
-      meta: {requiresAuth: true}
+      meta: {
+        title: 'Publica tu predio - Habitemos',
+        requiresAuth: true,
+      }
     },
     {
       path: '/plans',
@@ -93,12 +134,12 @@ export default new Router({
     {
       path: '*',
       name: 'all',
-      component: index
+      component: showMap
     },
     {
       path: '/map',
       name: 'map',
-      component: Map
+      component: showMap
     },
     {
       path: '/',

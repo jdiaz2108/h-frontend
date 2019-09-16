@@ -33,7 +33,7 @@ Inscrito desde: {{user.created_at.date.substr(0, 10)}}
               </div>
               <div class="card-body">
                 <div class="row ">
-                  <div class="col-4 p-3" v-if="property.length == 0">
+                  <div class="col-4 p-3" v-if="properties.length == 0">
                     <div class="card shadow bg-secondary text-white">
                       <img class="card-img-top" src="b.image">
                       <div class="card-body ">
@@ -46,7 +46,7 @@ Inscrito desde: {{user.created_at.date.substr(0, 10)}}
                     </div>
                   </div>
 
-                  <div class="col-12 col-md-6 col-lg-4 p-3" v-for="(b, i) in property" :key="i">
+                  <div class="col-12 col-md-6 col-lg-4 p-3" v-for="(b, i) in properties" :key="i">
                     <div class="card shadow">
                       <div class="card-timeago">
                         <i class="fa fa-clock-o pr-1"></i>
@@ -83,7 +83,7 @@ import { mapState } from 'vuex';
       }
     },
     computed: {
-      ...mapState(['user', 'property'])
+      ...mapState(['user', 'properties'])
     },
     created() {
       moment.locale('es');

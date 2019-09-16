@@ -44,7 +44,7 @@
                   <router-link class="router-links" to="/profile">Mi Perfil</router-link>
                 </li>
                 <li>
-                  <router-link class="router-links" to="/build">Build</router-link>
+                  <router-link class="router-links" to="/publicar-predio">Publicar predio</router-link>
                 </li>
                 <li>
                   <router-link class="router-links" to="/plans">Payu</router-link>
@@ -85,7 +85,8 @@ export default {
     ...mapActions(['logOutUser']),
 
     logout: function (root) {
-        this.logOutUser()
+    this.logOutUser().finally(() => { this.$router.push('/login') })
+
     this.alertSwal('success', 'has cerrado sesión correctamente.')
   },
           alertSwal(type, title){

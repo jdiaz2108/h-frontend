@@ -67,14 +67,13 @@
     data() {
       return {
         planes: [],
-        build: null,
+        property: null,
         payu: {}
       }
     },
     mounted() {
       this.getPlans();
-      //this.build = this.$route.params.slug;
-      this.build = 'H-lrakylaLP';
+      this.property = 'H-lrakylaLP';
     },
     methods: {
       getPlans() {
@@ -89,7 +88,7 @@
       },
       getPayu(plan) {
         axios
-          .get('/plans/' + this.build, {
+          .get('/plans/' + this.property, {
             params: {
               plan: plan
             }

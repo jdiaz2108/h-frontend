@@ -91,7 +91,6 @@
         mapBounds: {},
         lightbox: false,
         dialog: false,
-        showBuildObj: {},
         center: {
           lat: 4.7284735308193895,
           lng: -74.04891107444162
@@ -116,7 +115,7 @@
       myHtml.classList.add('overHidden');
     },
     mounted() {
-      this.getBuilds();
+      this.getProperties();
     },
     beforeDestroy() {
       var myHtml = document.getElementsByTagName('html')[0];
@@ -167,9 +166,9 @@
           console.log(e.key);
         }
       },
-      getBuilds: function () {
+      getProperties: function () {
         axios
-          .get('/builds')
+          .get('/property')
           .then(response => {
 
             this.markers = [];

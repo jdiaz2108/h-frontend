@@ -7,41 +7,13 @@ Vue.use(Vuex, axios)
 export default new Vuex.Store({
   
   state: {
+    root: '2091-Bahama-Dr-Miramar-FL-33023',
     accessToken: null,
     count: 0,
     user: null,
     auth: false,
-    property: [],
-    build: {
-      name: null,
-      image: null,
-      highlight: 0,
-      sale: 0,
-      priceSale: null,
-      rent: 0,
-      priceRent: null,
-      negotiable: false,
-      streetAddress: null,
-      stratum: null,
-      yearBuilt: null,
-      typeId: null,
-      latitude: null,
-      longitude: null,
-      buildArea: null,
-      LandArea: null,
-      totalArea: null,
-      description: '',
-      country_id: null,
-      state_id: null,
-      city_id: null,
-      bRooms: 1,
-      rooms: 1,
-      rulePH: false,
-      rulerPH: null,
-      adminValue: null,
-      adminIncludedV: false,
-      neighborhood: null
-    },
+    properties: [],
+    property: {},
     propertyImages: [],
     properTypes: [{
         value: 1,
@@ -176,9 +148,11 @@ export default new Vuex.Store({
     },
     loadUser(state, data) {
       if (data == null) {
-        state.auth = false
+        state.auth = false,
+        state.user = null,
+        state.properties = []
       } else {
-        state.property = data.property;
+        state.properties = data.properties;
         state.user = data.user;
         state.auth = true
       }
@@ -187,7 +161,39 @@ export default new Vuex.Store({
       state.accessToken = accessToken
     },
     propertyUpdate(state, property) {
-      state.build = property;
+      state.property = property;
+    },
+    resetProperty(state) {
+      state.property = {
+        name: null,
+        image: null,
+        highlight: 0,
+        sale: 0,
+        priceSale: null,
+        rent: 0,
+        priceRent: null,
+        negotiable: false,
+        streetAddress: null,
+        stratum: null,
+        yearBuilt: null,
+        typeId: null,
+        latitude: null,
+        longitude: null,
+        buildArea: null,
+        LandArea: null,
+        totalArea: null,
+        description: '',
+        country_id: null,
+        state_id: null,
+        city_id: null,
+        bRooms: 1,
+        rooms: 1,
+        rulePH: false,
+        rulerPH: null,
+        adminValue: null,
+        adminIncludedV: false,
+        neighborhood: null
+      }
     }
   },
   actions: {
@@ -197,6 +203,7 @@ export default new Vuex.Store({
       axios.get('/auth/logout')
       commit('loadUser', null)
       commit('loadToken', null)
+      commit('resetProperty')
     },
     getUser: async function ({
       commit

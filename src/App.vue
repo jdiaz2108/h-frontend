@@ -29,7 +29,7 @@ export default {
     hheaders,
   },
   data: () => ({
-    //
+    id: 100
   }),
 };
 </script>
