@@ -203,7 +203,7 @@
                     </div>
                     <div class="py-2 col-8">
                       <div class="input-group">
-                        <input type="text" class="form-control" id="priceSale" placeholder="Ej: Santa Bárbara"
+                        <input type="text" class="form-control" placeholder="Ej: Santa Bárbara"
                           v-model="property.neighborhood">
                       </div>
                     </div>
@@ -558,9 +558,15 @@
       },
       geocoder() {
         var geocoder = new google.maps.Geocoder();
+
         geocoder.geocode({
+          componentRestrictions: { country: 'CO' },
           'address': this.property.streetAddress
         }, (results, status) => {
+          
+        console.log("TCL: geocoder -> status", status)
+        console.log("TCL: geocoder -> results", results)
+          
           if (status === 'OK') {
             this.center = {
               lat: results[0].geometry.location.lat(),
