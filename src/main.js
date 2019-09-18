@@ -82,7 +82,7 @@ if (to.meta.requiresAuth && store.state.auth == false) {
   if (to.name == 'login' && store.state.user || to.name == 'register' && store.state.user) {
     next('/');
   } else {
-      next();
+    next();
   }
 }
 // ...

@@ -87,6 +87,7 @@
           })
       },
       getPayu(plan) {
+        console.log("TCL: getPayu -> axios", axios)
         axios
           .get('/plans/' + this.property, {
             params: {

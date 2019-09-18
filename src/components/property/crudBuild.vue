@@ -353,6 +353,8 @@
                 <div class="col-12">
                   <button type="button" @click="formSend()" class="btn btn-danger btn-block btn-lg">Crear
                     Cuenta</button>
+
+                    <button type="button" @click="here()" class="btn btn-danger btn-block btn-lg">Here</button>
                 </div>
 
               </div>
@@ -370,8 +372,10 @@
 </template>
 
 <script>
+import Vue from 'vue'
   import axios from 'axios'
   import Inputmask from "inputmask"
+
 
   // Import Vue FilePond
   import vueFilePond from 'vue-filepond'
@@ -555,6 +559,33 @@
           image: process.env.VUE_APP_ROOT_RES + response
         })
         console.log(this.$refs.pond.getFiles())
+      },
+      here(){
+        fetch('https://geocoder.api.here.com/6.2/geocode.json?jsoncallback=json&searchtext=calle+19a+no+82-65%2CBogot%C3%A1+%2CColombia&app_id=GDDudqiIEicDd5LA6t2y&app_code=DMiiCyaz3CXgJY_Le4OFSw&gen=9')
+         .then(response => response.text())
+  .then(data => data.substring(5))
+  .then(slice => slice.slice(0, -1))
+  .then(myJson => 
+  //console.log(myJson)
+     console.log(JSON.parse(myJson))
+  );
+    
+        // let fr = 'https://geocoder.api.here.com/6.2/geocode.json';
+        // let h = 'https://geocoder.api.here.com/6.2/geocode.json?&searchtext=425+W+Randolph+Chicago&gen=8&_=1568767683165';
+        // axios
+        //   .get(fr, {
+        //     params: {
+        //     searchtext: 'calle 19 a no 82 - 65 Bogotá Colombia',
+        //           app_id: 'OvsDtWYFSpGXQ2xPij0v',
+        //           app_code: 'ycOe7bb06V-jcxlid38NwQ',
+        //         }
+        //   })
+        //   .then(response => {
+        //   console.log("TCL: here -> response", response)
+        //   })
+        //   .catch(error => {
+        //     console.log(error)
+        //   })
       },
       geocoder() {
         var geocoder = new google.maps.Geocoder();
