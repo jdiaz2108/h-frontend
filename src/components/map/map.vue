@@ -170,26 +170,9 @@
         axios
           .get('/property')
           .then(response => {
-
-            this.markers = [];
-            for (let x = 0; x < response.data.length; x++) {
-
-              let obj = response.data[x];
-              this.markers.push({
-                id: obj.id,
-                image: obj.image,
-                name: obj.name,
-                date: obj.created_at,
-                priceSale: obj.priceSale,
-                window: false,
-                totalArea: obj.totalArea,
-                description: obj.description,
-                position: {
-                  lat: parseFloat(obj.latitude),
-                  lng: parseFloat(obj.longitude)
-                }
-              })
-
+            if (response.data.length) {
+              this.markers = [];
+              this.markers = response.data
             }
           })
           .catch(error => {

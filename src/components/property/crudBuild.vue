@@ -193,7 +193,8 @@
                     <div class="py-2 col-8">
                       <div class="input-group">
                         <input type="text" class="form-control" id="priceSale" placeholder="Ej: Calle 12 # 18 - 64"
-                          @blur="geocoder()" v-model="property.streetAddress">
+                          @blur="here()"
+                          v-model="property.streetAddress">
                       </div>
                     </div>
 
@@ -353,8 +354,6 @@
                 <div class="col-12">
                   <button type="button" @click="formSend()" class="btn btn-danger btn-block btn-lg">Crear
                     Cuenta</button>
-
-                    <button type="button" @click="here()" class="btn btn-danger btn-block btn-lg">Here</button>
                 </div>
 
               </div>
@@ -424,6 +423,7 @@ import Vue from 'vue'
     },
     data() {
       return {
+        res: null,
         images: [],
         prueba: null,
         cellHeight: 200,
@@ -561,55 +561,53 @@ import Vue from 'vue'
         console.log(this.$refs.pond.getFiles())
       },
       here(){
-        fetch('https://geocoder.api.here.com/6.2/geocode.json?jsoncallback=json&searchtext=calle+19a+no+82-65%2CBogot%C3%A1+%2CColombia&app_id=GDDudqiIEicDd5LA6t2y&app_code=DMiiCyaz3CXgJY_Le4OFSw&gen=9')
-         .then(response => response.text())
-  .then(data => data.substring(5))
-  .then(slice => slice.slice(0, -1))
-  .then(myJson => 
-  //console.log(myJson)
-     console.log(JSON.parse(myJson))
-  );
-    
-        // let fr = 'https://geocoder.api.here.com/6.2/geocode.json';
-        // let h = 'https://geocoder.api.here.com/6.2/geocode.json?&searchtext=425+W+Randolph+Chicago&gen=8&_=1568767683165';
-        // axios
-        //   .get(fr, {
-        //     params: {
-        //     searchtext: 'calle 19 a no 82 - 65 Bogotá Colombia',
-        //           app_id: 'OvsDtWYFSpGXQ2xPij0v',
-        //           app_code: 'ycOe7bb06V-jcxlid38NwQ',
-        //         }
-        //   })
-        //   .then(response => {
-        //   console.log("TCL: here -> response", response)
-        //   })
-        //   .catch(error => {
-        //     console.log(error)
-        //   })
-      },
-      geocoder() {
-        var geocoder = new google.maps.Geocoder();
+        let app_id = process.env.VUE_APP_HERE_APP_ID;
+        let app_code = process.env.VUE_APP_HERE_APP_CODE;
+        let street = this.property.streetAddress.split('#').join('No. ').split(' ').join('+')+'%2CBogot%C3%A1+%2CColombia';
+        fetch('https://geocoder.api.here.com/6.2/geocode.json?searchtext='+street+'&app_id='+app_id+'&app_code='+app_code+'&gen=9')
+          .then(result => result.json())
+          .then(result => {
+          console.log("TCL: here -> result", result)
+                if(result.Response.View.length > 0 && result.Response.View[0].Result.length > 0) {
+                    this.res = result.Response.View[0].Result[0];
 
-        geocoder.geocode({
-          componentRestrictions: { country: 'CO' },
-          'address': this.property.streetAddress
-        }, (results, status) => {
-          
-        console.log("TCL: geocoder -> status", status)
-        console.log("TCL: geocoder -> results", results)
-          
-          if (status === 'OK') {
-            this.center = {
-              lat: results[0].geometry.location.lat(),
-              lng: results[0].geometry.location.lng()
-            }
-            this.property.latitude = results[0].geometry.location.lat(),
-              this.property.longitude = results[0].geometry.location.lng()
-            this.zoom = 16;
-            this.marker = true;
-          }
-        });
+                    this.property.latitude = this.res.Location.DisplayPosition.Latitude,
+                    this.property.longitude = this.res.Location.DisplayPosition.Longitude,
+                        this.center = {
+                          lat: this.res.Location.DisplayPosition.Latitude,
+                          lng: this.res.Location.DisplayPosition.Longitude,
+                        }
+                        
+                    this.zoom = 16;
+                    this.marker = true;
+                }
+            }, error => {
+                console.error(error);
+            });
       },
+      // geocoder() {
+      //   var geocoder = new google.maps.Geocoder();
+
+      //   geocoder.geocode({
+      //     componentRestrictions: { country: 'CO' },
+      //     'address': this.property.streetAddress
+      //   }, (results, status) => {
+          
+      //   console.log("TCL: geocoder -> status", status)
+      //   console.log("TCL: geocoder -> results", results)
+          
+      //     if (status === 'OK') {
+      //       this.center = {
+      //         lat: results[0].geometry.location.lat(),
+      //         lng: results[0].geometry.location.lng()
+      //       }
+      //       this.property.latitude = results[0].geometry.location.lat(),
+      //         this.property.longitude = results[0].geometry.location.lng()
+      //       this.zoom = 16;
+      //       this.marker = true;
+      //     }
+      //   });
+      // },
       getCities() {
         axios
           .get('/cities')
