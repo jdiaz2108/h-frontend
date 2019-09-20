@@ -158,7 +158,7 @@
                     <div class="py-2 col-4"><label for="buildArea" class="form-control-label">Municipio:</label>
                     </div>
                     <div class="py-2 col-8">
-                      <v-autocomplete v-model="citySelected" :items="cities" search-input.sync="search" chips clearable
+                      <v-autocomplete v-model="property.city_id" :items="cities" search-input.sync="search" chips clearable
                         hide-details hide-selected item-text="name" item-value="id" label="Selecciona una Ciudad..."
                         solo>
                         <template v-slot:no-data>
@@ -194,7 +194,8 @@
                       <div class="input-group">
                         <input type="text" class="form-control" id="priceSale" placeholder="Ej: Calle 12 # 18 - 64"
                           @blur="here()"
-                          v-model="property.streetAddress">
+                          :disabled="property.city_id == null"
+                          v-model="property.streetAddress" >
                       </div>
                     </div>
 
@@ -205,7 +206,8 @@
                     <div class="py-2 col-8">
                       <div class="input-group">
                         <input type="text" class="form-control" placeholder="Ej: Santa Bárbara"
-                          v-model="property.neighborhood">
+                          v-model="property.neighborhood"
+                          :disabled="property.city_id == null">
                       </div>
                     </div>
 
@@ -230,23 +232,6 @@
                       <gmap-marker icon="https://api.habitemos.com/images/icono1.png" v-if="marker" :draggable="true"
                         @dragend="updateCoordinates" :labelClass="'gmap-marker'" :title="'m.name'"
                         :position="{'lat': property.latitude, 'lng': property.longitude}"></gmap-marker>
-                      <gmap-info-window v-if="marker" :options="{maxWidth: 220}"
-                        :position="{'lat': property.latitude, 'lng': property.longitude}" :opened="marker">
-                        <div class="row m-0">
-                          <div class="col-3 m-0 p-0">
-                            <img class="img-fluid mb-2" style="height: 40px; width: 40px"
-                              src="https://api.habitemos.com/images/icono1.png">
-                          </div>
-                          <div class="col-9 m-0 p-1">
-                            <div>
-                              <span>{{ 'maker.name' }}</span>
-                            </div>
-                            <div>
-                              <span>{{property.priceSale | currency('$', 0, { thousandsSeparator: '.', spaceBetweenAmountAndSymbol: true }) }}</span>
-                            </div>
-                          </div>
-                        </div>
-                      </gmap-info-window>
                     </gmap-map>
                   </div>
                 </div>
@@ -262,7 +247,7 @@
                     v-bind:files="myFiles" :instant-upload="true" v-on:init="handleFilePondInit" />
 
                   <GridJs v-resize="onResize" :center="false" :draggable="true"
-                    :sortable="true" ref="gridjs" @sort="sort" :items="items" :cellHeight="cellHeight"
+                    :sortable="true" ref="gridjs" @sort="sort" :items="propertyImages" :cellHeight="cellHeight"
                     :cellWidth="cellWidth" :gridWidth="gridWidth"
                     @dragend="drag" @dragstart="drag">
                     <template slot="cell" slot-scope="props">
@@ -450,22 +435,7 @@ import Vue from 'vue'
           lat: '',
           lng: ''
         },
-        items: [{
-            title: 'a',
-            order: 1,
-            image: 'https://images.pexels.com/photos/1020315/pexels-photo-1020315.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500'
-          },
-          {
-            title: 'b',
-            order: 2,
-            image: 'https://images.pexels.com/photos/1020315/pexels-photo-1020315.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500'
-          },
-          {
-            title: 'c',
-            order: 3,
-            image: 'https://images.pexels.com/photos/1020315/pexels-photo-1020315.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500'
-          }
-        ],
+        items: [],
         marker: false,
         maker: {},
         markers: [],
@@ -553,17 +523,16 @@ import Vue from 'vue'
         this.property.longitude = location.latLng.lng()
       },
       onLoaded(response) {
-        console.log(response)
         this.items.push({
           title: 'd',
           image: process.env.VUE_APP_ROOT_RES + response
         })
-        console.log(this.$refs.pond.getFiles())
       },
       here(){
         let app_id = process.env.VUE_APP_HERE_APP_ID;
         let app_code = process.env.VUE_APP_HERE_APP_CODE;
-        let street = this.property.streetAddress.split('#').join('No. ').split(' ').join('+')+'%2CBogot%C3%A1+%2CColombia';
+        let city = this.cityModel ? '%2C'+this.cityModel.name : '';
+        let street = this.property.streetAddress.split('#').join('No. ').split(' ').join('+')+city+'%2CColombia';
         fetch('https://geocoder.api.here.com/6.2/geocode.json?searchtext='+street+'&app_id='+app_id+'&app_code='+app_code+'&gen=9')
           .then(result => result.json())
           .then(result => {
@@ -579,35 +548,11 @@ import Vue from 'vue'
                         }
                         
                     this.zoom = 16;
-                    this.marker = true;
                 }
             }, error => {
                 console.error(error);
             });
       },
-      // geocoder() {
-      //   var geocoder = new google.maps.Geocoder();
-
-      //   geocoder.geocode({
-      //     componentRestrictions: { country: 'CO' },
-      //     'address': this.property.streetAddress
-      //   }, (results, status) => {
-          
-      //   console.log("TCL: geocoder -> status", status)
-      //   console.log("TCL: geocoder -> results", results)
-          
-      //     if (status === 'OK') {
-      //       this.center = {
-      //         lat: results[0].geometry.location.lat(),
-      //         lng: results[0].geometry.location.lng()
-      //       }
-      //       this.property.latitude = results[0].geometry.location.lat(),
-      //         this.property.longitude = results[0].geometry.location.lng()
-      //       this.zoom = 16;
-      //       this.marker = true;
-      //     }
-      //   });
-      // },
       getCities() {
         axios
           .get('/cities')
@@ -653,7 +598,7 @@ import Vue from 'vue'
              url: '/H/property',
              data: {
                property: this.property,
-               images: this.images
+               images: this.propertyImages
              },
            })
            .then(response => {
@@ -683,16 +628,8 @@ import Vue from 'vue'
       ...mapState(['properTypes', 'buildForTypes', 'rulersPH', 'stratums', 'rooms', 'propertyImages', 'property'])
     },
     watch: {
-      // build: {
-      //   handler(val) {
-      //     this.propertyUpdate(val)
-      //     console.log(val)
-      //   },
-      //   deep: true
-      // },
-      citySelected() {
-        this.property.city_id = this.citySelected;
-        var position = this.cities.findIndex(obj => obj.id == this.citySelected);
+      'property.city_id'() {
+        var position = this.cities.findIndex(obj => obj.id == this.property.city_id);
         if (position == 0) {
           this.cityModel = null
         } else {
@@ -701,6 +638,7 @@ import Vue from 'vue'
             lat: parseFloat(this.cities[position].latitude),
             lng: parseFloat(this.cities[position].longitude),
           };
+            this.zoom = 12
         }
       },
       'property.priceSale'() {
@@ -712,7 +650,6 @@ import Vue from 'vue'
     },
   }
 </script>
-
 
 <style>
 .icon-container {
