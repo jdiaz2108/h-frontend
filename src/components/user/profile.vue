@@ -14,7 +14,7 @@ Nombre: {{user.name}}
 Email: {{user.email}}
               </h5>
               <h5>
-Inscrito desde: {{user.created_at.date.substr(0, 10)}}
+Inscrito desde: {{user.date}}
               </h5>
               <h5>
 
@@ -46,21 +46,21 @@ Inscrito desde: {{user.created_at.date.substr(0, 10)}}
                     </div>
                   </div>
 
-                  <div class="col-12 col-md-6 col-lg-4 p-3" v-for="(b, i) in properties" :key="i">
-                    <div class="card shadow">
+                  <div class="col-12 col-md-6 col-lg-4 p-3" v-for="(property, index) in properties" :key="index">
+                    <div class="card shadow h-100">
                       <div class="card-timeago">
                         <i class="fa fa-clock-o pr-1"></i>
-                        <span class="card-title">{{b.created_at | timeago}}</span>
+                        <span class="card-title">{{property.created_at | timeago}}</span>
                       </div>
 
-                      <img class="card-img-top" :src="b.image">
+                      <img class="card-img-top" :src="property.image">
 
                       <div class="card-body ">
-                        <h5 class="card-title">{{b.name}}</h5>
+                        <h5 class="card-title">{{property.name}}</h5>
                         <h5 class="card-title">
-                          {{b.priceSale | currency('$', 0, { thousandsSeparator: '.', spaceBetweenAmountAndSymbol: true }) }}
+                          {{property.priceSale | currency('$', 0, { thousandsSeparator: '.', spaceBetweenAmountAndSymbol: true }) }}
                         </h5>
-                        <p class="card-text">{{b.description}}</p>
+                        <p class="card-text">{{property.description}}</p>
                       </div>
                     </div>
                   </div>

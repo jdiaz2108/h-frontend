@@ -18,7 +18,7 @@
               </h4>
             </div>
           </div>
-          <div class="card-body">
+          <div class="card-body pb-0">
             <div class="d-flex">
 
               <router-link to="/login" class="link-no-hover"
@@ -40,37 +40,74 @@
 
 
           <div class="card-body">
-
+            <div v-if="errors.message" >
+                <v-alert dense outlined type="error">
+                  {{errors.message}}
+                </v-alert>
+            </div>
             <form @submit.prevent="createObject()">
-              <div class="input-group mb-3"><input name="name" v-model="object.name" type="text" id="name"
-                  placeholder="Nombre" aria-describedby="basic-addon2" required="required" autofocus="autofocus"
-                  class="form-control">
-                <div class="input-group-append"><span id="basic-addon2" class="input-group-text" style="width: 34px;"><i
-                      class="fa fa-user"></i></span></div>
+              <div class="input-group mb-3">
+                <input name="name" v-model="object.name" type="text" id="name" placeholder="Nombre" required="required" autofocus="autofocus" class="form-control" :class="{ 'is-invalid': errors.errors ? errors.errors.name : '' }">
+                <div class="input-group-append">
+                  <span id="basic-addon2" class="input-group-text" style="width: 34px;">
+                    <i class="fa fa-user"></i>
+                  </span>
+                </div>
+                <div v-if="errors.errors" class="invalid-feedback">
+                  <div v-for="error in errors.errors.name" :key="error">
+                    {{error}}
+                  </div>
+                 </div>
               </div>
-              <div class="input-group mb-3"><input name="email" v-model="object.email" type="email" id="email"
-                  placeholder="Correo electrónico" aria-describedby="basic-addon2" required="required"
-                  autofocus="autofocus" class="form-control">
-                <div class="input-group-append"><span id="basic-addon2" class="input-group-text" style="width: 34px;"><i
-                      aria-hidden="true" class="fa fa-envelope"></i></span></div>
+              <div class="input-group mb-3">
+                <input name="email" v-model="object.email" type="email" id="email" placeholder="Correo electrónico" required="required" autofocus="autofocus" class="form-control" :class="{ 'is-invalid': errors.errors ? errors.errors.email : '' }">
+                <div class="input-group-append">
+                  <span id="basic-addon2" class="input-group-text" style="width: 34px;">
+                    <i aria-hidden="true" class="fa fa-envelope"></i>
+                  </span>
+                </div>
+                 <div v-if="errors.errors" class="invalid-feedback">
+                  <div v-for="error in errors.errors.email" :key="error">
+                    {{error}}
+                  </div>
+                 </div>
               </div>
-              <div class="input-group mb-3"><input name="password" v-model="object.password" type="password"
-                  id="password" placeholder="Contraseña" aria-describedby="basic-addon2" required="required"
-                  autofocus="autofocus" class="form-control">
-                <div class="input-group-append"><span id="basic-addon2" class="input-group-text" style="width: 34px;"><i
-                      aria-hidden="true" class="fa fa-lock"></i></span></div>
+              <div class="input-group mb-3">
+                <input name="password" v-model="object.password" type="password" id="password" placeholder="Contraseña" required="required" autofocus="autofocus" class="form-control" :class="{ 'is-invalid': errors.errors ? errors.errors.password : '' }">
+                <div class="input-group-append">
+                  <span id="basic-addon2" class="input-group-text" style="width: 34px;">
+                    <i aria-hidden="true" class="fa fa-lock"></i>
+                  </span>
+                </div>
+                <div v-if="errors.errors" class="invalid-feedback">
+                  <div v-for="error in errors.errors.password" :key="error">
+                    {{error}}
+                  </div>
+                 </div>
               </div>
-              <div class="input-group mb-3"><input name="password-confirmation" v-model="object.password_confirmation"
-                  type="password" id="password-confirmation" placeholder="Repetir Contraseña"
-                  aria-describedby="basic-addon2" required="required" autofocus="autofocus" class="form-control">
-                <div class="input-group-append"><span id="basic-addon2" class="input-group-text" style="width: 34px;"><i
-                      aria-hidden="true" class="fa fa-lock"></i></span></div>
+              <div class="input-group mb-3">
+                <input name="password-confirmation" v-model="object.password_confirmation" type="password" id="password-confirmation" placeholder="Repetir Contraseña" required="required" autofocus="autofocus" class="form-control" :class="{ 'is-invalid': errors.errors ? errors.errors.password_confirmation : '' }">
+                <div class="input-group-append">
+                  <span id="basic-addon2" class="input-group-text" style="width: 34px;">
+                    <i aria-hidden="true" class="fa fa-lock"></i>
+                  </span>
+                </div>
+                <div v-if="errors.errors" class="invalid-feedback">
+                  <div v-for="error in errors.errors.password_confirmation" :key="error">
+                    {{error}}
+                  </div>
+                 </div>
               </div>
               <div class="form-group">
 
-                <div class="d-flex mb-3">
+                <div class="d-flex mt-5">
                   <div class="p-2">
-                    <button type="submit" class="btn btn-green btn-block">Registrarse</button></div>
+                    <button type="submit" class="btn btn-green btn-block" :disabled="loading">
+                      <span class="px-2" v-if="!loading">Registrarse</span>
+                      <span v-if="loading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                      <span v-if="loading" class="pl-2">Cargando...</span>
+                    </button>
+                  </div>
                   <div class="p-2 align-self-center">
                     <router-link style="color: #00ADEF !important" to="/login">Olvidó su contraseña?</router-link>
                   </div>
@@ -118,8 +155,12 @@
         object: {},
         status: 'ver',
         getDepend: null,
-        errors: [],
+        errors: {
+          errors:null,
+          message:null
+        },
         crudstatus: 'show',
+        loading: false,
       }
     },
     methods: {
@@ -134,22 +175,32 @@
         });
       },
       createObject: function () {
+        this.errors = {
+          errors:null,
+          message:null
+        },
+        this.loading = true;
         axios({
             method: 'post',
             url: '/auth/register',
             data: this.object,
           })
           .then(response => {
-            localStorage.Authorization = 'Bearer ' + response.data.access_token;
+            this.login(response.data)
             this.alertSwal('success', 'Te has registrado correctamente.')
             this.$router.push({
               path: '/'
             });
           })
           .catch(error => {
-            //this.errors = error.response.data.errors;
-            console.log(error.response.data.errors)
+            this.errors = error.response.data;
+            if (this.errors.message == 'The given data was invalid.') {
+              this.errors.message = 'Los datos ingresados son inválidos.'
+            }
           })
+          .finally(() => {
+            this.loading = false
+          }); 
       },
     }
   }

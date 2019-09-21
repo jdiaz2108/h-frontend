@@ -19,7 +19,7 @@
               </h4>
             </div>
           </div>
-          <div class="card-body">
+          <div class="card-body pb-0">
             <div class="d-flex">
 
               <router-link to="/login" style="color: #000 !important"
@@ -39,32 +39,47 @@
             </div>
           </div>
           <div class="card-body">
-          <div  v-if="Object.keys(errors).length" >
-                <v-alert v-for="(error, index) in errors" :key="index+'-alert'" dense outlined type="error">
-                  {{error}}
+                      <div v-if="errors.message" >
+                <v-alert dense outlined type="error">
+                  {{errors.message}}
                 </v-alert>
             </div>
             <form @submit.prevent="doLogin()">
-              <div class="input-group mb-3"><input name="email" v-model="email" type="email"
+              <div class="input-group mb-3"><input name="email" v-model="email" type="email" :class="{ 'is-invalid': errors.errors ? errors.errors.email : '' }"
                   placeholder="Correo electrónico" aria-describedby="basic-addon2" required="required"
                   autofocus="autofocus" class="form-control">
                 <div class="input-group-append"><span id="basic-addon2" class="input-group-text" style="width: 34px;"><i
                       aria-hidden="true" class="fa fa-envelope"></i></span></div>
+                                      <div v-if="errors.errors" class="invalid-feedback">
+                  <div v-for="error in errors.errors.email" :key="error">
+                    {{error}}
+                  </div>
+                 </div>
               </div>
-              <div class="input-group mb-3"><input name="password" v-model="password" type="password"
+              <div class="input-group mb-3"><input name="password" v-model="password" type="password" :class="{ 'is-invalid': errors.errors ? errors.errors.password : '' }"
                   placeholder="Contraseña" aria-describedby="basic-addon2" required="required" autofocus="autofocus"
                   class="form-control">
                 <div class="input-group-append"><span id="basic-addon2" class="input-group-text" style="width: 34px;"><i
                       aria-hidden="true" class="fa fa-lock"></i></span></div>
+                                      <div v-if="errors.errors" class="invalid-feedback">
+                  <div v-for="error in errors.errors.password" :key="error">
+                    {{error}}
+                  </div>
+                 </div>
               </div>
               <div class="form-group">
                 <div class="custom-control custom-checkbox mb-3"><input type="checkbox" id="customCheck1"
                     class="custom-control-input"> <label for="customCheck1"
                     class="custom-control-label">Recordarme</label></div>
 
-                <div class="d-flex mb-3">
+                <div class="d-flex mt-5">
                   <div class="p-2">
-                    <button type="submit" class="btn btn-green btn-block" :disabled="loading">Iniciar Sesión</button></div>
+                    <button type="submit" class="btn btn-green btn-block" :disabled="loading">
+                      <span class="px-2" v-if="!loading">Iniciar Sesión</span>
+                      <span v-if="loading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                      <span v-if="loading" class="pl-2">Cargando...</span>
+                    </button>
+                  </div>
                   <div class="p-2 align-self-center">
                     <router-link style="color: #00ADEF !important" to="/login">Olvidó su contraseña?</router-link>
                   </div>
@@ -79,6 +94,7 @@
   </div>
 </template>
 <script>
+  import { mapState, mapMutations } from 'vuex';
   export default {
     data() {
       return {
@@ -97,14 +113,16 @@
             }
     },
     methods: {
+      ...mapMutations(['propertyUpdate', 'resetProperty', 'loadUser', 'loadToken', 'login']),
       doLogin: function () {
-        this.loading = true;
+        this.errors = {},
+        this.loading = true,
         this.$axios.post('/auth/login', {
             email: this.email,
             password: this.password
           })
           .then(response => {
-            localStorage.Authorization = 'Bearer ' + response.data.access_token;
+            this.login(response.data)
             this.alertSwal('success', 'Has iniciado sesión correctamente.')
             this.$router.push({
               path: '/'
@@ -112,6 +130,9 @@
           })
           .catch(error => {
             this.errors = error.response.data;
+            if (this.errors.message == 'The given data was invalid.') {
+              this.errors.message = 'Los datos ingresados son inválidos.'
+            }
           })
           .finally(() => {
             this.loading = false
@@ -124,7 +145,7 @@
           type: type,
           confirmButtonText: 'Aceptar',
           showConfirmButton: false,
-          timer: 1500
+          timer: 1500,
         });
       },
     },

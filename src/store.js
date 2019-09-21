@@ -146,19 +146,37 @@ export default new Vuex.Store({
     increment(state) {
       state.count++
     },
-    loadUser(state, data) {
+    noAuth(state) {
+      state.auth = false
+    },
+    loadUser(state, user) {
+      if (user == null) {
+        state.user = null
+      } else {
+        state.user = user,
+        state.auth = true
+      }
+    },
+    loadProperties(state, properties) {
+      state.properties = properties
+    },
+    login(state, data) {
       if (data == null) {
+        state.accessToken = null,
         state.auth = false,
         state.user = null,
         state.properties = []
       } else {
-        state.properties = data.properties;
-        state.user = data.user;
-        state.auth = true
+        state.properties = data.properties,
+        state.user = data.user,
+        state.auth = true,
+        state.accessToken = 'Bearer ' + data.access_token,
+        axios.defaults.headers.common['Authorization'] = state.accessToken
       }
     },
     loadToken(state, accessToken) {
-      state.accessToken = accessToken
+      state.accessToken = accessToken,
+      axios.defaults.headers.common['Authorization'] = state.accessToken
     },
     propertyUpdate(state, property) {
       state.property = property;
@@ -201,13 +219,11 @@ export default new Vuex.Store({
       commit, state
     }) {
       axios.get('/auth/logout')
-      commit('loadUser', null)
+      commit('noAuth')
       commit('loadToken', null)
       commit('resetProperty')
     },
-    getUser: async function ({
-      commit
-    }, props) {
+    getUser: async function ({ commit }, props) {
       axios.defaults.headers.common['Authorization'] = props.accessToken
       await axios
         .get('/auth/user')

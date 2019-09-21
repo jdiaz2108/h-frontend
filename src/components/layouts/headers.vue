@@ -70,7 +70,7 @@
 </template>
 
 <script>
-import {mapState, mapActions} from 'vuex'
+import {mapState, mapActions, mapMutations} from 'vuex'
 import axios from 'axios'
 export default {
   data() {
@@ -82,10 +82,11 @@ export default {
       ...mapState(['auth'])
   },
   methods: {
+  ...mapMutations(['loadUser']),
     ...mapActions(['logOutUser']),
 
     logout: function (root) {
-    this.logOutUser().finally(() => { this.$router.push('/login') })
+    this.logOutUser().finally(() => { this.$router.push('/login'), this.loadUser(null) })
 
     this.alertSwal('success', 'has cerrado sesión correctamente.')
   },

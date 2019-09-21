@@ -536,7 +536,6 @@ import Vue from 'vue'
         fetch('https://geocoder.api.here.com/6.2/geocode.json?searchtext='+street+'&app_id='+app_id+'&app_code='+app_code+'&gen=9')
           .then(result => result.json())
           .then(result => {
-          console.log("TCL: here -> result", result)
                 if(result.Response.View.length > 0 && result.Response.View[0].Result.length > 0) {
                     this.res = result.Response.View[0].Result[0];
 

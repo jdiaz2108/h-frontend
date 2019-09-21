@@ -80,6 +80,7 @@ export default new Router({
       name: 'login',
       component: login,
       meta: {
+        requiresNoAuth: true,
         status: 'login',
         title: 'Login Page - Example App',
         metaTags: [
@@ -98,7 +99,10 @@ export default new Router({
       path: '/register',
       name: 'register',
       component: register,
-      meta: {status: 'register'}
+      meta: {
+        status: 'register',
+        requiresNoAuth: true
+      }
     },
     {
       path: '/profile',
