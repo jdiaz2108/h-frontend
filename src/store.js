@@ -187,9 +187,9 @@ export default new Vuex.Store({
         image: null,
         highlight: 0,
         sale: 0,
-        priceSale: null,
+        priceSale: 0,
         rent: 0,
-        priceRent: null,
+        priceRent: 0,
         negotiable: false,
         streetAddress: null,
         stratum: null,
@@ -208,7 +208,7 @@ export default new Vuex.Store({
         rooms: 1,
         rulePH: false,
         rulerPH: null,
-        adminValue: null,
+        adminValue: 0,
         adminIncludedV: false,
         neighborhood: null
       }

@@ -81,8 +81,7 @@
                     <div class="py-2 col-4"><label for="priceSale" class="form-control-label">Valor Inmueble:</label>
                     </div>
                     <div class="py-2 col-8">
-                      <input type="text" id="priceSale" placeholder="0" v-model="property.priceSale" class="form-control"
-                        :disabled="disabled || property.type_id == 2">
+                       <money v-model="property.priceSale" v-bind="money" class="form-control" :disabled="disabled || property.type_id == 2"></money>
                     </div>
 
                     <div class="col-4"></div>
@@ -110,8 +109,7 @@
                       </label>
                     </div>
                     <div class="py-2 col-8">
-                      <input type="text" id="priceRent" v-model="property.priceRent" placeholder="0" class="form-control"
-                        :disabled="disabled || property.type_id == 1">
+                        <money v-model="property.priceRent" v-bind="money" class="form-control" :disabled="disabled || property.type_id == 1"></money>
                     </div>
 
                     <div class="col-4"></div>
@@ -140,8 +138,7 @@
                       </label>
                     </div>
                     <div class="py-2 col-8">
-                      <input type="text" id="adminValue" v-model="property.adminValue" placeholder="0" class="form-control"
-                        :disabled="disabled || property.type_id == 1 || property.adminIncludedV">
+                        <money v-model="property.adminValue" v-bind="money" class="form-control" :disabled="disabled || property.type_id == 1 || property.adminIncludedV"></money>
                     </div>
 
                   </div>
@@ -155,7 +152,7 @@
 
                 <div class="col-12 row">
                   <div class="col-12 row p-2">
-                    <div class="py-2 col-4"><label for="buildArea" class="form-control-label">Municipio:</label>
+                    <div class="py-2 col-4"><label for="buildArea" class="form-control-label">Ciudad / Municipio:</label>
                     </div>
                     <div class="py-2 col-8">
                       <v-autocomplete v-model="property.city_id" :items="cities" search-input.sync="search" chips clearable
@@ -212,10 +209,7 @@
                     </div>
 
                   </div>
-                  <div class="col-4 py-2">
-                    <h1> mapa</h1>
-                  </div>
-                  <div class="col-8 py-2">
+                  <div class="col-12 py-2">
                     <gmap-map :options="{
                       zoomControl: true,
                       mapTypeControl: false,
@@ -247,7 +241,7 @@
                     v-bind:files="myFiles" :instant-upload="true" v-on:init="handleFilePondInit" />
 
                   <GridJs v-resize="onResize" :center="false" :draggable="true"
-                    :sortable="true" ref="gridjs" @sort="sort" :items="propertyImages" :cellHeight="cellHeight"
+                    :sortable="true" ref="gridjs" @sort="sort" :items="items" :cellHeight="cellHeight"
                     :cellWidth="cellWidth" :gridWidth="gridWidth"
                     @dragend="drag" @dragstart="drag">
                     <template slot="cell" slot-scope="props">
@@ -358,8 +352,10 @@
 <script>
 import Vue from 'vue'
   import axios from 'axios'
-  import Inputmask from "inputmask"
+  import money from 'v-money'
 
+// register directive v-money and component <money>
+Vue.use(money, {precision: 4})
 
   // Import Vue FilePond
   import vueFilePond from 'vue-filepond'
@@ -374,8 +370,12 @@ import Vue from 'vue'
     FilePondPluginFileValidateType,
   )
 
-  export default {
-    components: {
+    import {Money} from 'v-money'
+
+    
+    export default {
+      components: {
+    Money,
       FilePond,
       GridJs
     },
@@ -385,29 +385,18 @@ import Vue from 'vue'
       // localStorage.PropertyImagess ? this.images = localStorage.PropertyImagess.map(a => a.item) : '';
       this.items = this.propertyImages.map(a => a.item)
     },
-    directives: {
-      //   mask: {
-      //   bind: function (el, binding) {
-      //     var maskOpts = binding.value;
-      //     maskOpts ? maskOpts.autoUnmask = true : '';
-      //     maskOpts ? maskOpts.showMaskOnHover = false : '';
-      //     maskOpts ? maskOpts.clearIncomplete = true : '';
-      //     Inputmask(maskOpts).mask(el);
-      //     console.log(Inputmask);
-      //     console.log(maskOpts);
-      //     console.log(el);
-      //   },
-      //   unbind: function(el) {
-      //     Inputmask.remove(el);
-      //   }
-      // }
-    },
     mounted() {
       console.log(window.innerWidth)
       // this.saleRent()
     },
     data() {
       return {
+        money: {
+          thousands: '.',
+          prefix: '$ ',
+          precision: 0,
+          masked: false
+        },
         res: null,
         images: [],
         prueba: null,
@@ -494,7 +483,7 @@ import Vue from 'vue'
             myHtml.classList.add('overHidden');
           } else if (event.event.type == 'touchend') {
             var myHtml = document.getElementsByTagName('html')[0];
-            myHtml.classList.remove('overHidden');
+            myHtml.classList.remove('overHidden')
           }
         }
         for (let index = 0; index < event.items.length; index++) {
@@ -536,17 +525,23 @@ import Vue from 'vue'
         fetch('https://geocoder.api.here.com/6.2/geocode.json?searchtext='+street+'&app_id='+app_id+'&app_code='+app_code+'&gen=9')
           .then(result => result.json())
           .then(result => {
+                    this.center = {
+          lat: null,
+          lng: null
+        }
                 if(result.Response.View.length > 0 && result.Response.View[0].Result.length > 0) {
                     this.res = result.Response.View[0].Result[0];
 
                     this.property.latitude = this.res.Location.DisplayPosition.Latitude,
                     this.property.longitude = this.res.Location.DisplayPosition.Longitude,
+                    
                         this.center = {
                           lat: this.res.Location.DisplayPosition.Latitude,
                           lng: this.res.Location.DisplayPosition.Longitude,
                         }
                         
-                    this.zoom = 16;
+                    this.zoom = 16,
+                    this.marker = true
                 }
             }, error => {
                 console.error(error);
@@ -576,11 +571,11 @@ import Vue from 'vue'
         }
       },
       validateNumber(param, valor) {
-        var number = null;
+        var number = 0;
 
         if (param != null) {
           param.length > 14 ? number = parseInt(param.substr(0, 14)) : number = parseInt(param);
-          isNaN(param) ? number = null : '';
+          isNaN(param) ? number = 0 : '';
         }
 
         if (valor == 'sale') {
@@ -591,7 +586,16 @@ import Vue from 'vue'
 
       },
       formSend() {
-        console.log(this.property)
+        let property = this.property
+        if (property.type_id == 1) {
+          delete property.priceRent
+          delete property.adminValue
+        } else if (property.type_id == 2) {
+          delete property.priceSale
+        }
+        if (!property.adminIncludedV) {
+          delete property.adminValue
+        }
         this.$axios({
              method: 'post',
              url: '/H/property',
