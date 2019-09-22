@@ -81,7 +81,7 @@
                     <div class="py-2 col-4"><label for="priceSale" class="form-control-label">Valor Inmueble:</label>
                     </div>
                     <div class="py-2 col-8">
-                       <money v-model="property.priceSale" v-bind="money" class="form-control" :disabled="disabled || property.type_id == 2"></money>
+                       <money v-model="property.priceSale" v-bind="money" class="form-control" :disabled="disabled || property.type_id == 2 || !property.type_id"></money>
                     </div>
 
                     <div class="col-4"></div>
@@ -109,7 +109,7 @@
                       </label>
                     </div>
                     <div class="py-2 col-8">
-                        <money v-model="property.priceRent" v-bind="money" class="form-control" :disabled="disabled || property.type_id == 1"></money>
+                        <money v-model="property.priceRent" v-bind="money" class="form-control" :disabled="disabled || property.type_id == 1 || !property.type_id"></money>
                     </div>
 
                     <div class="col-4"></div>
@@ -138,7 +138,7 @@
                       </label>
                     </div>
                     <div class="py-2 col-8">
-                        <money v-model="property.adminValue" v-bind="money" class="form-control" :disabled="disabled || property.type_id == 1 || property.adminIncludedV"></money>
+                        <money v-model="property.adminValue" v-bind="money" class="form-control" :disabled="disabled || property.type_id == 1 || property.adminIncludedV || !property.type_id"></money>
                     </div>
 
                   </div>
@@ -209,7 +209,7 @@
                     </div>
 
                   </div>
-                  <div class="col-12 py-2">
+                  <div class="col-10 mx-auto py-2">
                     <gmap-map :options="{
                       zoomControl: true,
                       mapTypeControl: false,
