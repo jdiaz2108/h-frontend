@@ -124,7 +124,7 @@ export default {
       this.dragging = true
 
       document.addEventListener('mousemove', this.documentMouseMove)
-      document.addEventListener('touchmove', this.documentMouseMove)
+      document.addEventListener('touchmove', this.documentMouseMove, {passive: true})
 
       this.$emit('dragstart', this.wrapEvent(event))
     },
@@ -197,7 +197,7 @@ export default {
       this.shiftStartY = 0
 
       document.removeEventListener('mousemove', this.documentMouseMove)
-      document.removeEventListener('touchmove', this.documentMouseMove)
+      document.removeEventListener('touchmove', this.documentMouseMove, {passive: true})
 
       document.removeEventListener('mouseup', this.documentMouseUp)
       document.removeEventListener('touchend', this.documentMouseUp)

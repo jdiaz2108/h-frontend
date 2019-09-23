@@ -39,7 +39,7 @@
             </div>
           </div>
           <div class="card-body">
-                      <div v-if="errors.message" >
+              <div v-if="errors.message" >
                 <v-alert dense outlined type="error">
                   {{errors.message}}
                 </v-alert>
@@ -50,7 +50,7 @@
                   autofocus="autofocus" class="form-control">
                 <div class="input-group-append"><span id="basic-addon2" class="input-group-text" style="width: 34px;"><i
                       aria-hidden="true" class="fa fa-envelope"></i></span></div>
-                                      <div v-if="errors.errors" class="invalid-feedback">
+                <div v-if="errors.errors" class="invalid-feedback">
                   <div v-for="error in errors.errors.email" :key="error">
                     {{error}}
                   </div>

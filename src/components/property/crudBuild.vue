@@ -13,11 +13,22 @@
               <div class="row form-group d-flex align-center justify-center">
                 <!-- Start BuildFor Zone -->
                 <div class="py-2 d-flex col-12 row justify-content-start">
-                  <div class="col-12 col-md-4" :key="buildForType.value+'buildForType'"
-                    v-for="buildForType of buildForTypes">
-                    <v-radio-group v-model="property.type_id" class="" :disabled="disabled">
+                  <div v-if="errors.errors">
+                    holi
+                    <v-alert dense outlined type="error" v-for="error in errors.errors" :key="error">
+                      holi
+                      {{error}}
+                  </v-alert>
+                  </div>
+                  <div class="col-12 col-md-4" :key="buildForType.value+'buildForType'" v-for="buildForType of buildForTypes">
+                    <v-radio-group v-model="property.type_id" class="" :disabled="disabled" :validate-on-blur="true" >
                       <v-radio :label="buildForType.label" :value="buildForType.value" color="blue"></v-radio>
                     </v-radio-group>
+                  </div>
+                    <div class="col-12" v-if="!property.type_id">
+                    <v-alert dense outlined type="error">
+                      el campo es obligatorio
+                    </v-alert>
                   </div>
                 </div>
                 <!-- End BuildFor Zone -->
@@ -81,7 +92,7 @@
                     <div class="py-2 col-4"><label for="priceSale" class="form-control-label">Valor Inmueble:</label>
                     </div>
                     <div class="py-2 col-8">
-                       <money v-model="property.priceSale" v-bind="money" class="form-control" :disabled="disabled || property.type_id == 2 || !property.type_id"></money>
+                       <money v-model="property.priceSale" v-bind="money" maxlength="17" class="form-control" :disabled="disabled || property.type_id == 2 || !property.type_id"></money>
                     </div>
 
                     <div class="col-4"></div>
@@ -109,7 +120,7 @@
                       </label>
                     </div>
                     <div class="py-2 col-8">
-                        <money v-model="property.priceRent" v-bind="money" class="form-control" :disabled="disabled || property.type_id == 1 || !property.type_id"></money>
+                        <money v-model="property.priceRent" v-bind="money" maxlength="15" class="form-control" :disabled="disabled || property.type_id == 1 || !property.type_id"></money>
                     </div>
 
                     <div class="col-4"></div>
@@ -138,7 +149,7 @@
                       </label>
                     </div>
                     <div class="py-2 col-8">
-                        <money v-model="property.adminValue" v-bind="money" class="form-control" :disabled="disabled || property.type_id == 1 || property.adminIncludedV || !property.type_id"></money>
+                        <money v-model="property.adminValue" v-bind="money" maxlength="13" class="form-control" :disabled="disabled || property.type_id == 1 || property.adminIncludedV || !property.type_id"></money>
                     </div>
 
                   </div>
@@ -155,30 +166,31 @@
                     <div class="py-2 col-4"><label for="buildArea" class="form-control-label">Ciudad / Municipio:</label>
                     </div>
                     <div class="py-2 col-8">
+
                       <v-autocomplete v-model="property.city_id" :items="cities" search-input.sync="search" chips clearable
-                        hide-details hide-selected item-text="name" item-value="id" label="Selecciona una Ciudad..."
-                        solo>
+                        hide-details hide-selected item-text="name" item-value="id" label="Selecciona una Ciudad..." solo>
+
                         <template v-slot:no-data>
-                          <v-list-tile>
-                            <v-list-tile-title>
+                          <v-list-item>
+                            <v-list-item-title>
                               No hay resultados en su
                               <strong>Busqueda</strong>
-                            </v-list-tile-title>
-                          </v-list-tile>
+                            </v-list-item-title>
+                          </v-list-item>
                         </template>
+
                         <template v-slot:selection="{ item, selected }">
-
-                          <v-icon left>mdi-coin</v-icon>
-                          <span v-text="item.name"></span>
-
-                        </template>
-                        <template v-slot:item="{ item }">
-                          <v-list-tile-avatar color="blue" class="headline font-weight-light white--text" size="30">
+                          <v-list-item-avatar color="blue-grey darken-2" class="headline font-weight-light white--text" size="25">
                             <i class="fa fa-map-marker "></i>
-                          </v-list-tile-avatar>
-                          <v-list-tile-content>
-                            <v-list-tile-title v-text="item.name"></v-list-tile-title>
-                          </v-list-tile-content>
+                          </v-list-item-avatar>
+                          <span v-text="item.name"></span>
+                        </template>
+
+                        <template v-slot:item="{ item }">
+                          <v-list-item-avatar color="blue-grey darken-2" class="headline font-weight-light white--text" size="25">
+                            <i class="fa fa-map-marker "></i>
+                          </v-list-item-avatar>
+                            <span v-text="item.name"></span>
                         </template>
                       </v-autocomplete>
 
@@ -190,7 +202,7 @@
                     <div class="py-2 col-8">
                       <div class="input-group">
                         <input type="text" class="form-control" id="priceSale" placeholder="Ej: Calle 12 # 18 - 64"
-                          @blur="here()"
+                          @blur="here()" @keyup.enter="here()"
                           :disabled="property.city_id == null"
                           v-model="property.streetAddress" >
                       </div>
@@ -350,12 +362,12 @@
 </template>
 
 <script>
-import Vue from 'vue'
+  import Vue from 'vue'
   import axios from 'axios'
   import money from 'v-money'
 
-// register directive v-money and component <money>
-Vue.use(money, {precision: 4})
+  // register directive v-money and component <money>
+  Vue.use(money, {precision: 4})
 
   // Import Vue FilePond
   import vueFilePond from 'vue-filepond'
@@ -386,8 +398,16 @@ Vue.use(money, {precision: 4})
       this.items = this.propertyImages.map(a => a.item)
     },
     mounted() {
-      console.log(window.innerWidth)
       // this.saleRent()
+      if (this.property.latitude && this.property.longitude && this.property.streetAddress) {
+        
+        this.center = {
+          lat: this.property.latitude,
+          lng: this.property.longitude,
+        }
+        this.zoom = 16,
+        this.marker = true
+      }
     },
     data() {
       return {
@@ -435,7 +455,7 @@ Vue.use(money, {precision: 4})
         hasSaved: false,
         isEditing: null,
         model: null,
-        errors: [],
+        errors: {},
         styles: [{
           featureType: 'poi',
           stylers: [{
@@ -477,7 +497,6 @@ Vue.use(money, {precision: 4})
       },
       drag(event) {
         if (window.innerWidth <= 768) {
-          console.log(event.event.type)
           if (event.event.type == 'touchstart') {
             var myHtml = document.getElementsByTagName('html')[0];
             myHtml.classList.add('overHidden');
@@ -500,7 +519,6 @@ Vue.use(money, {precision: 4})
         // FilePond instance methods are available on `this.$refs.pond`
       },
       handleFileUpload(error, file) {
-        console.log(file)
         if (error) {
           return
         }
@@ -525,33 +543,36 @@ Vue.use(money, {precision: 4})
         fetch('https://geocoder.api.here.com/6.2/geocode.json?searchtext='+street+'&app_id='+app_id+'&app_code='+app_code+'&gen=9')
           .then(result => result.json())
           .then(result => {
-                    this.center = {
-          lat: null,
-          lng: null
-        }
-                if(result.Response.View.length > 0 && result.Response.View[0].Result.length > 0) {
-                    this.res = result.Response.View[0].Result[0];
+            this.center = {
+              lat: null,
+              lng: null
+            }
+            if (result.Response.View.length > 0 && result.Response.View[0].Result.length > 0) {
+              this.res = result.Response.View[0].Result[0];
 
-                    this.property.latitude = this.res.Location.DisplayPosition.Latitude,
-                    this.property.longitude = this.res.Location.DisplayPosition.Longitude,
-                    
-                        this.center = {
-                          lat: this.res.Location.DisplayPosition.Latitude,
-                          lng: this.res.Location.DisplayPosition.Longitude,
-                        }
-                        
-                    this.zoom = 16,
-                    this.marker = true
+              this.property.latitude = this.res.Location.DisplayPosition.Latitude,
+                this.property.longitude = this.res.Location.DisplayPosition.Longitude,
+
+                this.center = {
+                  lat: this.res.Location.DisplayPosition.Latitude,
+                  lng: this.res.Location.DisplayPosition.Longitude,
                 }
-            }, error => {
-                console.error(error);
-            });
+
+              this.zoom = 16,
+                this.marker = true
+            }
+          }, error => {
+              console.error(error);
+          });
       },
       getCities() {
         axios
           .get('/cities')
           .then(response => {
             this.cities = response.data, 'cities';
+            if (this.property.city_id) {
+              this.cityModel = this.cities.find(x => x.id === this.property.city_id);
+            }
           })
           .catch(error => {
             console.log(error)
@@ -574,7 +595,7 @@ Vue.use(money, {precision: 4})
         var number = 0;
 
         if (param != null) {
-          param.length > 14 ? number = parseInt(param.substr(0, 14)) : number = parseInt(param);
+          param > 999999999999 ? number = parseInt(param.toString().substr(0, 12)) : number = parseInt(param);
           isNaN(param) ? number = 0 : '';
         }
 
@@ -586,6 +607,8 @@ Vue.use(money, {precision: 4})
 
       },
       formSend() {
+        this.errors = {}
+        
         let property = this.property
         if (property.type_id == 1) {
           delete property.priceRent
@@ -593,7 +616,7 @@ Vue.use(money, {precision: 4})
         } else if (property.type_id == 2) {
           delete property.priceSale
         }
-        if (!property.adminIncludedV) {
+        if (property.adminIncludedV) {
           delete property.adminValue
         }
         this.$axios({
@@ -606,14 +629,13 @@ Vue.use(money, {precision: 4})
            })
            .then(response => {
              console.log(response)
-              // this.alertSwal('success', 'Se ha generado una nueva factura');
-              // this.$router.push({
-              //   path: '/facturas/' + response.data.message
-              // });
            })
-           .catch(function (err) {
-             console.log(err)
-           })
+          .catch(error => {
+            this.errors = error.response.data;
+            if (this.errors.message == 'The given data was invalid.') {
+              this.errors.message = 'Los datos ingresados son inválidos.'
+            }
+          })
 
       },
       alertSwal(type, title) {
