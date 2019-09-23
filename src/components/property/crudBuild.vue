@@ -6,43 +6,34 @@
           <form @submit.prevent="formSend" method="POST" class="form-group mb-0">
 
             <div class="card-header">
-              <h2 class="card-header-title my-1">Publicar Predio </h2>
+              <h2 class="card-header-title my-1 text-center">Publicar Predio </h2>
             </div>
 
             <div class="card-body">
               <div class="row form-group d-flex align-center justify-center">
                 <!-- Start BuildFor Zone -->
-                <div class="py-2 d-flex col-12 row justify-content-start">
-                  <div v-if="errors.errors">
-                    holi
-                    <v-alert dense outlined type="error" v-for="error in errors.errors" :key="error">
-                      holi
-                      {{error}}
-                  </v-alert>
-                  </div>
-                  <div class="col-12 col-md-4" :key="buildForType.value+'buildForType'" v-for="buildForType of buildForTypes">
-                    <v-radio-group v-model="property.type_id" class="" :disabled="disabled" :validate-on-blur="true" >
-                      <v-radio :label="buildForType.label" :value="buildForType.value" color="blue"></v-radio>
-                    </v-radio-group>
-                  </div>
-                    <div class="col-12" v-if="!property.type_id">
-                    <v-alert dense outlined type="error">
-                      el campo es obligatorio
-                    </v-alert>
-                  </div>
+                  
+              <div class="col-10 row p-2">
+                <div class="py-2 col-4"><label for="buildArea" class="form-control-label">Seleccione tipo de oferta:</label></div>
+                <div class="py-2 col-8 text-left">
+                  <v-select v-model="property.type_id" label="Seleccionar" item-value="value" :items="buildForTypes" :rules="[v => !!v || 'campo requerido']" item-text="label"
+                             solo :validate-on-blur="true"></v-select>
                 </div>
-                <!-- End BuildFor Zone -->
+              </div>
+
                 <div class="col-12">
                   <v-divider></v-divider>
                 </div>
+
                 <!-- Start Property Type Zone -->
-                <div class="py-2 d-flex col-12 row justify-content-start">
-                  <div class="col-6 col-md-3" :key="properType.value+'properType'" v-for="properType of properTypes">
-                    <v-radio-group v-model="property.typeId" class="" :disabled="disabled">
-                      <v-radio :label="properType.label" :value="properType.value" color="blue"></v-radio>
-                    </v-radio-group>
-                  </div>
+              <div class="col-10 row p-2">
+                <div class="py-2 col-4"><label for="buildArea" class="form-control-label">Seleccione tipo de propiedad:</label></div>
+                <div class="py-2 col-8 text-left">
+                  <v-select v-model="property.typeId" label="Seleccionar" item-value="value" :items="properTypes" item-text="label" :hide-details="true"
+                            :height="'29px'" solo flat :style="'border: 1px solid #ced4da;'"></v-select>
                 </div>
+              </div>
+
                 <!-- End Property Type Zone -->
                 <div class="py-2 d-flex col-10">
                   <v-checkbox v-model="property.rulePH">
@@ -62,25 +53,25 @@
                   </v-checkbox>
                 </div>
                 <!-- Start Horizontal Property Rules Zone -->
-                <div class="py-2 d-flex col-12 row justify-content-start">
-                  <div class="col-6 col-md-3" :key="rulerPH.value+'properType'" v-for="rulerPH of rulersPH">
-                    <v-radio-group v-model="property.rulerPH" class="" :disabled="disabled || !property.rulePH">
-                      <v-radio :label="rulerPH.label" :value="rulerPH.value" color="blue"></v-radio>
-                    </v-radio-group>
-                  </div>
+              <div class="col-10 row p-2" v-if="property.rulePH">
+                <div class="py-2 col-4"><label for="buildArea" class="form-control-label">Seleccione regimen de propiedad horizontal:</label></div>
+                <div class="py-2 col-8 text-left">
+                  <v-select v-model="property.rulerPH" :required="property.rulePH" label="Seleccionar" item-value="value" :items="rulersPH" item-text="label" :rules="[v => !!v || 'campo requerido']" 
+                    solo :validate-on-blur="true" :disabled="disabled || !property.rulePH"></v-select>
                 </div>
+              </div>
                 <!-- End Horizontal Property Rules Zone -->
                 <div class="col-12">
                   <v-divider></v-divider>
                 </div>
                 <!-- Start Stratum Component -->
-                <div class="py-2 d-flex col-12 row">
-                  <div class="col-4 col-md-2" :key="stratum.value + 'stratum'" v-for="stratum in stratums">
-                    <v-radio-group v-model="property.stratum" class="justify-center" :disabled="disabled">
-                      <v-radio :label="stratum.label" :value="stratum.value" color="blue"></v-radio>
-                    </v-radio-group>
-                  </div>
+              <div class="col-10 row p-2">
+                <div class="py-2 col-4"><label for="buildArea" class="form-control-label">Seleccione estrato:</label></div>
+                <div class="py-2 col-8 text-left">
+                  <v-select v-model="property.stratum" label="Seleccionar" item-value="value" :items="stratums" item-text="label" :rules="[v => !!v || 'campo requerido']"
+                           solo :validate-on-blur="true" ></v-select>
                 </div>
+              </div>
                 <!-- End Stratum Component -->
                 <div class="col-12">
                   <v-divider></v-divider>
@@ -161,14 +152,14 @@
                 </div>
 
 
-                <div class="col-12 row">
+                <div class="col-12 col-lg-10 row">
                   <div class="col-12 row p-2">
                     <div class="py-2 col-4"><label for="buildArea" class="form-control-label">Ciudad / Municipio:</label>
                     </div>
                     <div class="py-2 col-8">
 
-                      <v-autocomplete v-model="property.city_id" :items="cities" search-input.sync="search" chips clearable
-                        hide-details hide-selected item-text="name" item-value="id" label="Selecciona una Ciudad..." solo>
+                      <v-autocomplete v-model="property.city_id" :items="cities" search-input.sync="search" chips clearable :rules="[v => !!v || 'campo requerido']" :validate-on-blur="true"
+                         hide-selected item-text="name" item-value="id" label="Selecciona una Ciudad..." solo>
 
                         <template v-slot:no-data>
                           <v-list-item>
@@ -221,7 +212,7 @@
                     </div>
 
                   </div>
-                  <div class="col-10 mx-auto py-2">
+                  <div class="col-12 mx-auto py-2">
                     <gmap-map :options="{
                       zoomControl: true,
                       mapTypeControl: false,
@@ -677,6 +668,12 @@
 </script>
 
 <style>
+
+.v-text-field.v-text-field--solo:not(.v-text-field--solo-flat) > .v-input__control > .v-input__slot {
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+    border: 1px solid rgb(206, 212, 218);
+}
 .icon-container {
       font-size: 1.2rem;
     color: #fff;
@@ -692,6 +689,7 @@ display: block;
     top: 10px;
     box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.4);
     background: rgba(0, 0, 0, 0.39);
+    text-align: center;
 }
 
 .testeo {
