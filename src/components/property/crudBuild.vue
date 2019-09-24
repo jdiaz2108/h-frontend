@@ -1,7 +1,7 @@
 <template>
   <div class="container-fluid auth py-5 bg-dark">
     <div class="row justify-content-center">
-      <div class="col-12 col-sm-10 col-md-8 col-lg-8 col-xl-6">
+      <div class="col-12 col-sm-10 col-md-8 col-lg-7 col-xl-6">
         <div class="card shadow">
           <form @submit.prevent="formSend" method="POST" class="form-group mb-0">
 
@@ -12,144 +12,95 @@
             <div class="card-body">
               <div class="row form-group d-flex align-center justify-center">
                 <!-- Start BuildFor Zone -->
-                  
               <div class="col-10 row p-2">
-                <div class="py-2 col-4"><label for="buildArea" class="form-control-label">Seleccione tipo de oferta:</label></div>
-                <div class="py-2 col-8 text-left">
+                <div class="py-2 col-5"><label for="buildArea" class="form-control-label">*Seleccione tipo de oferta:</label></div>
+                <div class="py-2 col-7 text-left">
                   <v-select v-model="property.type_id" label="Seleccionar" item-value="value" :items="buildForTypes" :rules="[v => !!v || 'campo requerido']" item-text="label"
                              solo :validate-on-blur="true"></v-select>
                 </div>
               </div>
 
-                <div class="col-12">
-                  <v-divider></v-divider>
-                </div>
-
                 <!-- Start Property Type Zone -->
               <div class="col-10 row p-2">
-                <div class="py-2 col-4"><label for="buildArea" class="form-control-label">Seleccione tipo de propiedad:</label></div>
-                <div class="py-2 col-8 text-left">
-                  <v-select v-model="property.typeId" label="Seleccionar" item-value="value" :items="properTypes" item-text="label" :hide-details="true"
-                            :height="'29px'" solo flat :style="'border: 1px solid #ced4da;'"></v-select>
+                <div class="py-2 col-5"><label for="buildArea" class="form-control-label">*Seleccione tipo de propiedad:</label></div>
+                <div class="py-2 col-7 text-left">
+                  <v-select v-model="property.typeId" label="Seleccionar" item-value="value" :items="properTypes" item-text="label" :rules="[v => !!v || 'campo requerido']"
+                            solo :validate-on-blur="true" ></v-select>
                 </div>
               </div>
 
-                <!-- End Property Type Zone -->
-                <div class="py-2 d-flex col-10">
-                  <v-checkbox v-model="property.rulePH">
-                    <template v-slot:label>
-                      <div>
-                        Regido por el
-                        <v-tooltip bottom>
-                          <template v-slot:activator="{ on }">
-                            <span v-on="on">
-                              Régimen de Propiedad Horizontal
-                            </span>
-                          </template>
-                          Opens in new window
-                        </v-tooltip>
-                      </div>
-                    </template>
-                  </v-checkbox>
-                </div>
-                <!-- Start Horizontal Property Rules Zone -->
-              <div class="col-10 row p-2" v-if="property.rulePH">
-                <div class="py-2 col-4"><label for="buildArea" class="form-control-label">Seleccione regimen de propiedad horizontal:</label></div>
-                <div class="py-2 col-8 text-left">
-                  <v-select v-model="property.rulerPH" :required="property.rulePH" label="Seleccionar" item-value="value" :items="rulersPH" item-text="label" :rules="[v => !!v || 'campo requerido']" 
-                    solo :validate-on-blur="true" :disabled="disabled || !property.rulePH"></v-select>
-                </div>
-              </div>
-                <!-- End Horizontal Property Rules Zone -->
-                <div class="col-12">
-                  <v-divider></v-divider>
-                </div>
-                <!-- Start Stratum Component -->
               <div class="col-10 row p-2">
-                <div class="py-2 col-4"><label for="buildArea" class="form-control-label">Seleccione estrato:</label></div>
-                <div class="py-2 col-8 text-left">
+                <div class="py-2 col-5"><label for="buildArea" class="form-control-label">*Seleccione estrato:</label></div>
+                <div class="py-2 col-7 text-left">
                   <v-select v-model="property.stratum" label="Seleccionar" item-value="value" :items="stratums" item-text="label" :rules="[v => !!v || 'campo requerido']"
                            solo :validate-on-blur="true" ></v-select>
                 </div>
               </div>
+
+              <div class="col-10 row p-2">
+                <div class="py-2 col-5 my-auto"><label for="buildArea" class="form-control-label">Regido por propiedad horizontal:</label></div>
+                <div class="py-2 col-7 text-left">
+                  <v-checkbox v-model="property.rulePH"></v-checkbox>
+                </div>
+              </div>
+
+
+                <!-- Start Horizontal Property Rules Zone -->
+              <v-expand-transition>
+              <div class="col-10 row p-2" v-show="property.rulePH">
+                <div class="py-2 col-5"><label for="buildArea" class="form-control-label">*Seleccione regimen de propiedad horizontal:</label></div>
+                <div class="py-2 col-7 text-left">
+                  <v-select v-model="property.rulerPH" :required="property.rulePH" label="Seleccionar" item-value="value" :items="rulersPH" item-text="label" :rules="[v => !!v || 'campo requerido']" 
+                    solo :validate-on-blur="true" :disabled="disabled || !property.rulePH"></v-select>
+                </div>
+              </div>
+              </v-expand-transition>
+
+
                 <!-- End Stratum Component -->
                 <div class="col-12">
                   <v-divider></v-divider>
                 </div>
 
-                <div class="col-12 row p-0 m-0">
-
-                  <div class="col-6 row m-0 p-2">
-                    <div class="py-2 col-4"><label for="priceSale" class="form-control-label">Valor Inmueble:</label>
-                    </div>
-                    <div class="py-2 col-8">
+              <v-expand-transition>
+              <div class="col-10 row p-2" v-show="property.type_id != 2">
+                                    <div class="py-2 col-5"><label for="priceSale" class="form-control-label">Valor inmueble:</label></div>
+                    <div class="py-2 col-7">
                        <money v-model="property.priceSale" v-bind="money" maxlength="17" class="form-control" :disabled="disabled || property.type_id == 2 || !property.type_id"></money>
                     </div>
 
-                    <div class="col-4"></div>
-                    <div class="col-8">
-                      <v-checkbox v-model="property.negotiable" :disabled="disabled || property.type_id == 2">
-                        <template v-slot:label>
-                          <div>
-                            <v-tooltip bottom>
-                              <template v-slot:activator="{ on }">
-                                <span v-on="on">
-                                  Negociable
-                                </span>
-                              </template>
-                            </v-tooltip>
-                          </div>
-                        </template>
-                      </v-checkbox>
-                    </div>
-                  </div>
-                  <div class="col-6 m-0 row p-2">
+                <div class="py-2 col-5 my-auto"><label for="buildArea" class="form-control-label">Valor negociable:</label></div>
+                <div class="py-2 col-7 my-auto">
+                  <v-checkbox v-model="property.negotiable" :disabled="disabled || property.type_id == 2"></v-checkbox>
+                </div>
+              <div class="col-12">
+                <v-divider></v-divider>
+              </div>
+              </div>
 
-                    <div class="py-2 col-4">
-                      <label for="priceRent" class="form-control-label">
-                        Valor Arriendo:
-                      </label>
-                    </div>
-                    <div class="py-2 col-8">
-                        <money v-model="property.priceRent" v-bind="money" maxlength="15" class="form-control" :disabled="disabled || property.type_id == 1 || !property.type_id"></money>
-                    </div>
+              </v-expand-transition>
 
-                    <div class="col-4"></div>
-                    <div class="col-8">
-                      <v-checkbox v-model="property.adminIncludedV" :disabled="disabled || property.type_id == 1">
-                        <template v-slot:label>
-                          <!-- <div>
-  Valor de
-  <v-tooltip bottom>
-  <template v-slot:activator="{ on }">
-  <span v-on="on">
-  Administración
-  </span>
-  </template>
-  Administración
-  </v-tooltip>
-  incluido en el Arriendo
-  </div> -->
-                        </template>
-                      </v-checkbox>
-                    </div>
 
-                    <div class="py-2 col-4">
-                      <label for="adminValue" class="form-control-label">
-                        Valor Administración:
-                      </label>
-                    </div>
-                    <div class="py-2 col-8">
-                        <money v-model="property.adminValue" v-bind="money" maxlength="13" class="form-control" :disabled="disabled || property.type_id == 1 || property.adminIncludedV || !property.type_id"></money>
-                    </div>
-
+              <v-expand-transition>
+                <div class="col-10 row p-2" v-show="property.type_id != 1">
+                  <div class="py-2 col-5"><label for="priceRent" class="form-control-label">Valor arriendo:</label></div>
+                  <div class="py-2 col-7">
+                    <money v-model="property.priceRent" v-bind="money" maxlength="15" class="form-control" :disabled="disabled || property.type_id == 1 || !property.type_id"></money>
                   </div>
 
-                </div>
+                  <div class="py-2 col-5 my-auto"><label for="buildArea" class="form-control-label">Incluye administración:</label></div>
+                  <div class="py-2 col-7 my-auto">
+                    <v-checkbox v-model="property.adminIncludedV" :disabled="disabled || property.type_id == 1"></v-checkbox>
+                  </div>
 
-                <div class="col-12">
-                  <v-divider></v-divider>
+                  <div class="py-2 col-5"><label for="adminValue" class="form-control-label">Valor Administración:</label></div>
+                  <div class="py-2 col-7">
+                    <money v-model="property.adminValue" v-bind="money" maxlength="13" class="form-control" :disabled="disabled || property.type_id == 1 || property.adminIncludedV || !property.type_id"></money>
+                  </div>
+
+                  <div class="col-12"><v-divider></v-divider></div>
                 </div>
+              </v-expand-transition>
 
 
                 <div class="col-12 col-lg-10 row">
@@ -245,18 +196,15 @@
 
                   <GridJs v-resize="onResize" :center="false" :draggable="true"
                     :sortable="true" ref="gridjs" @sort="sort" :items="items" :cellHeight="cellHeight"
-                    :cellWidth="cellWidth" :gridWidth="gridWidth"
+                    :cellWidth="cellWidth" :gridWidth="gridWidth" @remove="removeEvent"
                     @dragend="drag" @dragstart="drag">
                     <template slot="cell" slot-scope="props">
                       <!-- <a class="testeo">X</a> -->
                       <div class="icon-delete icon-container" style="cursor: pointer" @mousedown="props.remove()"><i class="fa fa-times" aria-hidden="true"></i></div>
-                        <!-- <v-fab-transition>
-      <v-btn color="indigo" dark fab absolute top right small @mousedown="props.remove()">
-        <v-icon>close</v-icon>
-      </v-btn>
-    </v-fab-transition> -->
+{{props}}
                       <div class="h-100 w-100 p-2">
                         <div class="d-flex rounded shadow" style="background-color: #b2b2b2; height: 100px; height: 100%; cursor: grab;">
+                          <div v-if="props.sort == 0" class="card-timeago"><i class="fa fa-star-o" aria-hidden="true"></i><span class="card-title"> Principal</span></div>
                           <img
                             :src="props.item.image"
                             class="img-fluid my-auto mx-auto" :style="'object-fit: contain; pointer-events: none; max-height: calc('+cellHeight+'px - 16px)'" alt="">
@@ -270,14 +218,11 @@
                   <v-divider></v-divider>
                 </div>
                 <!-- Start Build Zone, we have here build Area and Terrain Area -->
-                <div class="col-12 row">
-
-                  <div class="col-6 row p-2">
-                    <div class="py-2 col-4"><label for="buildArea" class="form-control-label">Area Construida:</label>
-                    </div>
-                    <div class="py-2 col-8">
+                  <div class="col-10 row p-2">
+                    <div class="py-2 col-5"><label for="buildArea" class="form-control-label">*Area Construida:</label></div>
+                    <div class="py-2 col-7">
                       <div class="input-group">
-                        <input type="text" class="form-control" id="buildArea" v-model="property.buildArea">
+                        <input type="text" class="form-control" id="buildArea" v-model="property.buildArea" required>
                         <div class="input-group-append">
                           <span class="input-group-text" id="basic-addon2">Mts<sup>2</sup></span>
                         </div>
@@ -285,10 +230,10 @@
                     </div>
 
                   </div>
-                  <div class="col-6 row p-2">
-                    <div class="py-2 col-4"><label for="LandArea" class="form-control-label">Area del Terreno:</label>
-                    </div>
-                    <div class="py-2 col-8">
+
+                  <div class="col-10 row p-2">
+                    <div class="py-2 col-5"><label for="LandArea" class="form-control-label">Area del Terreno:</label></div>
+                    <div class="py-2 col-7">
                       <div class="input-group">
                         <input type="text" class="form-control" id="LandArea" v-model="property.LandArea">
                         <div class="input-group-append">
@@ -298,52 +243,35 @@
                     </div>
 
                   </div>
-                </div>
-                <!-- End Build Zone, we have here build Area and Terrain Area -->
-                <div class="col-12">
-                  <v-divider></v-divider>
-                </div>
+<div v-for="item in items"> {{item}}</div>
                 <!-- Start Rooms Zone -->
-                <div class="col-12 row">
-                  <div class="col-6 row p-2">
-                    <div class="py-2 col-4"><label for="buildArea" class="form-control-label">No. Habitaciones:</label>
-                    </div>
-                    <div class="py-2 col-8">
-
-                      <v-select v-model="property.rooms" :items="rooms" item-text="value" :hide-details="true"
-                        :height="'29px'" solo flat :style="'border: 1px solid #ced4da;'"></v-select>
-
-
+                  <div class="col-10 row p-2">
+                    <div class="py-2 col-5"><label for="buildArea" class="form-control-label">*Numero de habitaciones:</label></div>
+                    <div class="py-2 col-7">
+                      <v-select v-model="property.rooms" label="Seleccionar" :items="rooms" item-text="value" :rules="[v => !!v || 'campo requerido']"
+                        solo :validate-on-blur="true"></v-select>
                     </div>
 
                   </div>
-                  <div class="col-6 row p-2">
-                    <div class="py-2 col-4"><label for="buildArea" class="form-control-label">No. Baños:</label>
-                    </div>
-                    <div class="py-2 col-8">
 
-                      <v-select v-model="property.bRooms" :items="rooms" item-text="value" :hide-details="true"
-                        :height="'29px'" solo flat :style="'border: 1px solid #ced4da;'"></v-select>
-
+                  <div class="col-10 row p-2">
+                    <div class="py-2 col-5"><label for="buildArea" class="form-control-label">*Numero de baños:</label></div>
+                    <div class="py-2 col-7">
+                      <v-select v-model="property.bRooms" label="Seleccionar" :items="rooms" item-text="value" :rules="[v => !!v || 'campo requerido']"
+                        solo :validate-on-blur="true"></v-select>
                     </div>
 
                   </div>
-                </div>
-                <!-- End Rooms Zone -->
-                <div class="col-12">
-                  <v-divider></v-divider>
-                </div>
-                <div class="col-12">
-                  <button type="button" @click="formSend()" class="btn btn-danger btn-block btn-lg">Crear
-                    Cuenta</button>
-                </div>
 
               </div>
 
             </div>
 
             <div class="card-footer">
-              <div class="p-3"></div>
+                <div class="col-6 mx-auto">
+                  <button type="button" @click="formSend()" class="btn btn-danger btn-block btn-lg">Crear
+                    Cuenta</button>
+                </div>
             </div>
           </form>
         </div>
@@ -475,7 +403,9 @@
     ...mapMutations(['propertyUpdate']),
       onResize() {
         this.gridWidth = this.$refs.gridjs.windowWidth;
-        if (window.innerWidth >= 1260) {
+        if (window.innerWidth >= 1400) {
+          this.cellWidth = (this.gridWidth * 0.25) - 8
+        } else if (window.innerWidth >= 1260) {
           this.cellWidth = (this.gridWidth * 0.33) - 8
         } else if (window.innerWidth >= 768) {
           this.cellWidth = (this.gridWidth * 0.33) - 8
@@ -486,7 +416,19 @@
         }
         this.cellHeight = this.cellWidth;
       },
+      removeEvent(event) {
+        // this.items.splice(event.index, 1)
+    //   this.items = event.items.sort(function( a, b ) {
+    //     if ( a.order < b.order ){ return -1 }
+    //     if ( a.order > b.order ){ return 1 }
+    //     return 0;
+    // },)
+        console.log("TCL: removeEvent -> this.items", this.items)
+        
+      console.log("TCL: removeEvent -> event", event)
+      },
       drag(event) {
+        console.log("TCL: drag -> event", event)
         if (window.innerWidth <= 768) {
           if (event.event.type == 'touchstart') {
             var myHtml = document.getElementsByTagName('html')[0];
@@ -501,8 +443,13 @@
           this.items[element.index].order = element.sort;
         }
       },
+
       sort(event) {
-        //console.log('sort', event.items)
+      // console.log("TCL: sort -> event", event)
+
+      // this.items = event.items.map(function(x) { return x.item;});
+      // console.log("TCL: sort -> doubles", doubles)
+        
       },
       handleFilePondInit() {
         this.$refs.pond.getFiles();

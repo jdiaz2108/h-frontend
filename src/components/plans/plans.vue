@@ -1,9 +1,8 @@
 <template>
-  <div>
-    <div class="container-fluid auth bg-dark">
-      <div class="row p-0 m-0 justify-center">
+    <div class="container-fluid auth bg-dark h-100">
+      <div class="row p-0 m-0 justify-center h-100">
         <div class="col-12 col-md-6 col-lg-4 col-xl-3 card-group p-0" :key="index" v-for="(plan, index) in planes">
-        <div class="card m-3 p-0 shadow">
+        <div class="card m-3 p-0 shadow my-auto">
             <div class="card-body d-flex flex-column">
               <div class="card shadow mb-4" style="background-color: #00adef">
                 <div class="card-body text-white">
@@ -38,7 +37,6 @@
         </div>
         </div>
       </div>
-    </div>
  <form method="POST" ref="PayuForm" action="https://sandbox.checkout.payulatam.com/ppp-web-gateway-payu/">
   <input name="merchantId"    type="hidden"  :value.sync="payu.merchantId"   >
   <input name="referenceCode" type="hidden"  :value.sync="payu.referenceCode" >
@@ -58,7 +56,7 @@
   <input name="confirmationUrl"    type="hidden"  :value.sync="payu.confirmationUrl" >
 
 </form>
-  </div>
+    </div>
 </template>
 
 <script>
@@ -78,7 +76,7 @@
     methods: {
       getPlans() {
         axios
-          .get('/plans')
+          .get('/H/plans')
           .then(response => {
             this.planes = response.data;
           })
