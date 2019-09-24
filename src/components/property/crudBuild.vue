@@ -243,7 +243,6 @@
                     </div>
 
                   </div>
-<div v-for="item in items"> {{item}}</div>
                 <!-- Start Rooms Zone -->
                   <div class="col-10 row p-2">
                     <div class="py-2 col-5"><label for="buildArea" class="form-control-label">*Numero de habitaciones:</label></div>
