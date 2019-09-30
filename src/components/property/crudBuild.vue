@@ -195,7 +195,7 @@
                     v-bind:files="myFiles" :instant-upload="true" v-on:init="handleFilePondInit" />
 
                   <GridJs v-resize="onResize" :center="false" :draggable="true"
-                    :sortable="true" ref="gridjs" @sort="sort" :items="items" :cellHeight="cellHeight"
+                    :sortable="true" ref="gridjs" :items="items" :cellHeight="cellHeight"
                     :cellWidth="cellWidth" :gridWidth="gridWidth"
                     @dragend="drag" @dragstart="drag">
                     <template slot="cell" slot-scope="props">
@@ -413,7 +413,6 @@
         this.cellHeight = this.cellWidth;
       },
       drag(event) {
-        console.log("TCL: drag -> event", event)
         if (window.innerWidth <= 768) {
           if (event.event.type == 'touchstart') {
             var myHtml = document.getElementsByTagName('html')[0];
@@ -427,14 +426,6 @@
           const element = event.items[index];
           this.items[element.index].order = element.sort;
         }
-      },
-
-      sort(event) {
-      // console.log("TCL: sort -> event", event)
-
-      // this.items = event.items.map(function(x) { return x.item;});
-      // console.log("TCL: sort -> doubles", doubles)
-        
       },
       handleFilePondInit() {
         this.$refs.pond.getFiles();

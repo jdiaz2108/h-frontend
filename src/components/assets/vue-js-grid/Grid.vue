@@ -88,8 +88,6 @@ export default {
     },
     list: {
       handler: function () {
-        console.log("TCL: list", this.list)
-        
         this.changeImages(this.list)
       }
     }
