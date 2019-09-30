@@ -115,7 +115,7 @@ export default new Router({
       name: 'property',
       component: crudBuild,
       meta: {
-        title: 'Publica tu predio - Habitemos',
+        title: 'Publica tu predio',
         requiresAuth: true,
       }
     },

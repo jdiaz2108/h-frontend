@@ -88,11 +88,14 @@ export default {
     },
     list: {
       handler: function () {
-      this.changeImages(this.list)
+        console.log("TCL: list", this.list)
+        
+        this.changeImages(this.list)
       }
     }
   },
   computed: {
+     ...mapState(['propertyImages']),
     gridResponsiveWidth () {
       if (this.gridWidth < 0) {
         return this.windowWidth
@@ -173,8 +176,19 @@ export default {
     onDragStart (event) {
       this.$emit('dragstart', this.wrapEvent(event))
     },
+        compare( a, b ) {
+      if ( a.sort < b.sort ){
+        return -1;
+      }
+      if ( a.sort > b.sort ){
+        return 1;
+      }
+      return 0;
+    },
 
     onDragEnd (event) {
+      let mergedImages = this.propertyImages.sort(this.compare)
+      this.changeImages(mergedImages)
       this.$emit('dragend', this.wrapEvent(event))
     },
 

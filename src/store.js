@@ -140,8 +140,9 @@ export default new Vuex.Store({
   },
   mutations: {
     changeImages(state, items) {
-      // state.propertyImages = items.map(a => a.item);
       state.propertyImages = items
+      // state.propertyImages = items.map(a => a.item);
+      // state.propertyImages = items.compare
     },
     increment(state) {
       state.count++

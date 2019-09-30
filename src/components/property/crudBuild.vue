@@ -196,18 +196,15 @@
 
                   <GridJs v-resize="onResize" :center="false" :draggable="true"
                     :sortable="true" ref="gridjs" @sort="sort" :items="items" :cellHeight="cellHeight"
-                    :cellWidth="cellWidth" :gridWidth="gridWidth" @remove="removeEvent"
+                    :cellWidth="cellWidth" :gridWidth="gridWidth"
                     @dragend="drag" @dragstart="drag">
                     <template slot="cell" slot-scope="props">
                       <!-- <a class="testeo">X</a> -->
                       <div class="icon-delete icon-container" style="cursor: pointer" @mousedown="props.remove()"><i class="fa fa-times" aria-hidden="true"></i></div>
-{{props}}
                       <div class="h-100 w-100 p-2">
                         <div class="d-flex rounded shadow" style="background-color: #b2b2b2; height: 100px; height: 100%; cursor: grab;">
                           <div v-if="props.sort == 0" class="card-timeago"><i class="fa fa-star-o" aria-hidden="true"></i><span class="card-title"> Principal</span></div>
-                          <img
-                            :src="props.item.image"
-                            class="img-fluid my-auto mx-auto" :style="'object-fit: contain; pointer-events: none; max-height: calc('+cellHeight+'px - 16px)'" alt="">
+                          <img :src="props.item.image" class="img-fluid my-auto mx-auto" :style="'object-fit: contain; pointer-events: none; max-height: calc('+cellHeight+'px - 16px)'" alt="">
                         </div>
                       </div>
                     </template>
@@ -415,17 +412,6 @@
         }
         this.cellHeight = this.cellWidth;
       },
-      removeEvent(event) {
-        // this.items.splice(event.index, 1)
-    //   this.items = event.items.sort(function( a, b ) {
-    //     if ( a.order < b.order ){ return -1 }
-    //     if ( a.order > b.order ){ return 1 }
-    //     return 0;
-    // },)
-        console.log("TCL: removeEvent -> this.items", this.items)
-        
-      console.log("TCL: removeEvent -> event", event)
-      },
       drag(event) {
         console.log("TCL: drag -> event", event)
         if (window.innerWidth <= 768) {
@@ -467,8 +453,10 @@
         this.property.longitude = location.latLng.lng()
       },
       onLoaded(response) {
+        if (this.propertyImages) {
+          this.items = this.propertyImages.map(a => a.item);
+        }
         this.items.push({
-          title: 'd',
           image: process.env.VUE_APP_ROOT_RES + response
         })
       },
