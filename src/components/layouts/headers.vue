@@ -10,8 +10,10 @@
         <nav class="consult-nav">
           <ul class="consult-menu">
             <li>
-              <router-link class="router-links" to="/">Inicio
-              </router-link>
+              <router-link class="router-links" to="/">Inicio</router-link>
+            </li>
+                        <li>
+              <router-link class="router-links" to="/mapa">Ver Mapa</router-link>
             </li>
             <li class="menu-item-has-children"><a href="#">COMPRAR</a>
               <ul class="sub-menu">

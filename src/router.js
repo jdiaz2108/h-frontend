@@ -22,7 +22,7 @@ export default new Router({
     {
       path: '/',
       name: 'index',
-      component: showMap,
+      component: mapeishion,
       meta: {
         title: 'Home Page - Example App',
         metaTags: [
@@ -35,12 +35,7 @@ export default new Router({
             content: 'The home page of our example app.'
           }
         ]
-      }
-    },
-    {
-      path: '/H',
-      name: 'map',
-      component: mapeishion,
+      },
       children: [
         {
           path: 'mapa',

@@ -110,12 +110,13 @@
       }
     },
     created() {
+      this.getProperties();
       this.geolocate();
       var myHtml = document.getElementsByTagName('html')[0];
       myHtml.classList.add('overHidden');
     },
     mounted() {
-      this.getProperties();
+      //
     },
     beforeDestroy() {
       var myHtml = document.getElementsByTagName('html')[0];
@@ -123,7 +124,7 @@
     },
     methods: {
       gotoProperty(id) {
-        this.$router.push({ path: '/H/mapa/'+id })
+        this.$router.push({ path: '/mapa/'+id })
       },
       delInfoWindow: function (marker) {
         this.timeout = setTimeout(() => {

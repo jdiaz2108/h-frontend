@@ -53,7 +53,7 @@ export default {
   methods: {
     gotoMap(esc) {
       if (!this.lightbox) {
-        this.$router.push({ path: '/H/mapa' })
+        this.$router.push({ path: '/mapa' })
       }
     },
       showModal() {
