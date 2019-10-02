@@ -1,20 +1,20 @@
   <template>
     <div class="container-fluid auth pt-5 bg-dark">
       <div class="row justify-content-center">
-        <div class="col-12 col-sm-4 col-lg-3">
+        <div class="col-12 col-sm-6 col-lg-3 pt-0">
           <div class="card shadow">
             <div class="card-header bg-white">
               Mi Perfil
             </div>
             <div class="card-body text-left">
               <h5>
-Nombre: {{user.name}}
+                Nombre: {{user.name}}
               </h5>
               <h5>
-Email: {{user.email}}
+                Email: {{user.email}}
               </h5>
               <h5>
-Inscrito desde: {{user.date}}
+                Inscrito desde: {{user.date}}
               </h5>
               <h5>
 
@@ -26,10 +26,10 @@ Inscrito desde: {{user.date}}
             </div>
           </div>
         </div>
-          <div class="col-12 col-sm-8 col-lg-7 m-0 p-0">
+          <div class="col-12 col-sm-6 col-lg-7 m-0 p-0">
             <div class="card shadow">
               <div class="card-header bg-white">
-                Mi Perfil
+                Mis Predios
               </div>
               <div class="card-body">
                 <div class="row ">
@@ -110,11 +110,11 @@ import { mapState } from 'vuex';
         })
       },
     },
-    filters: {
-      timeago: function (value) {
-       return moment(value, "YYYY-MM-DD HH:ii:ss").fromNow()
-      }
-    },
+            filters: {
+        timeago: function (value) {
+         return moment(value, "YYYY-MM-DD HH:ii:ss").fromNow()
+        }
+      },
   }
 </script>
 

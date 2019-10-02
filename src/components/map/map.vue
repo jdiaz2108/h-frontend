@@ -55,7 +55,7 @@
         <div class="row m-0">
 
           <div class="col-12 col-lg-6 p-2" @mouseover="createInfoWindow(m)" @mouseout="delInfoWindow(m)"
-            :key="index + '-card'" v-for="(m, index) in markers" @click="gotoProperty(m.id)">
+            :key="index + '-card'" v-for="(m, index) in markers" @click="gotoProperty(m.slug)">
             <div class="card m-2 shadow h-100" style="cursor: pointer">
               <img class="card-img-top" :src="m.image">
               <div class="card-body ">
@@ -79,12 +79,42 @@
     name: 'Map',
     data() {
       return {
-        styles: [{
-          featureType: 'poi',
-          stylers: [{
-            visibility: 'off'
-          }]
-        }],
+        styles: [
+  {
+    "featureType": "poi",
+    "elementType": "labels.text",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
+    "featureType": "poi.business",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
+    "featureType": "road",
+    "elementType": "labels.icon",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
+    "featureType": "transit",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  }
+],
         showModalStatus: true,
         timeout: '',
         selector1: null,
@@ -123,8 +153,8 @@
       myHtml.classList.remove('overHidden');
     },
     methods: {
-      gotoProperty(id) {
-        this.$router.push({ path: '/mapa/'+id })
+      gotoProperty(slug) {
+        this.$router.push({ path: '/mapa/'+slug })
       },
       delInfoWindow: function (marker) {
         this.timeout = setTimeout(() => {

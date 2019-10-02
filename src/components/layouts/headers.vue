@@ -1,8 +1,9 @@
 <template>
     <header style="z-index: 100" class="sticky-top">
       <v-toolbar color="white" class="stinky">
+         <v-app-bar-nav-icon @click="changeDawner" class="nav-icon" v-if="$vuetify.breakpoint.mdAndDown"></v-app-bar-nav-icon>
         <v-spacer></v-spacer>
-        <div class="header__logo" style="    height: 60px;
+        <div class="header__logo" style="height: 60px;
     line-height: 60px;"><a href="index.html">
             <img src="https://api.habitemos.com/images/LOGO-HABITEMOS-HORIZONTAL.png" class="img-fluid"
               style="vertical-align: webkit-baseline-middle !Important;" alt=""></a></div>
@@ -84,7 +85,7 @@ export default {
       ...mapState(['auth'])
   },
   methods: {
-  ...mapMutations(['loadUser']),
+  ...mapMutations(['loadUser', 'changeDawner']),
     ...mapActions(['logOutUser']),
 
     logout: function (root) {
@@ -375,7 +376,15 @@ a.router-link-exact-active {
     text-decoration: none;
 }
 
+.nav-icon:focus {
+    outline: none;
+}
+
 @media (min-width: 993px) {
+    .nav-icon {
+        visibility: hidden;
+    }
+
     .consult-nav {
         text-align: center;
     }

@@ -371,12 +371,42 @@
         isEditing: null,
         model: null,
         errors: {},
-        styles: [{
-          featureType: 'poi',
-          stylers: [{
-            visibility: 'off'
-          }]
-        }],
+                styles: [
+  {
+    "featureType": "poi",
+    "elementType": "labels.text",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
+    "featureType": "poi.business",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
+    "featureType": "road",
+    "elementType": "labels.icon",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  },
+  {
+    "featureType": "transit",
+    "stylers": [
+      {
+        "visibility": "off"
+      }
+    ]
+  }
+],
         zoom: 12,
         buildFor: null,
         cities: [],

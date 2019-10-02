@@ -46,8 +46,7 @@ export default {
       lightbox: false,
     }
   },
-  mounted() {
-    console.log(this)
+  created() {
     this.showProperty(this.$route.params.id)
   },
   methods: {
@@ -68,9 +67,9 @@ export default {
           el.lightbox = false;
         });
       },
-      showProperty(id) {
+      showProperty(slug) {
         axios
-          .get('/property/' + id)
+          .get('/property/' + slug)
           .then(response => {
             console.log(response);
             this.property = response.data.data;

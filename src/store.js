@@ -7,6 +7,7 @@ Vue.use(Vuex, axios)
 export default new Vuex.Store({
   
   state: {
+    drawner: false,
     root: '2091-Bahama-Dr-Miramar-FL-33023',
     accessToken: null,
     count: 0,
@@ -139,6 +140,9 @@ export default new Vuex.Store({
   ],
   },
   mutations: {
+    changeDawner(state){
+      state.drawner = !state.drawner
+    },
     changeImages(state, items) {
       state.propertyImages = items
       // state.propertyImages = items.map(a => a.item);

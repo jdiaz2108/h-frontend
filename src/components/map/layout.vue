@@ -31,16 +31,12 @@ export default {
      //
     };
   },
-  created() {
-      var myHtml = document.getElementsByTagName('html')[0];
-      myHtml.classList.add('overHidden');
-  },
 };
 </script>
 
 <style scoped>
 .back-index{
-    background-image: url(http://wp.efforttech.net/newwp/shina/wp-content/uploads/2018/03/image-3.jpg);
+    background-image: url(https://api.habitemos.com/images/image-3.jpg);
     background-repeat: no-repeat;
     background-size: cover;
     width: 100%;

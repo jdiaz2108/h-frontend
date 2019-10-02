@@ -1,5 +1,6 @@
 <template>
     <v-app>
+    <leftPanel v-if="$vuetify.breakpoint.mdAndDown"></leftPanel>
     <hheaders></hheaders>
     <!-- <transition name="fade"  mode="out-in">
       <keep-alive>
@@ -14,6 +15,7 @@
 <script>
 import Vue from 'vue'
 import hheaders from './components/layouts/headers'
+import leftPanel from './components/layouts/leftPanel'
 import * as VueGoogleMaps from "vue2-google-maps";
 
 Vue.use(VueGoogleMaps, {
@@ -27,6 +29,7 @@ export default {
   name: 'App',
   components: {
     hheaders,
+    leftPanel
   },
   data: () => ({
     id: 100
