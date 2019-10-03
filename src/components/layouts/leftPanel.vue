@@ -2,7 +2,7 @@
 <template>
   <v-navigation-drawer fixed clipped app v-model="$store.state.drawner">
     <v-list dense>
-      <v-list-item avatar tag="div" v-if="$vuetify.breakpoint.mdAndDown">
+      <v-list-item tag="div" v-if="$vuetify.breakpoint.mdAndDown">
           <v-app-bar-nav-icon></v-app-bar-nav-icon>
         <v-list-item-icon></v-list-item-icon>
       </v-list-item>

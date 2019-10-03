@@ -1,279 +1,292 @@
 <template>
-  <div class="container-fluid auth py-5 bg-dark">
-    <div class="row justify-content-center">
-      <div class="col-12 col-sm-10 col-md-8 col-lg-7 col-xl-6">
-        <div class="card shadow">
-          <form @submit.prevent="formSend" method="POST" class="form-group mb-0">
+	<div class="container-fluid auth py-5 bg-dark">
+		<div class="row justify-content-center">
+			<div class="col-12 col-sm-10 col-md-8 col-lg-7 col-xl-6">
+				<div class="card shadow">
+					<form @submit.prevent="formSend" method="POST" class="form-group mb-0">
+						<div class="card-header">
+							<h2 class="card-header-title my-1 text-center">Publicar Predio </h2>
+						</div>
+						<div class="card-body">
+							<div class="row form-group d-flex align-center justify-center">
+								<!-- Start BuildFor Zone -->
+								<div class="col-10 row p-2">
+									<div class="py-2 col-5"><label for="buildArea" class="form-control-label">*Seleccione tipo de oferta:</label></div>
+									<div class="py-2 col-7 text-left">
+										<v-select v-model="property.type_id" label="Seleccionar" item-value="value" :items="buildForTypes" :rules="[v => !!v || 'campo requerido']" item-text="label"
+										solo :validate-on-blur="true"></v-select>
+									</div>
+								</div>
+								<!-- Start Property Type Zone -->
+								<div class="col-10 row p-2">
+									<div class="py-2 col-5"><label for="buildArea" class="form-control-label">*Seleccione tipo de propiedad:</label></div>
+									<div class="py-2 col-7 text-left">
+										<v-select v-model="property.typeId" label="Seleccionar" item-value="value" :items="properTypes" item-text="label" :rules="[v => !!v || 'campo requerido']"
+										solo :validate-on-blur="true" ></v-select>
+									</div>
+								</div>
 
-            <div class="card-header">
-              <h2 class="card-header-title my-1 text-center">Publicar Predio </h2>
-            </div>
+								<div class="col-10 row p-2">
+									<div class="py-2 col-5"><label for="buildArea" class="form-control-label">*Seleccione estrato:</label></div>
+									<div class="py-2 col-7 text-left">
+										<v-select v-model="property.stratum" label="Seleccionar" item-value="value" :items="stratums" item-text="label" :rules="[v => !!v || 'campo requerido']"
+										solo :validate-on-blur="true" ></v-select>
+									</div>
+								</div>
 
-            <div class="card-body">
-              <div class="row form-group d-flex align-center justify-center">
-                <!-- Start BuildFor Zone -->
-              <div class="col-10 row p-2">
-                <div class="py-2 col-5"><label for="buildArea" class="form-control-label">*Seleccione tipo de oferta:</label></div>
-                <div class="py-2 col-7 text-left">
-                  <v-select v-model="property.type_id" label="Seleccionar" item-value="value" :items="buildForTypes" :rules="[v => !!v || 'campo requerido']" item-text="label"
-                             solo :validate-on-blur="true"></v-select>
-                </div>
-              </div>
+								<div class="col-10 row p-2">
+									<div class="py-2 col-5 my-auto"><label for="buildArea" class="form-control-label">Regido por propiedad horizontal:</label></div>
+									<div class="py-2 col-7 text-left">
+										<v-checkbox v-model="property.rulePH"></v-checkbox>
+									</div>
+								</div>
+								<!-- Start Horizontal Property Rules Zone -->
+								<v-expand-transition>
+									<div class="col-10 row p-2" v-show="property.rulePH">
+										<div class="py-2 col-5"><label for="buildArea" class="form-control-label">*Seleccione regimen de propiedad horizontal:</label></div>
+										<div class="py-2 col-7 text-left">
+											<v-select v-model="property.rulerPH" :required="property.rulePH" label="Seleccionar" item-value="value" :items="rulersPH" item-text="label" :rules="[v => !!v || 'campo requerido']" 
+											solo :validate-on-blur="true" :disabled="disabled || !property.rulePH"></v-select>
+										</div>
+									</div>
+								</v-expand-transition>
+								<!-- End Stratum Component -->
+								<div class="col-12">
+									<v-divider></v-divider>
+								</div>
+								<v-expand-transition>
+									<div class="col-10 row p-2" v-show="property.type_id != 2">
+										<div class="py-2 col-5"><label for="priceSale" class="form-control-label">Valor inmueble:</label></div>
+										<div class="py-2 col-7">
+											<money v-model="property.priceSale" v-bind="money" maxlength="17" class="form-control" :disabled="disabled || property.type_id == 2 || !property.type_id"></money>
+										</div>
+										<div class="py-2 col-5 my-auto"><label for="buildArea" class="form-control-label">Valor negociable:</label></div>
+										<div class="py-2 col-7 my-auto">
+											<v-checkbox v-model="property.negotiable" :disabled="disabled || property.type_id == 2"></v-checkbox>
+										</div>
+										<div class="col-12"><v-divider></v-divider></div>
+									</div>
+								</v-expand-transition>
 
-                <!-- Start Property Type Zone -->
-              <div class="col-10 row p-2">
-                <div class="py-2 col-5"><label for="buildArea" class="form-control-label">*Seleccione tipo de propiedad:</label></div>
-                <div class="py-2 col-7 text-left">
-                  <v-select v-model="property.typeId" label="Seleccionar" item-value="value" :items="properTypes" item-text="label" :rules="[v => !!v || 'campo requerido']"
-                            solo :validate-on-blur="true" ></v-select>
-                </div>
-              </div>
+								<v-expand-transition>
+									<div class="col-10 row p-2" v-show="property.type_id != 1">
+										<div class="py-2 col-5"><label for="priceRent" class="form-control-label">Valor arriendo:</label></div>
+										<div class="py-2 col-7">
+											<money v-model="property.priceRent" v-bind="money" maxlength="15" class="form-control" :disabled="disabled || property.type_id == 1 || !property.type_id"></money>
+										</div>
+										<div class="py-2 col-5 my-auto"><label for="buildArea" class="form-control-label">Incluye administración:</label></div>
+										<div class="py-2 col-7 my-auto">
+											<v-checkbox v-model="property.adminIncludedV" :disabled="disabled || property.type_id == 1"></v-checkbox>
+										</div>
+										<div class="py-2 col-5"><label for="adminValue" class="form-control-label">Valor Administración:</label></div>
+										<div class="py-2 col-7">
+											<money v-model="property.adminValue" v-bind="money" maxlength="13" class="form-control" :disabled="disabled || property.type_id == 1 || property.adminIncludedV || !property.type_id"></money>
+										</div>
+										<div class="col-12"><v-divider></v-divider></div>
+									</div>
+								</v-expand-transition>
 
-              <div class="col-10 row p-2">
-                <div class="py-2 col-5"><label for="buildArea" class="form-control-label">*Seleccione estrato:</label></div>
-                <div class="py-2 col-7 text-left">
-                  <v-select v-model="property.stratum" label="Seleccionar" item-value="value" :items="stratums" item-text="label" :rules="[v => !!v || 'campo requerido']"
-                           solo :validate-on-blur="true" ></v-select>
-                </div>
-              </div>
+								<div class="col-12 col-lg-10 row">
+									<div class="col-12 row p-2">
+										<div class="py-2 col-4"><label for="buildArea" class="form-control-label">Ciudad / Municipio:</label></div>
+										<div class="py-2 col-8">
+											<v-autocomplete v-model="property.city_id" :items="cities" search-input.sync="search" chips clearable :rules="[v => !!v || 'campo requerido']" :validate-on-blur="true"
+											hide-selected item-text="name" item-value="id" label="Selecciona una Ciudad..." solo>
+												<template v-slot:no-data>
+													<v-list-item>
+														<v-list-item-title>
+															No hay resultados en tu <strong>Busqueda</strong>
+														</v-list-item-title>
+													</v-list-item>
+												</template>
 
-              <div class="col-10 row p-2">
-                <div class="py-2 col-5 my-auto"><label for="buildArea" class="form-control-label">Regido por propiedad horizontal:</label></div>
-                <div class="py-2 col-7 text-left">
-                  <v-checkbox v-model="property.rulePH"></v-checkbox>
-                </div>
-              </div>
+												<template v-slot:selection="{ item, selected }">
+													<v-list-item-avatar color="blue-grey darken-2" class="headline font-weight-light white--text" size="25">
+														<i class="fa fa-map-marker "></i>
+													</v-list-item-avatar>
+													<span v-text="item.name"></span>
+												</template>
 
+												<template v-slot:item="{ item }">
+													<v-list-item-avatar color="blue-grey darken-2" class="headline font-weight-light white--text" size="25">
+														<i class="fa fa-map-marker "></i>
+													</v-list-item-avatar>
+													<span v-text="item.name"></span>
+												</template>
+											</v-autocomplete>
+										</div>
+									</div>
 
-                <!-- Start Horizontal Property Rules Zone -->
-              <v-expand-transition>
-              <div class="col-10 row p-2" v-show="property.rulePH">
-                <div class="py-2 col-5"><label for="buildArea" class="form-control-label">*Seleccione regimen de propiedad horizontal:</label></div>
-                <div class="py-2 col-7 text-left">
-                  <v-select v-model="property.rulerPH" :required="property.rulePH" label="Seleccionar" item-value="value" :items="rulersPH" item-text="label" :rules="[v => !!v || 'campo requerido']" 
-                    solo :validate-on-blur="true" :disabled="disabled || !property.rulePH"></v-select>
-                </div>
-              </div>
-              </v-expand-transition>
+									<div class="col-12 row p-2">
+										<div class="py-2 col-4"><label for="priceSale" class="form-control-label">Dirección:</label></div>
+										<div class="py-2 col-8">
+											<div class="input-group">
+												<input type="text" class="form-control" id="priceSale" placeholder="Ej: Calle 12 # 18 - 64"
+												@blur="here()" @keyup.enter="here()" :disabled="property.city_id == null" v-model="property.streetAddress">
+											</div>
+										</div>
+									</div>
 
+									<div class="col-12 row p-2">
+									<div class="py-2 col-4"><label for="priceSale" class="form-control-label">Barrio:</label></div>
+									<div class="py-2 col-8">
+										<div class="input-group">
+											<input type="text" class="form-control" placeholder="Ej: Santa Bárbara"
+											v-model="property.neighborhood" :disabled="property.city_id == null">
+										</div>
+									</div>
+									</div>
 
-                <!-- End Stratum Component -->
-                <div class="col-12">
-                  <v-divider></v-divider>
-                </div>
+									<div class="col-12 mx-auto py-2">
+										<gmap-map :options="{
+										zoomControl: true,
+										mapTypeControl: false,
+										scaleControl: false,
+										streetViewControl: false,
+										rotateControl: false,
+										fullscreenControl: true,
+										disableDefaultUi: false,
+										gestureHandling: 'greedy',
+										styles: styles
+										}" @center_changed="update('reportedCenter', $event)" @bounds_changed="update('bounds', $event)" :center="center"
+										ref="map" :zoom="zoom" style="width:100%;  height: 400px">
+											<gmap-marker icon="https://api.habitemos.com/images/icono1.png" v-if="marker" :draggable="true"
+											@dragend="updateCoordinates" :labelClass="'gmap-marker'" :title="'m.name'"
+											:position="{'lat': property.latitude, 'lng': property.longitude}"></gmap-marker>
+										</gmap-map>
+									</div>
+								</div>
 
-              <v-expand-transition>
-              <div class="col-10 row p-2" v-show="property.type_id != 2">
-                                    <div class="py-2 col-5"><label for="priceSale" class="form-control-label">Valor inmueble:</label></div>
-                    <div class="py-2 col-7">
-                       <money v-model="property.priceSale" v-bind="money" maxlength="17" class="form-control" :disabled="disabled || property.type_id == 2 || !property.type_id"></money>
-                    </div>
+								<div class="col-12"><v-divider></v-divider></div>
 
-                <div class="py-2 col-5 my-auto"><label for="buildArea" class="form-control-label">Valor negociable:</label></div>
-                <div class="py-2 col-7 my-auto">
-                  <v-checkbox v-model="property.negotiable" :disabled="disabled || property.type_id == 2"></v-checkbox>
-                </div>
-              <div class="col-12">
-                <v-divider></v-divider>
-              </div>
-              </div>
+								<div class="col-12">
+								<file-pond name="test" ref="pond" @processfile="handleFileUpload"
+								label-idle="Suelta las imagenes aquí o <span class='filepond--label-action'>Buscar Imagenes</span>"
+								allow-multiple="true" :server="server" accepted-file-types="image/jpeg, image/png"
+								v-bind:files="myFiles" :instant-upload="true" v-on:init="handleFilePondInit"/>
 
-              </v-expand-transition>
+								<GridJs v-resize="onResize" :center="false" :draggable="true"
+								:sortable="true" ref="gridjs" :items="items" :cellHeight="cellHeight"
+								:cellWidth="cellWidth" :gridWidth="gridWidth"
+								@dragend="drag" @dragstart="drag">
+									<template slot="cell" slot-scope="props">
+									<!-- <a class="testeo">X</a> -->
+									<div class="icon-delete icon-container" style="cursor: pointer" @mousedown="props.remove()"><i class="fa fa-times" aria-hidden="true"></i></div>
+										<div class="h-100 w-100 p-2">
+											<div class="d-flex rounded shadow" style="background-color: #b2b2b2; height: 100px; height: 100%; cursor: grab;">
+												<div v-if="props.sort == 0" class="card-timeago"><i class="fa fa-star-o" aria-hidden="true"></i><span class="card-title"> Principal</span></div>
+												<img :src="props.item.image" class="img-fluid my-auto mx-auto" :style="'object-fit: contain; pointer-events: none; max-height: calc('+cellHeight+'px - 16px)'" alt="">
+											</div>
+										</div>
+									</template>
+								</GridJs>
+								</div>
 
+								<div class="col-12"><v-divider></v-divider></div>
+								<!-- Start Build Zone, we have here build Area and Terrain Area -->
+								<div class="col-10 row p-2">
+									<div class="py-2 col-5"><label for="buildArea" class="form-control-label">*Area Construida:</label></div>
+									<div class="py-2 col-7">
+										<div class="input-group">
+											<input type="text" class="form-control" id="buildArea" v-model="property.buildArea" required>
+											<div class="input-group-append">
+												<span class="input-group-text" id="basic-addon2">Mts<sup>2</sup></span>
+											</div>
+										</div>
+									</div>
+								</div>
 
-              <v-expand-transition>
-                <div class="col-10 row p-2" v-show="property.type_id != 1">
-                  <div class="py-2 col-5"><label for="priceRent" class="form-control-label">Valor arriendo:</label></div>
-                  <div class="py-2 col-7">
-                    <money v-model="property.priceRent" v-bind="money" maxlength="15" class="form-control" :disabled="disabled || property.type_id == 1 || !property.type_id"></money>
-                  </div>
+								<div class="col-10 row p-2">
+									<div class="py-2 col-5"><label for="LandArea" class="form-control-label">Area del Terreno:</label></div>
+									<div class="py-2 col-7">
+										<div class="input-group">
+											<input type="text" class="form-control" id="LandArea" v-model="property.LandArea">
+											<div class="input-group-append">
+												<span class="input-group-text" id="basic-addon2">Mts<sup>2</sup></span>
+											</div>
+										</div>
+									</div>
+								</div>
+								<!-- Start Rooms Zone -->
+								<div class="col-10 row p-2">
+									<div class="py-2 col-5"><label for="buildArea" class="form-control-label">*Numero de habitaciones:</label></div>
+									<div class="py-2 col-7">
+										<v-select v-model="property.rooms" label="Seleccionar" :items="rooms" item-text="value" :rules="[v => !!v || 'campo requerido']"
+										solo :validate-on-blur="true"></v-select>
+									</div>
+								</div>
 
-                  <div class="py-2 col-5 my-auto"><label for="buildArea" class="form-control-label">Incluye administración:</label></div>
-                  <div class="py-2 col-7 my-auto">
-                    <v-checkbox v-model="property.adminIncludedV" :disabled="disabled || property.type_id == 1"></v-checkbox>
-                  </div>
+								<div class="col-10 row p-2">
+									<div class="py-2 col-5"><label for="buildArea" class="form-control-label">*Numero de baños:</label></div>
+									<div class="py-2 col-7">
+										<v-select v-model="property.bRooms" label="Seleccionar" :items="rooms" item-text="value" :rules="[v => !!v || 'campo requerido']"
+										solo :validate-on-blur="true"></v-select>
+									</div>
+								</div>
 
-                  <div class="py-2 col-5"><label for="adminValue" class="form-control-label">Valor Administración:</label></div>
-                  <div class="py-2 col-7">
-                    <money v-model="property.adminValue" v-bind="money" maxlength="13" class="form-control" :disabled="disabled || property.type_id == 1 || property.adminIncludedV || !property.type_id"></money>
-                  </div>
+								<div class="col-12 row p-2">
+									<v-item-group class="w-100">
+										<v-container>
+											<v-row>
+												<v-col v-for="plan in planes" :key="plan.id" cols="12" md="4">
+													<v-item v-slot:default="{ active, toggle }">
+														<div class="card my-3 p-0 my-auto" :class="active ? 'shadow' : ''" @click="toggle">
+															<!-- <v-scroll-y-transition>
+															<div v-if="active" class="display-3 flex-grow-1 text-center">
+															Active
+															</div>
+															</v-scroll-y-transition> -->
+															<div class="card-header">
+																<h4 class="card-title">{{plan.name}}</h4>
+															</div>
+															<div class="card-body d-flex flex-column">
+																<div class="card shadow mb-4" style="background-color: #00adef">
+																	<div class="card-body text-white">
+																		<h3 v-if="plan.price != 0" class="card-title">{{plan.price | currency('$', 0, { thousandsSeparator: '.', spaceBetweenAmountAndSymbol: true })}}</h3>
+																	</div>
+																</div>
+																<ul class="list-card px-4">
+																	<li>
+																		<p><strong>{{plan.days}}</strong> Dias</p>
+																	</li>
+																	<li>
+																		<p><strong>100</strong> components</p>
+																	</li>
+																	<li>
+																		<p><strong>150</strong> features</p>
+																	</li>
+																	<li>
+																		<p><strong>200</strong> members</p>
+																	</li>
+																	<li>
+																		<p><strong>250</strong> messages</p>
+																	</li>
+																</ul>
+																<div class="d-flex align-items-end"></div>
+															</div>
+															<div class="card-footer">
+																<button class="btn btn-green btn-lg btn-block">Seleccionar</button>
+															</div>
+														</div>
+													</v-item>
+												</v-col>
+											</v-row>
+										</v-container>
+									</v-item-group>
+								</div>
+							</div>
+						</div>
 
-                  <div class="col-12"><v-divider></v-divider></div>
-                </div>
-              </v-expand-transition>
-
-
-                <div class="col-12 col-lg-10 row">
-                  <div class="col-12 row p-2">
-                    <div class="py-2 col-4"><label for="buildArea" class="form-control-label">Ciudad / Municipio:</label>
-                    </div>
-                    <div class="py-2 col-8">
-
-                      <v-autocomplete v-model="property.city_id" :items="cities" search-input.sync="search" chips clearable :rules="[v => !!v || 'campo requerido']" :validate-on-blur="true"
-                         hide-selected item-text="name" item-value="id" label="Selecciona una Ciudad..." solo>
-
-                        <template v-slot:no-data>
-                          <v-list-item>
-                            <v-list-item-title>
-                              No hay resultados en su
-                              <strong>Busqueda</strong>
-                            </v-list-item-title>
-                          </v-list-item>
-                        </template>
-
-                        <template v-slot:selection="{ item, selected }">
-                          <v-list-item-avatar color="blue-grey darken-2" class="headline font-weight-light white--text" size="25">
-                            <i class="fa fa-map-marker "></i>
-                          </v-list-item-avatar>
-                          <span v-text="item.name"></span>
-                        </template>
-
-                        <template v-slot:item="{ item }">
-                          <v-list-item-avatar color="blue-grey darken-2" class="headline font-weight-light white--text" size="25">
-                            <i class="fa fa-map-marker "></i>
-                          </v-list-item-avatar>
-                            <span v-text="item.name"></span>
-                        </template>
-                      </v-autocomplete>
-
-                    </div>
-                  </div>
-                  <div class="col-12 row p-2">
-                    <div class="py-2 col-4"><label for="priceSale" class="form-control-label">Dirección:</label>
-                    </div>
-                    <div class="py-2 col-8">
-                      <div class="input-group">
-                        <input type="text" class="form-control" id="priceSale" placeholder="Ej: Calle 12 # 18 - 64"
-                          @blur="here()" @keyup.enter="here()"
-                          :disabled="property.city_id == null"
-                          v-model="property.streetAddress" >
-                      </div>
-                    </div>
-
-                  </div>
-                  <div class="col-12 row p-2">
-                    <div class="py-2 col-4"><label for="priceSale" class="form-control-label">Barrio:</label>
-                    </div>
-                    <div class="py-2 col-8">
-                      <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Ej: Santa Bárbara"
-                          v-model="property.neighborhood"
-                          :disabled="property.city_id == null">
-                      </div>
-                    </div>
-
-                  </div>
-                  <div class="col-12 mx-auto py-2">
-                    <gmap-map :options="{
-                      zoomControl: true,
-                      mapTypeControl: false,
-                      scaleControl: false,
-                      streetViewControl: false,
-                      rotateControl: false,
-                      fullscreenControl: true,
-                      disableDefaultUi: false,
-                      gestureHandling: 'greedy',
-                      styles: styles
-                      }" @center_changed="update('reportedCenter', $event)" @bounds_changed="update('bounds', $event)" :center="center"
-                      ref="map" :zoom="zoom" style="width:100%;  height: 400px">
-
-                      <gmap-marker icon="https://api.habitemos.com/images/icono1.png" v-if="marker" :draggable="true"
-                        @dragend="updateCoordinates" :labelClass="'gmap-marker'" :title="'m.name'"
-                        :position="{'lat': property.latitude, 'lng': property.longitude}"></gmap-marker>
-                    </gmap-map>
-                  </div>
-                </div>
-
-                <div class="col-12">
-                  <v-divider></v-divider>
-                </div>
-                <div class="col-12">
-
-                  <file-pond name="test" ref="pond" @processfile="handleFileUpload"
-                    label-idle="Suelta las imagenes aquí o <span class='filepond--label-action'>Buscar Imagenes</span>"
-                    allow-multiple="true" :server="server" accepted-file-types="image/jpeg, image/png"
-                    v-bind:files="myFiles" :instant-upload="true" v-on:init="handleFilePondInit" />
-
-                  <GridJs v-resize="onResize" :center="false" :draggable="true"
-                    :sortable="true" ref="gridjs" :items="items" :cellHeight="cellHeight"
-                    :cellWidth="cellWidth" :gridWidth="gridWidth"
-                    @dragend="drag" @dragstart="drag">
-                    <template slot="cell" slot-scope="props">
-                      <!-- <a class="testeo">X</a> -->
-                      <div class="icon-delete icon-container" style="cursor: pointer" @mousedown="props.remove()"><i class="fa fa-times" aria-hidden="true"></i></div>
-                      <div class="h-100 w-100 p-2">
-                        <div class="d-flex rounded shadow" style="background-color: #b2b2b2; height: 100px; height: 100%; cursor: grab;">
-                          <div v-if="props.sort == 0" class="card-timeago"><i class="fa fa-star-o" aria-hidden="true"></i><span class="card-title"> Principal</span></div>
-                          <img :src="props.item.image" class="img-fluid my-auto mx-auto" :style="'object-fit: contain; pointer-events: none; max-height: calc('+cellHeight+'px - 16px)'" alt="">
-                        </div>
-                      </div>
-                    </template>
-                  </GridJs>
-
-                </div>
-                <div class="col-12">
-                  <v-divider></v-divider>
-                </div>
-                <!-- Start Build Zone, we have here build Area and Terrain Area -->
-                  <div class="col-10 row p-2">
-                    <div class="py-2 col-5"><label for="buildArea" class="form-control-label">*Area Construida:</label></div>
-                    <div class="py-2 col-7">
-                      <div class="input-group">
-                        <input type="text" class="form-control" id="buildArea" v-model="property.buildArea" required>
-                        <div class="input-group-append">
-                          <span class="input-group-text" id="basic-addon2">Mts<sup>2</sup></span>
-                        </div>
-                      </div>
-                    </div>
-
-                  </div>
-
-                  <div class="col-10 row p-2">
-                    <div class="py-2 col-5"><label for="LandArea" class="form-control-label">Area del Terreno:</label></div>
-                    <div class="py-2 col-7">
-                      <div class="input-group">
-                        <input type="text" class="form-control" id="LandArea" v-model="property.LandArea">
-                        <div class="input-group-append">
-                          <span class="input-group-text" id="basic-addon2">Mts<sup>2</sup></span>
-                        </div>
-                      </div>
-                    </div>
-
-                  </div>
-                <!-- Start Rooms Zone -->
-                  <div class="col-10 row p-2">
-                    <div class="py-2 col-5"><label for="buildArea" class="form-control-label">*Numero de habitaciones:</label></div>
-                    <div class="py-2 col-7">
-                      <v-select v-model="property.rooms" label="Seleccionar" :items="rooms" item-text="value" :rules="[v => !!v || 'campo requerido']"
-                        solo :validate-on-blur="true"></v-select>
-                    </div>
-
-                  </div>
-
-                  <div class="col-10 row p-2">
-                    <div class="py-2 col-5"><label for="buildArea" class="form-control-label">*Numero de baños:</label></div>
-                    <div class="py-2 col-7">
-                      <v-select v-model="property.bRooms" label="Seleccionar" :items="rooms" item-text="value" :rules="[v => !!v || 'campo requerido']"
-                        solo :validate-on-blur="true"></v-select>
-                    </div>
-
-                  </div>
-
-              </div>
-
-            </div>
-
-            <div class="card-footer">
-                <div class="col-6 mx-auto">
-                  <button type="button" @click="formSend()" class="btn btn-danger btn-block btn-lg">Crear
-                    Cuenta</button>
-                </div>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
+						<div class="card-footer">
+							<div class="col-6 mx-auto">
+								<button type="button" @click="formSend()" class="btn btn-danger btn-block btn-lg">Crear Cuenta</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
 </template>
 
 <script>
@@ -308,6 +321,7 @@
     },
     created() {
       this.getCities()
+      this.getPlans()
       // localStorage.PropertyImages ? this.items = JSON.parse(localStorage.PropertyImages) : '';
       // localStorage.PropertyImagess ? this.images = localStorage.PropertyImagess.map(a => a.item) : '';
       this.items = this.propertyImages.map(a => a.item)
@@ -326,6 +340,7 @@
     },
     data() {
       return {
+        planes: null,
         money: {
           thousands: '.',
           prefix: '$ ',
@@ -426,6 +441,16 @@
       }
     },
     methods: {
+            getPlans() {
+        axios
+          .get('/H/plans')
+          .then(response => {
+            this.planes = response.data;
+          })
+          .catch(error => {
+            console.log(error)
+          })
+      },
     ...mapMutations(['propertyUpdate']),
       onResize() {
         this.gridWidth = this.$refs.gridjs.windowWidth;
