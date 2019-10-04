@@ -228,40 +228,21 @@
 									<v-item-group class="w-100">
 										<v-container>
 											<v-row>
-												<v-col v-for="plan in planes" :key="plan.id" cols="12" md="4">
+												<v-col v-for="(plan, index) in planes" :key="plan.id" cols="12" md="4">
 													<v-item v-slot:default="{ active, toggle }">
-														<div class="card my-3 p-0 my-auto" :class="active ? 'shadow' : ''" @click="toggle">
+														<div class="card my-3 p-0 my-auto h-100 border-2px" :class="[(active ? 'shadow-lg border-active' : 'shadow-sm') , (index == 1 ? 'active' : 'inactive')]" @click="toggle">
 															<!-- <v-scroll-y-transition>
 															<div v-if="active" class="display-3 flex-grow-1 text-center">
 															Active
 															</div>
 															</v-scroll-y-transition> -->
-															<div class="card-header">
-																<h4 class="card-title">{{plan.name}}</h4>
-															</div>
-															<div class="card-body d-flex flex-column">
-																<div class="card shadow mb-4" style="background-color: #00adef">
-																	<div class="card-body text-white">
-																		<h3 v-if="plan.price != 0" class="card-title">{{plan.price | currency('$', 0, { thousandsSeparator: '.', spaceBetweenAmountAndSymbol: true })}}</h3>
-																	</div>
-																</div>
-																<ul class="list-card px-4">
-																	<li>
-																		<p><strong>{{plan.days}}</strong> Dias</p>
-																	</li>
-																	<li>
-																		<p><strong>100</strong> components</p>
-																	</li>
-																	<li>
-																		<p><strong>150</strong> features</p>
-																	</li>
-																	<li>
-																		<p><strong>200</strong> members</p>
-																	</li>
-																	<li>
-																		<p><strong>250</strong> messages</p>
-																	</li>
-																</ul>
+															<div class="card-body d-flex flex-column align-items-center">
+
+                                <img data-src="holder.js/75x75" class="rounded-circle mx-auto mb-5" alt="75x75" style="width: 150px; height: 150px;" :src="plan.image" data-holder-rendered="true">
+                                <p class="complement-text">Publicación</p>
+                                <p class="h5 text-price">{{plan.months+ (plan.months == 1 ? ' Mes' : ' Meses')}} </p>
+                                <h1 class="mx-auto text-price">{{plan.price | currency('$', 0, { thousandsSeparator: '.', spaceBetweenAmountAndSymbol: true })}}</h1>
+																<p v-if="plan.promo">*Recibe {{plan.promo+ (plan.promo == 1 ? ' Mes' : ' Meses')}} gratis.</p>
 																<div class="d-flex align-items-end"></div>
 															</div>
 															<div class="card-footer">
@@ -303,7 +284,7 @@
 
   // Import image preview and file type validation plugins
   import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type'
-  import { mapState, mapMutations } from 'vuex';
+  import { mapState, mapMutations, mapActions } from 'vuex';
 
   // Create component
   const FilePond = vueFilePond(
@@ -441,6 +422,10 @@
       }
     },
     methods: {
+       ...mapActions(['logOutUser']),
+          logout() {
+    this.logOutUser().finally(() => { this.$router.push('/login'), this.loadUser(null) })
+  },
             getPlans() {
         axios
           .get('/H/plans')
@@ -448,10 +433,13 @@
             this.planes = response.data;
           })
           .catch(error => {
-            console.log(error)
+            console.log(error.response.status)
+            if (error.response.status == 401) {
+              this.logout()
+            }
           })
       },
-    ...mapMutations(['propertyUpdate']),
+    ...mapMutations(['loadUser','propertyUpdate']),
       onResize() {
         this.gridWidth = this.$refs.gridjs.windowWidth;
         if (window.innerWidth >= 1400) {
@@ -647,7 +635,36 @@
   }
 </script>
 
-<style>
+<style lang="scss">
+
+
+.active{
+  .text-price{
+    color: #ffffff;
+  }
+  .complement-text{
+    color: #666666;
+  }
+    background-color: #B4D13D;
+}
+
+.inactive{
+    .text-price{
+    color: #666666;
+  }
+  .complement-text{
+    color: #B4D13D;
+  }
+
+}
+
+.border-2px{
+  border: 3px solid rgba(0,0,0,.125);
+}
+
+.border-active{
+  border-color: #00ADEF;
+}
 
 .v-text-field.v-text-field--solo:not(.v-text-field--solo-flat) > .v-input__control > .v-input__slot {
     -webkit-box-shadow: none !important;

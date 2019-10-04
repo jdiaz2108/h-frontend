@@ -1,6 +1,6 @@
 <template>
   <div class="container-fluid p-0">
-    <div class="row" style="overflow: scroll;">
+    <div class="row" style="overflow-y: scroll;">
       <div class="col-7 p-0">
         <gmap-map :options="{
                     zoomControl: true,
@@ -29,11 +29,11 @@
               :title="m.name" 
               :clickable="true" 
               :position="m.position"
-              @click="gotoProperty(m.id)"></gmap-marker>
+              @click="gotoProperty(m.slug)"></gmap-marker>
 
           <gmap-info-window :options="{maxWidth: 220}" :position="maker.position" :opened="maker.window">
             <div @mouseover="createInfoWindow(maker)" @mouseout="delInfoWindow(maker), print()" class="row m-0"
-              @click="gotoProperty(maker.id)">
+              @click="gotoProperty(maker.slug)">
               <div class="col-3 m-0 p-0">
                 <img class="img-fluid mb-2" style="height: 40px; width: 40px" :src="maker.image">
               </div>

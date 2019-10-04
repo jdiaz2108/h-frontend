@@ -3,10 +3,9 @@
       <v-toolbar color="white" class="stinky">
          <v-app-bar-nav-icon @click="changeDawner" class="nav-icon" v-if="$vuetify.breakpoint.mdAndDown"></v-app-bar-nav-icon>
         <v-spacer></v-spacer>
-        <div class="header__logo" style="height: 60px;
-    line-height: 60px;"><a href="index.html">
-            <img src="https://api.habitemos.com/images/LOGO-HABITEMOS-HORIZONTAL.png" class="img-fluid"
-              style="vertical-align: webkit-baseline-middle !Important;" alt=""></a></div>
+        <div class="header__logo" style="height: 60px; line-height: 60px;">
+            <img @click="goIndex" src="https://api.habitemos.com/images/LOGO-HABITEMOS-HORIZONTAL.png" class="img-fluid" style="vertical-align: webkit-baseline-middle !Important;" alt="">
+        </div>
         <v-spacer></v-spacer>
         <nav class="consult-nav">
           <ul class="consult-menu">
@@ -88,6 +87,9 @@ export default {
   ...mapMutations(['loadUser', 'changeDawner']),
     ...mapActions(['logOutUser']),
 
+    goIndex() {
+        this.$router.push('/')
+    },
     logout: function (root) {
     this.logOutUser().finally(() => { this.$router.push('/login'), this.loadUser(null) })
 
