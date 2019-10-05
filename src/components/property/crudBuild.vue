@@ -224,13 +224,21 @@
 									</div>
 								</div>
 
+                <div class="col-10 row p-2">
+									<div class="py-2 col-5"><label for="buildArea" class="form-control-label">*Numero de parqueaderos:</label></div>
+									<div class="py-2 col-7">
+										<v-select v-model="property.parking" label="Seleccionar" :items="rooms" item-text="value" :rules="[v => !!v || 'campo requerido']"
+										solo :validate-on-blur="true"></v-select>
+									</div>
+								</div>
+
 								<div class="col-12 row p-2">
 									<v-item-group class="w-100">
 										<v-container>
 											<v-row>
 												<v-col v-for="(plan, index) in planes" :key="plan.id" cols="12" md="4">
 													<v-item v-slot:default="{ active, toggle }">
-														<div class="card my-3 p-0 my-auto h-100 border-2px" :class="[(active ? 'shadow-lg border-active' : 'shadow-sm') , (index == 1 ? 'active' : 'inactive')]" @click="toggle">
+														<div class="card my-3 p-0 my-auto h-100 border-2px" style="cursor:pointer" :class="[(active ? 'shadow-lg border-active active' : 'shadow-sm inactive')]" @click="toggle">
 															<!-- <v-scroll-y-transition>
 															<div v-if="active" class="display-3 flex-grow-1 text-center">
 															Active
@@ -246,8 +254,11 @@
 																<div class="d-flex align-items-end"></div>
 															</div>
 															<div class="card-footer">
-																<button class="btn btn-green btn-lg btn-block">Seleccionar</button>
+                                <p class="btn btn-lg btn-block" :class="active ? 'btn-light' : 'btn-green'">{{active ? 'Seleccionado' : 'Seleccionar'}}</p>
 															</div>
+                              <div v-if="index == 1" class="special-tag">
+                                <i class="fa-2x fa fa-star text-white ml-5 mt-5" aria-hidden="true"></i>
+                              </div>
 														</div>
 													</v-item>
 												</v-col>
@@ -636,7 +647,16 @@
 </script>
 
 <style lang="scss">
-
+.special-tag{
+    background: #f2c428;
+    width: 90px;
+    height: 90px;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    border-radius: 0px 0px 115px 0px;
+    overflow: hidden;
+}
 
 .active{
   .text-price{
@@ -674,6 +694,10 @@
 .icon-container {
       font-size: 1.2rem;
     color: #fff;
+}
+
+.v-text-field.v-text-field--enclosed .v-text-field__details {
+    margin-bottom: 0px !important;
 }
 
 .icon-delete {
