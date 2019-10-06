@@ -34,7 +34,7 @@ router.beforeEach(async (to, from, next) => {
     if (localStorage.UserData && localStorage.Authorization) {
       next();
     } else {
-      next('/');
+      next('/login');
     }
   } else if (to.meta.requiresNoAuth && store.state.auth || to.meta.requiresNoAuth && localStorage.Authorization) {
     next('/');

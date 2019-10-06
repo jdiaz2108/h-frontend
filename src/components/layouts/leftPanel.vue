@@ -25,26 +25,9 @@
         </v-list-item>
       </router-link>
 
-      <v-list-group v-for="item in items" :key="item.title" v-model="item.active" :prepend-icon="item.action" no-action>
-        <template v-slot:activator>
-          <v-list-item>
-            <v-list-item-title>{{ item.title }}</v-list-item-title>
-          </v-list-item>
-        </template>
-        <router-link class="router-links" :to="subItem.action" v-for="subItem in item.items" :key="subItem.title">
-          <v-list-item>
-            <v-list-item-title>{{ subItem.title }}</v-list-item-title>
-
-            <v-list-item-action>
-              <v-icon light>{{ item.action }}</v-icon>
-            </v-list-item-action>
-          </v-list-item>
-        </router-link>
-
-      </v-list-group>
 
             
-    <v-list-group prepend-icon="group" no-action>
+    <v-list-group prepend-icon="group" no-action v-if="auth">
         <template v-slot:activator>
           <v-list-item>
             <v-list-item-title>MI CUENTA</v-list-item-title>
@@ -62,6 +45,33 @@
                 <router-link class="router-links" to="/publicar-predio">
           <v-list-item>
             <v-list-item-title>Publicar predio</v-list-item-title>
+
+            <v-list-item-action>
+              <v-icon light>group</v-icon>
+            </v-list-item-action>
+          </v-list-item>
+        </router-link>
+
+      </v-list-group>
+
+          <v-list-group prepend-icon="group" no-action v-else>
+        <template v-slot:activator>
+          <v-list-item>
+            <v-list-item-title>MI CUENTA</v-list-item-title>
+          </v-list-item>
+        </template>
+                <router-link class="router-links" to="/login">
+          <v-list-item>
+            <v-list-item-title>Iniciar sesión</v-list-item-title>
+
+            <v-list-item-action>
+              <v-icon light>group</v-icon>
+            </v-list-item-action>
+          </v-list-item>
+        </router-link>
+        <router-link class="router-links" to="/register">
+          <v-list-item>
+            <v-list-item-title>Registrarse</v-list-item-title>
 
             <v-list-item-action>
               <v-icon light>group</v-icon>
@@ -136,6 +146,9 @@ export default {
       }
     ]
   }),
+    computed: {
+      ...mapState(['auth'])
+  },
   methods: {
     drawerMDown: function () {
       if (this.$vuetify.breakpoint.mdAndDown) {

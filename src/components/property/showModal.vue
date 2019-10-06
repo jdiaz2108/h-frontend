@@ -71,7 +71,7 @@ export default {
         axios
           .get('/property/' + slug)
           .then(response => {
-            console.log(response);
+            // console.log(response);
             this.property = response.data.data;
           })
           .catch(error => {

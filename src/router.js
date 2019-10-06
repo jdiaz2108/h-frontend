@@ -115,17 +115,6 @@ export default new Router({
       }
     },
     {
-      path: '/plans',
-      name: 'plans',
-      component: () => import(/* webpackChunkName: "plans" */ './components/plans/plans'),
-      meta: {requiresAuth: true}
-    },
-    {
-      path: '/plans/:slug',
-      component: () => import(/* webpackChunkName: "plans" */ './components/plans/plans'),
-      meta: {requiresAuth: true, validateOwnProperty: true},
-    },
-    {
       path: '/response',
       component: () => import(/* webpackChunkName: "payuResponse" */ './components/user/payuResponse'),
       meta: {requiresAuth: true},

@@ -9,6 +9,7 @@ export default new Vuex.Store({
   state: {
     drawner: false,
     root: '2091-Bahama-Dr-Miramar-FL-33023',
+    plan: null,
     accessToken: null,
     count: 0,
     user: null,
@@ -140,6 +141,9 @@ export default new Vuex.Store({
   ],
   },
   mutations: {
+    selectPlan(state, plan){
+      state.plan = plan
+    },
     changeDawner(state){
       state.drawner = !state.drawner
     },

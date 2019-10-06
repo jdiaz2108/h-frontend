@@ -51,6 +51,15 @@
 		</gmap-map>
 	  </div>
 	<div class="col-5 p-0" :style="$vuetify.breakpoint.smAndDown ? 'overflow-y: auto; max-height: calc(100vh - 56px)' : ' overflow-y: auto; max-height: calc(100vh - 64px)'">
+			<div class="row m-0" v-if="markers.length == 0">
+			<div v-for="m in 6" :key="m" class="col-12 col-lg-6 p-2">
+				      <v-skeleton-loader
+						ref="skeleton"
+						type="image, article"
+						class="m-2"
+					></v-skeleton-loader>
+			</div>
+			</div>
 		<div class="row m-0">
 			<div class="col-12 col-lg-6 p-2" @mouseover="createInfoWindow(m)" @mouseout="delInfoWindow(m)"
 			:key="index + '-card'" v-for="(m, index) in markers" @click="gotoProperty(m.slug)">
@@ -203,10 +212,10 @@
 		}
 	  },
 	  print(e) {
-		console.log('se ejecuta');
+		// console.log('se ejecuta');
 		if (this.lightbox) {
-		  console.log('hola');
-		  console.log(e.key);
+		//   console.log('hola');
+		//   console.log(e.key);
 		}
 	  },
 	  getProperties: function () {
@@ -229,7 +238,7 @@
 		});
 	  },
 	  showPosition: function (position) {
-		console.log('dragstap'); // when enter will start the same function that mouse drag stap
+	//	console.log('dragstap'); // when enter will start the same function that mouse drag stap
 		this.center = {
 		  lat: position.coords.latitude,
 		  lng: position.coords.longitude,

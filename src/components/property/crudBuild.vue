@@ -13,7 +13,7 @@
 								<div class="col-10 row p-2">
 									<div class="py-2 col-5"><label for="buildArea" class="form-control-label">*Seleccione tipo de oferta:</label></div>
 									<div class="py-2 col-7 text-left">
-										<v-select v-model="property.type_id" label="Seleccionar" item-value="value" :items="buildForTypes" :rules="[v => !!v || 'campo requerido']" item-text="label"
+										<v-select v-model="property.offer_id" label="Seleccionar" item-value="value" :items="buildForTypes" :rules="[v => !!v || 'campo requerido']" item-text="label"
 										solo :validate-on-blur="true"></v-select>
 									</div>
 								</div>
@@ -21,7 +21,7 @@
 								<div class="col-10 row p-2">
 									<div class="py-2 col-5"><label for="buildArea" class="form-control-label">*Seleccione tipo de propiedad:</label></div>
 									<div class="py-2 col-7 text-left">
-										<v-select v-model="property.typeId" label="Seleccionar" item-value="value" :items="properTypes" item-text="label" :rules="[v => !!v || 'campo requerido']"
+										<v-select v-model="property.type_id" label="Seleccionar" item-value="value" :items="properTypes" item-text="label" :rules="[v => !!v || 'campo requerido']"
 										solo :validate-on-blur="true" ></v-select>
 									</div>
 								</div>
@@ -233,10 +233,10 @@
 								</div>
 
 								<div class="col-12 row p-2">
-									<v-item-group class="w-100">
+									<v-item-group class="w-100" :mandatory="plan ? true : false">
 										<v-container>
 											<v-row>
-												<v-col v-for="(plan, index) in planes" :key="plan.id" cols="12" md="4">
+												<v-col v-for="(plan, index) in planes" :key="plan.id" cols="12" md="4" @click="selectPlan(plan.slug)">
 													<v-item v-slot:default="{ active, toggle }">
 														<div class="card my-3 p-0 my-auto h-100 border-2px" style="cursor:pointer" :class="[(active ? 'shadow-lg border-active active' : 'shadow-sm inactive')]" @click="toggle">
 															<!-- <v-scroll-y-transition>
@@ -271,13 +271,66 @@
 
 						<div class="card-footer">
 							<div class="col-6 mx-auto">
-								<button type="button" @click="formSend()" class="btn btn-danger btn-block btn-lg">Crear Cuenta</button>
+    <v-dialog v-model="finalValidation" persistent max-width="600px">
+      <template v-slot:activator="{ on }">
+								<button type="button" v-on="on" @click="verifyProperty()" class="btn btn-danger btn-block btn-lg">Crear Publicación</button>
+      </template>
+      <v-card>
+        <v-card-title>
+          <span class="headline">Verifica tu Publicación</span>
+        </v-card-title>
+        <v-card-text>
+          <div class="container-fluid">
+            <div class="row text-dark">
+              <div class="col-6 h6">Oferta: {{ verificationProperty.offer.label}}</div>
+              <div class="col-6 h6">Predio: {{ verificationProperty.type.label }}</div>
+              <div class="col-6 h6">Estrato: {{property.stratum}}</div>
+              <div class="col-6 h6">Ciudad: {{ verificationProperty.city.name }}</div>
+              <div class="col-6 h6">PH: apartamento</div>
+              <div class="col-6 h6">Dirección: {{property.streetAddress}}</div>
+              <div class="col-6 h6">Clase ph: Edificio</div>
+              <div class="col-6 h6">Barrio: {{property.neighborhood}}</div>
+              <div class="col-6 h6">Valor: Hayuelos</div>
+              <div class="col-6 h6">incluye admin: Hayuelos</div>
+              <div class="col-6 h6">Fotos adjuntadas: {{propertyImages.length}}</div>
+              <div class="col-12 h6">Plan seleccionado: {{ verificationProperty.plan.months+' Meses' }} {{ verificationProperty.plan.promo ? ' + '+verificationProperty.plan.promo+' Gratis = '+(verificationProperty.plan.months + verificationProperty.plan.promo)+' Meses': '' }}</div>
+              <div class="col-12 h6">Valor plan: {{verificationProperty.plan.price | currency('$', 0, { thousandsSeparator: '.', spaceBetweenAmountAndSymbol: true })}}</div>
+            </div>
+          </div>
+        </v-card-text>
+        <v-card-actions>
+          <div class="flex-grow-1"></div>
+          <v-btn color="blue darken-1" text @click="finalValidation = false">Close</v-btn>
+          <v-btn color="blue darken-1" text @click="finalValidation = false">Save</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
 							</div>
 						</div>
 					</form>
 				</div>
 			</div>
 		</div>
+
+<form v-if="payu.merchantId" method="POST" ref="PayuForm" action="https://sandbox.checkout.payulatam.com/ppp-web-gateway-payu/">
+  <input name="merchantId"    type="hidden"  :value.sync="payu.merchantId"   >
+  <input name="referenceCode" type="hidden"  :value.sync="payu.referenceCode" >
+  <input name="description"   type="hidden"  :value.sync="payu.description"  >
+  <input name="amount"        type="hidden"  :value.sync="payu.amount"   >
+  <input name="tax"           type="hidden"  :value.sync="payu.tax"  >
+  <input name="taxReturnBase" type="hidden"  :value.sync="payu.taxReturnBase" >
+  <input name="accountId"     type="hidden"  :value.sync="payu.accountId" >
+  <input name="currency"      type="hidden"  :value.sync="payu.currency" >
+  <input name="signature"     type="hidden"  :value.sync="payu.signature"  >
+  <input name="test"          type="hidden"  :value.sync="payu.test" >
+  <input name="buyerEmail"    type="hidden"  :value.sync="payu.buyerEmail" >
+  <input name="buyerFullName"    type="hidden"  :value.sync="payu.buyerFullName" >
+  <input name="extra1"    type="hidden"  :value.sync="payu.extra1" >
+  <input name="extra2"    type="hidden"  :value.sync="payu.extra2" >
+  <input name="responseUrl"    type="hidden"  :value.sync="payu.responseUrl" >
+  <input name="confirmationUrl"    type="hidden"  :value.sync="payu.confirmationUrl" >
+</form>
+
 	</div>
 </template>
 
@@ -332,12 +385,29 @@
     },
     data() {
       return {
+        finalValidation: false,
+        payu: {},
         planes: null,
         money: {
           thousands: '.',
           prefix: '$ ',
           precision: 0,
           masked: false
+        },
+        verificationProperty: {
+          offer: {
+            label: null
+          },
+          type: {
+            label: null
+          },
+          city: {
+            name: null
+          },
+          plan: {
+            months: 0,
+            promo: null,
+          }
         },
         res: null,
         images: [],
@@ -433,6 +503,17 @@
       }
     },
     methods: {
+      verifyProperty() {
+       this.verificationProperty.offer = this.buildForTypes.find(x => x.value === this.property.offer_id)
+       if (this.cities.length != 0) {
+         
+         this.verificationProperty.city = this.cities.find(x => x.id === this.property.city_id)
+       }
+       this.verificationProperty.type = this.properTypes.find(x => x.value === this.property.type_id)
+       if (this.plan) {
+         this.verificationProperty.plan = this.planes.find(x => x.slug === this.plan)
+       }
+      },
        ...mapActions(['logOutUser']),
           logout() {
     this.logOutUser().finally(() => { this.$router.push('/login'), this.loadUser(null) })
@@ -450,7 +531,7 @@
             }
           })
       },
-    ...mapMutations(['loadUser','propertyUpdate']),
+    ...mapMutations(['loadUser','propertyUpdate', 'selectPlan']),
       onResize() {
         this.gridWidth = this.$refs.gridjs.windowWidth;
         if (window.innerWidth >= 1400) {
@@ -594,11 +675,15 @@
              url: '/H/property',
              data: {
                property: this.property,
-               images: this.propertyImages
+               images: this.propertyImages,
+               plan: this.plan
              },
            })
            .then(response => {
-             console.log(response)
+            this.payu = response.data;
+            setTimeout(() => {
+              this.$refs.PayuForm.submit()
+            }, 100);
            })
           .catch(error => {
             this.errors = error.response.data;
@@ -620,7 +705,7 @@
       },
     },
     computed: {
-      ...mapState(['properTypes', 'buildForTypes', 'rulersPH', 'stratums', 'rooms', 'propertyImages', 'property'])
+      ...mapState(['properTypes', 'buildForTypes', 'rulersPH', 'stratums', 'rooms', 'propertyImages', 'property', 'plan'])
     },
     watch: {
       'property.city_id'() {
