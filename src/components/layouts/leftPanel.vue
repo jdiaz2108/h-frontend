@@ -88,9 +88,6 @@
 <script>
 import { mapState } from 'vuex';
 export default {
-  created() {
-    //
-  },
   data: () => ({
     items: [{
         action: 'account_circle',

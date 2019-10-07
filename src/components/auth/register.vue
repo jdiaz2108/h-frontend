@@ -131,9 +131,6 @@
         this.active = 'register';
       }
     },
-    mounted() {
-      //
-    },
     data() {
       return {
         titleSee: 'Ver Usuario',

@@ -149,8 +149,6 @@ export default new Vuex.Store({
     },
     changeImages(state, items) {
       state.propertyImages = items
-      // state.propertyImages = items.map(a => a.item);
-      // state.propertyImages = items.compare
     },
     increment(state) {
       state.count++

@@ -31,11 +31,8 @@
                 </li>
               </ul>
             </li>
-            <li class="menu-item-has-children"><a href="blog.html">ANUNCIAR INMUEBLE</a>
-              <ul class="sub-menu">
-                <li><a href="blog-detail.html">Blog detail</a>
-                </li>
-              </ul>
+            <li>
+              <router-link class="router-links" to="/publicar-predio">PUBLICAR INMUEBLE</router-link>
             </li>
             <li>
               <router-link class="router-links" to="/profile">
@@ -44,12 +41,6 @@
               <ul class="sub-menu" v-if="auth">
                 <li>
                   <router-link class="router-links" to="/profile">Mi Perfil</router-link>
-                </li>
-                <li>
-                  <router-link class="router-links" to="/publicar-predio">Publicar predio</router-link>
-                </li>
-                <li>
-                  <router-link class="router-links" to="/plans">Payu</router-link>
                 </li>
                 <li>
                   <a @click="logout($root)"><i class="fa fa-power-off pr-2 text-danger"></i>Cerrar Sesión</a>
@@ -75,18 +66,12 @@
 import {mapState, mapActions, mapMutations} from 'vuex'
 import axios from 'axios'
 export default {
-  data() {
-    return {
-
-    }
-  },
   computed: {
-      ...mapState(['auth'])
+    ...mapState(['auth'])
   },
   methods: {
-  ...mapMutations(['loadUser', 'changeDawner']),
+    ...mapMutations(['loadUser', 'changeDawner']),
     ...mapActions(['logOutUser']),
-
     goIndex() {
         this.$router.push('/')
     },

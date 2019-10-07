@@ -6,10 +6,8 @@ import './registerServiceWorker'
 import vuetify from './plugins/vuetify';
 import { mapState, mapMutations } from 'vuex';
 
-// main.js
 import VueSweetalert2 from 'vue-sweetalert2';
  
-// If you don't need the styles, do not connect
 import 'sweetalert2/dist/sweetalert2.min.css';
  
 Vue.use(VueSweetalert2);
@@ -82,9 +80,6 @@ new Vue({
     }
 
     localStorage.clear();
-  },
-  beforeCreate() {
-    //
   },
   methods: {
     ...mapMutations(['changeImages', 'propertyUpdate', 'resetProperty', 'loadUser', 'loadToken', 'login', 'loadProperties']),

@@ -139,7 +139,6 @@
           }); 
       },
       alertSwal(type, title) {
-        // Use sweetalert2
         this.$swal({
           title: title,
           type: type,

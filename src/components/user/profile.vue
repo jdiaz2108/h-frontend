@@ -74,47 +74,21 @@
 
 <script>
 import moment from 'moment'
-  import axios from 'axios'
+
+import axios from 'axios'
 import { mapState } from 'vuex';
   export default {
-    data() {
-      return {
-        //
-      }
-    },
     computed: {
       ...mapState(['user', 'properties'])
     },
     created() {
       moment.locale('es');
     },
-    methods: {
-      createCarrousel() {
-        $('.owl-carousel').owlCarousel({
-          loop: false,
-          stagePadding: 30,
-          responsiveClass: true,
-          margin: 10,
-          nav: true,
-          responsive: {
-            0: {
-              items: 1
-            },
-            600: {
-              items: 3
-            },
-            1000: {
-              items: 4
-            }
-          }
-        })
-      },
+    filters: {
+      timeago: function (value) {
+        return moment(value, "YYYY-MM-DD HH:ii:ss").fromNow()
+      }
     },
-            filters: {
-        timeago: function (value) {
-         return moment(value, "YYYY-MM-DD HH:ii:ss").fromNow()
-        }
-      },
   }
 </script>
 

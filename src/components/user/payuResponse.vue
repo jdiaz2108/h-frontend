@@ -51,9 +51,6 @@ export default {
   mounted() {
     console.log(this.payuResponse.transactionState)
     this.transactionState(this.payuResponse.transactionState)
-  },
-  watch: {
-    //
-  },
+  }
 }
 </script>

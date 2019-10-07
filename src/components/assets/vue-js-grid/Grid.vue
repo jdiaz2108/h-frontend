@@ -147,11 +147,7 @@ export default {
         .sort((a, b) => {
           return a.sort - b.sort
         })
-      //  .map(v => {
-      //    return { ...v.item }
-      //  })
     },
-
     removeItem ({ index }) {
       let removeItem = this.list.find(v => v.index === index)
       let removeItemSort = removeItem.sort

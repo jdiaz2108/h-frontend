@@ -64,7 +64,13 @@
 			<div class="col-12 col-lg-6 p-2" @mouseover="createInfoWindow(m)" @mouseout="delInfoWindow(m)"
 			:key="index + '-card'" v-for="(m, index) in markers" @click="gotoProperty(m.slug)">
 				<div class="card m-2 shadow h-100" style="cursor: pointer">
-					<img class="card-img-top" :src="m.image">
+					<v-img
+					:src="m.image"
+					class="grey lighten-2"
+					lazy-src="https://api.habitemos.com/images/gray.png"
+      max-width="500"
+      max-height="300"
+					></v-img>
 					<div class="row m-0">
 						<div class="col-8 p-3 pb-0">
 							<h5 class="card-title mb-1 font-weight-bold">
@@ -320,73 +326,5 @@
 	transform: initial;
 	width: 0;
   }
-
-
-	/* .poi-info-window div, .poi-info-window a {
-		color: #000000 !important;
-	}
-	.gm-style .gm-style-iw-c {
-		bottom: 0;
-		top: 2rem;
-		position: relative;
-		overflow: initial;
-		padding: 5px 0.5rem;
-	}
-	.gm-style .gm-style-iw-t::after {
-		box-shadow: 0 2px 7px 1px rgba(0,0,0,0.3);
-		height: 13px;
-		width: 13px;
-		top: 35%;
-		z-index: -1;
-	}
-	.ctn-data-maps {
-		align-items: center;
-		color: #000000;
-		display: flex;
-		font-size: 15px;
-		justify-content: space-between;
-		line-height: 25px;
-	}
-	.ctn-data-maps span:last-child {
-		font-size: 13px;
-		font-weight: 500;
-		text-transform: capitalize;
-	}
-	.gm-ui-hover-effect {
-		background-color: #ffffff !important;
-		right: -1.25rem !important;
-		left: initial !important;
-		bottom: 0 !important;
-		top: -20px !important;
-		border-radius: 50% 50% 50% 0%;
-		width: 25px !important;
-		height: 25px !important;
-		box-shadow: 0 0 2px #000000;
-		display: flex !important;
-		align-items: center;
-		justify-content: center;
-		flex-direction: column;
-		opacity: 0.7;
-	}
-	.f-1,
-	.f-2 {
-		position: relative;
-	}
-	.f-1:before {
-		background-color: #51e451;
-	}
-	.f-2:before {
-		background-color: #ea4335;
-	}
-	.f-1:before,
-	.f-2:before {
-		content: '';
-		position: absolute;
-		top: 90%;
-		left: 0;
-		width: 100%;
-		height: 2px;
-		border-radius: 50%;
-	} */
 
 </style>

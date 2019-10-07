@@ -3,9 +3,9 @@
 		<div class="row justify-content-center">
 			<div class="col-12 col-sm-10 col-md-8 col-lg-7 col-xl-6">
 				<div class="card shadow">
-					<form @submit.prevent="formSend" method="POST" class="form-group mb-0">
+					<form @submit.prevent="validateProperty" method="POST" class="form-group mb-0">
 						<div class="card-header">
-							<h2 class="card-header-title my-1 text-center">Publicar Predio </h2>
+							<h2 class="card-header-title my-1 text-center">PUBLICAR INMUEBLE</h2>
 						</div>
 						<div class="card-body">
 							<div class="row form-group d-flex align-center justify-center">
@@ -271,10 +271,13 @@
 
 						<div class="card-footer">
 							<div class="col-6 mx-auto">
+
+					<button type="submit" class="btn btn-green btn-block btn-lg" :disabled="loading">
+						<span class="px-2" v-if="!loading">Crear Publicación</span>
+						<span v-if="loading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+						<span v-if="loading" class="pl-2">Cargando...</span>
+                    </button>
     <v-dialog v-model="finalValidation" persistent max-width="600px">
-      <template v-slot:activator="{ on }">
-								<button type="button" v-on="on" @click="verifyProperty()" class="btn btn-danger btn-block btn-lg">Crear Publicación</button>
-      </template>
       <v-card>
         <v-card-title>
           <span class="headline">Verifica tu Publicación</span>
@@ -367,12 +370,9 @@
     created() {
       this.getCities()
       this.getPlans()
-      // localStorage.PropertyImages ? this.items = JSON.parse(localStorage.PropertyImages) : '';
-      // localStorage.PropertyImagess ? this.images = localStorage.PropertyImagess.map(a => a.item) : '';
       this.items = this.propertyImages.map(a => a.item)
     },
     mounted() {
-      // this.saleRent()
       if (this.property.latitude && this.property.longitude && this.property.streetAddress) {
         
         this.center = {
@@ -385,6 +385,7 @@
     },
     data() {
       return {
+		  loading: false,
         finalValidation: false,
         payu: {},
         planes: null,
@@ -504,13 +505,18 @@
     },
     methods: {
       verifyProperty() {
-       this.verificationProperty.offer = this.buildForTypes.find(x => x.value === this.property.offer_id)
-       if (this.cities.length != 0) {
+        if (this.property.offer_id) {
+          this.verificationProperty.offer = this.buildForTypes.find(x => x.value === this.property.offer_id)
+        }
+       if (this.cities.length != 0 && this.property.city_id) {
          
          this.verificationProperty.city = this.cities.find(x => x.id === this.property.city_id)
        }
-       this.verificationProperty.type = this.properTypes.find(x => x.value === this.property.type_id)
-       if (this.plan) {
+       if (this.property.type_id) {
+         
+         this.verificationProperty.type = this.properTypes.find(x => x.value === this.property.type_id)
+       }
+       if (this.plan && this.plan) {
          this.verificationProperty.plan = this.planes.find(x => x.slug === this.plan)
        }
       },
@@ -534,16 +540,12 @@
     ...mapMutations(['loadUser','propertyUpdate', 'selectPlan']),
       onResize() {
         this.gridWidth = this.$refs.gridjs.windowWidth;
-        if (window.innerWidth >= 1400) {
+        if (window.innerWidth >= 1200) {
           this.cellWidth = (this.gridWidth * 0.25) - 8
-        } else if (window.innerWidth >= 1260) {
-          this.cellWidth = (this.gridWidth * 0.33) - 8
         } else if (window.innerWidth >= 768) {
           this.cellWidth = (this.gridWidth * 0.33) - 8
-        } else if (window.innerWidth >= 576) {
-          this.cellWidth = (this.gridWidth * 0.5) - 8
         } else {
-          this.cellWidth = (this.gridWidth) - 8
+          this.cellWidth = (this.gridWidth * 0.5) - 8
         }
         this.cellHeight = this.cellWidth;
       },
@@ -693,6 +695,42 @@
           })
 
       },
+	validateProperty() {
+		this.loading = true;
+		this.errors = {}
+		let property = this.property
+		if (property.type_id == 1) {
+			delete property.priceRent
+			delete property.adminValue
+		} else if (property.type_id == 2) {
+			delete property.priceSale
+		}
+		if (property.adminIncludedV) {
+			delete property.adminValue
+		}
+		this.$axios({
+		method: 'post',
+		url: '/H/valdateProperty',
+		data: {
+			property: this.property,
+			images: this.propertyImages,
+			plan: this.plan
+		},
+		})
+		.then(response => {
+			this.verifyProperty()
+			this.finalValidation = true
+		})
+		.catch(error => {
+			this.errors = error.response.data;
+			if (this.errors.message == 'The given data was invalid.') {
+				this.errors.message = 'Los datos ingresados son inválidos.'
+			}
+		})
+		.finally(() => {
+			this.loading = false
+		}); 
+	},
       alertSwal(type, title) {
         // Use sweetalert2
         this.$swal({
