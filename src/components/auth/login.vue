@@ -1,7 +1,7 @@
 <template>
   <div class="container-fluid auth d-flex bg-dark"
     :style="$vuetify.breakpoint.smAndDown ? 'height: calc(100vh - 56px)' : 'height: calc(100vh - 64px)'">
-    <div class="row justify-content-center">
+    <div class="row justify-content-center w-100">
       <div class="col-12 col-md-7 col-lg-5 col-xl-4 align-self-center" style="position: relative;bottom: 5rem;">
         <div class="card mt-25 shadow">
           <v-btn fab dark small class="button-close-float" @click="$router.go(-1)">

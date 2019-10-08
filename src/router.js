@@ -23,7 +23,7 @@ export default new Router({
       name: 'index',
       component: mapeishion,
       meta: {
-        title: 'Home Page - Example App',
+        title: 'Buscar predios ',
         metaTags: [
           {
             name: 'description',
@@ -76,7 +76,7 @@ export default new Router({
       meta: {
         requiresNoAuth: true,
         status: 'login',
-        title: 'Login Page - Example App',
+        title: 'Iniciar sesión',
         metaTags: [
           {
             name: 'description',
