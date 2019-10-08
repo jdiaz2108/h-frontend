@@ -1,14 +1,14 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import showMap from './components/map/map.vue'
 
-import mapeishion from '@/components/map/layout'
+const showMap = () => import(/* webpackChunkName: "map" */ './components/map/map.vue')
+const mapeishion = () => import(/* webpackChunkName: "layout" */ './components/map/layout.vue')
 
-import showModal from '@/components/property/showModal'
-import login from '@/components/auth/login'
-import register from '@/components/auth/register'
-import profile from '@/components/user/profile'
-import crudBuild from '@/components/property/crudBuild'
+const showModal = () => import(/* webpackChunkName: "showModal" */ './components/property/showModal.vue')
+const login = () => import(/* webpackChunkName: "login" */ './components/auth/login.vue')
+const register = () => import(/* webpackChunkName: "register" */ './components/auth/register.vue')
+const profile = () => import(/* webpackChunkName: "profile" */ './components/user/profile.vue')
+const crudBuild = () => import(/* webpackChunkName: "crudBuild" */ './components/property/crudBuild.vue')
 
 import store from './store'
 
