@@ -17,6 +17,10 @@ export default new Vuex.Store({
     properties: [],
     property: {},
     propertyImages: [],
+    search: {
+      offer_id: [],
+      type_id: [],
+    },
     properTypes: [{
         value: 1,
         label: "Apartamento"

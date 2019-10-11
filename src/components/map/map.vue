@@ -101,6 +101,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
   import axios from 'axios'
   export default {
 	name: 'Map',
@@ -167,10 +168,11 @@
 	  }
 	},
 	created() {
-	  this.getProperties();
-	  this.geolocate();
-	  var myHtml = document.getElementsByTagName('html')[0];
-	  myHtml.classList.add('overHidden');
+	
+   this.getProperties();
+   this.geolocate();
+   var myHtml = document.getElementsByTagName('html')[0];
+   myHtml.classList.add('overHidden');
 	},
 	mounted() {
 	  //
@@ -226,7 +228,11 @@
 	  },
 	  getProperties: function () {
 		axios
-		  .get('/property')
+		  .get('/property', {
+			               params: {
+               type: this.search,
+             },
+		  })
 		  .then(response => {
 			if (response.data.length) {
 			  this.markers = [];
@@ -252,6 +258,9 @@
 		this.position.position = this.center;
 	  },
 	},
+		  computed: {
+		  ...mapState(['properTypes', 'buildForTypes', 'search'])
+		},
 
   }
 </script>

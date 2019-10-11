@@ -80,6 +80,9 @@ new Vue({
     }
 
     localStorage.clear();
+
+    this.search.offer_id = this.buildForTypes.map(x => x.label)
+    this.search.type_id = this.properTypes.map(x => x.label)
   },
   methods: {
     ...mapMutations(['changeImages', 'propertyUpdate', 'resetProperty', 'loadUser', 'loadToken', 'login', 'loadProperties']),
@@ -102,7 +105,7 @@ new Vue({
     },
   },
   computed: {
-    ...mapState(['accessToken', 'propertyImages', 'property', 'user', 'properties'])
+    ...mapState(['accessToken', 'propertyImages', 'property', 'user', 'properties', 'search', 'buildForTypes', 'properTypes'])
   },
   render: h => h(App)
 }).$mount('#app')
