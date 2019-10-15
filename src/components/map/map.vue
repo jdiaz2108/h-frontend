@@ -101,7 +101,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
   import axios from 'axios'
   export default {
 	name: 'Map',
@@ -149,10 +149,6 @@ import { mapState } from 'vuex';
 		mapBounds: {},
 		lightbox: false,
 		dialog: false,
-		center: {
-		  lat: 4.7284735308193895,
-		  lng: -74.04891107444162
-		},
 		position: {
 		  position: null
 		},
@@ -169,10 +165,15 @@ import { mapState } from 'vuex';
 	},
 	created() {
 	
+		var myHtml = document.getElementsByTagName('html')[0];
+		myHtml.classList.add('overHidden');
+
    this.getProperties();
-   this.geolocate();
-   var myHtml = document.getElementsByTagName('html')[0];
-   myHtml.classList.add('overHidden');
+
+if (!this.center.search) {
+	this.geolocate();
+}
+
 	},
 	mounted() {
 	  //
@@ -182,6 +183,7 @@ import { mapState } from 'vuex';
 	  myHtml.classList.remove('overHidden');
 	},
 	methods: {
+		...mapMutations(['changeCenter']),
 	  gotoProperty(slug) {
 		this.$router.push({ path: '/mapa/'+slug })
 	  },
@@ -251,15 +253,15 @@ import { mapState } from 'vuex';
 	  },
 	  showPosition: function (position) {
 	//	console.log('dragstap'); // when enter will start the same function that mouse drag stap
-		this.center = {
-		  lat: position.coords.latitude,
+		let latlong = {
+          lat: position.coords.latitude,
 		  lng: position.coords.longitude,
 		};
-		this.position.position = this.center;
+		this.changeCenter(latlong)
 	  },
 	},
 		  computed: {
-		  ...mapState(['properTypes', 'buildForTypes', 'search'])
+		  ...mapState(['properTypes', 'buildForTypes', 'search', 'center'])
 		},
 
   }

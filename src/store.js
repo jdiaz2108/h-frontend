@@ -7,6 +7,11 @@ Vue.use(Vuex, axios)
 export default new Vuex.Store({
   
   state: {
+    center: {
+		  lat: 4.7284735308193895,
+      lng: -74.04891107444162,
+      search: false
+		},
     drawner: false,
     root: '2091-Bahama-Dr-Miramar-FL-33023',
     plan: null,
@@ -54,6 +59,15 @@ export default new Vuex.Store({
         label: "Finca"
       }
     ],
+    buildForTypesSearch: [{
+      value: 1,
+      label: "Vender"
+    },
+    {
+      value: 2,
+      label: "Arrendar"
+    }
+  ],
     buildForTypes: [{
       value: 1,
       label: "Vender"
@@ -145,6 +159,9 @@ export default new Vuex.Store({
   ],
   },
   mutations: {
+    changeCenter(state, latlng){
+      state.center = latlng
+    },
     selectPlan(state, plan){
       state.plan = plan
     },
