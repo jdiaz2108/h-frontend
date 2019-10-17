@@ -12,65 +12,54 @@
 					disableDefaultUi: false,
 					gestureHandling: 'greedy',
 					styles: styles}"
-		  @dragend="print('dragend')"
-		  @center_changed="update('reportedCenter', $event)"
-		  @bounds_changed="update('bounds', $event)"
-		  :center="center"
-		  ref="map"
-		  :zoom="14"
-		  :style="$vuetify.breakpoint.smAndDown ? 'width:100%; height: calc(100vh - 56px)' : ' width:100%; height: calc(100vh - 64px)'">
+			@dragend="print('dragend', $event)"
+			@center_changed="update('reportedCenter', $event)"
+			@bounds_changed="updateBounds($event)"
+			@zoom_changed="print('zoom', $event)"
+			:center="center"
+			ref="map"
+			:zoom="14"
+			:style="$vuetify.breakpoint.smAndDown ? 'width:100%; height: calc(100vh - 56px)' : ' width:100%; height: calc(100vh - 64px)'">
 
-		  <gmap-marker :icon="m.priceSale ? 'https://api.habitemos.com/images/icono1.png' : 'https://api.habitemos.com/images/icono2.png'" 
-			  @mouseover="createInfoWindow(m)"
-			  @mouseout="delInfoWindow(m.id)"
-			  :key="index + '-marker'" 
-			  v-for="(m, index) in markers" 
-			  :labelClass="'gmap-marker'" 
-			  :title="m.name" 
-			  :clickable="true" 
-			  :position="m.position"
-			  @click="gotoProperty(m.slug)"></gmap-marker>
+			<gmap-marker :icon="m.priceSale ? 'https://api.habitemos.com/images/icono1.png' : 'https://api.habitemos.com/images/icono2.png'" 
+				@mouseover="createInfoWindow(m)"
+				@mouseout="delInfoWindow(m.id)"
+				:key="index + '-marker'" 
+				v-for="(m, index) in markers" 
+				:labelClass="'gmap-marker'" 
+				:title="m.name" 
+				:clickable="true" 
+				:position="m.position"
+				@click="gotoProperty(m.slug)"></gmap-marker>
 
-		  <gmap-info-window :options="{maxWidth: 220}" :position="maker.position" :opened="maker.window">
-			<div @mouseover="createInfoWindow(maker)" @mouseout="delInfoWindow(maker), print()" class="row m-0"
-			  @click="gotoProperty(maker.slug)">
-			  <div class="col-3 m-0 p-0">
-				<img class="img-fluid mb-2" style="height: 40px; width: 40px" :src="maker.image">
-			  </div>
-			  <div class="col-9 m-0 p-1">
-				<div>
-				  <span>{{ maker.name }}</span>
+			<gmap-info-window :options="{maxWidth: 220}" :position="maker.position" :opened="maker.window">
+				<div @mouseover="createInfoWindow(maker)" @mouseout="delInfoWindow(maker), print()" class="row m-0" @click="gotoProperty(maker.slug)">
+					<div class="col-3 m-0 p-0">
+						<img class="img-fluid mb-2" style="height: 40px; width: 40px" :src="maker.image">
+					</div>
+					<div class="col-9 m-0 p-1">
+						<div>
+							<span>{{ maker.name }}</span>
+						</div>
+						<div>
+							<span>{{maker.priceSale | currency('$', 0, { thousandsSeparator: '.', spaceBetweenAmountAndSymbol: true }) }}</span>
+						</div>
+					</div>
 				</div>
-				<div>
-				  <span>{{maker.priceSale | currency('$', 0, { thousandsSeparator: '.', spaceBetweenAmountAndSymbol: true }) }}</span>
-				</div>
-			  </div>
-			</div>
-		  </gmap-info-window>
-
+			</gmap-info-window>
 		</gmap-map>
 	  </div>
 	<div class="col-5 p-0" :style="$vuetify.breakpoint.smAndDown ? 'overflow-y: auto; max-height: calc(100vh - 56px)' : ' overflow-y: auto; max-height: calc(100vh - 64px)'">
-			<div class="row m-0" v-if="markers.length == 0">
+		<div class="row m-0" v-if="markers.length == 0">
 			<div v-for="m in 6" :key="m" class="col-12 col-lg-6 p-2">
-				      <v-skeleton-loader
-						ref="skeleton"
-						type="image, article"
-						class="m-2"
-					></v-skeleton-loader>
+				<v-skeleton-loader ref="skeleton" type="image, article" class="m-2"></v-skeleton-loader>
 			</div>
-			</div>
+		</div>
 		<div class="row m-0">
 			<div class="col-12 col-lg-6 p-2" @mouseover="createInfoWindow(m)" @mouseout="delInfoWindow(m)"
 			:key="index + '-card'" v-for="(m, index) in markers" @click="gotoProperty(m.slug)">
 				<div class="card m-2 shadow h-100" style="cursor: pointer">
-					<v-img
-					:src="m.image"
-					class="grey lighten-2"
-					lazy-src="https://api.habitemos.com/images/gray.png"
-      max-width="500"
-      max-height="300"
-					></v-img>
+					<v-img :src="m.image" class="grey lighten-2" lazy-src="https://api.habitemos.com/images/gray.png" max-width="500" max-height="300"></v-img>
 					<div class="row m-0">
 						<div class="col-8 p-3 pb-0">
 							<h5 class="card-title mb-1 font-weight-bold">
@@ -101,170 +90,163 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
-  import axios from 'axios'
-  export default {
-	name: 'Map',
-	data() {
-	  return {
-		styles: [
-  {
-	"featureType": "poi",
-	"elementType": "labels.text",
-	"stylers": [
-	  {
-		"visibility": "off"
-	  }
-	]
-  },
-  {
-	"featureType": "poi.business",
-	"stylers": [
-	  {
-		"visibility": "off"
-	  }
-	]
-  },
-  {
-	"featureType": "road",
-	"elementType": "labels.icon",
-	"stylers": [
-	  {
-		"visibility": "off"
-	  }
-	]
-  },
-  {
-	"featureType": "transit",
-	"stylers": [
-	  {
-		"visibility": "off"
-	  }
-	]
-  }
-],
-		showModalStatus: true,
-		timeout: '',
-		selector1: null,
-		mapBounds: {},
-		lightbox: false,
-		dialog: false,
-		position: {
-		  position: null
-		},
-		reportedCenter: {
-		  lat: '',
-		  lng: ''
-		},
-		maker: {},
-		markers: [],
-		lightBoxData: {
-		  showImage: null,
-		}
-	  }
-	},
-	created() {
-	
-		var myHtml = document.getElementsByTagName('html')[0];
-		myHtml.classList.add('overHidden');
-
-   this.getProperties();
-
-if (!this.center.search) {
-	this.geolocate();
-}
-
-	},
-	mounted() {
-	  //
-	},
-	beforeDestroy() {
-	  var myHtml = document.getElementsByTagName('html')[0];
-	  myHtml.classList.remove('overHidden');
-	},
-	methods: {
-		...mapMutations(['changeCenter']),
-	  gotoProperty(slug) {
-		this.$router.push({ path: '/mapa/'+slug })
-	  },
-	  delInfoWindow: function (marker) {
-		this.timeout = setTimeout(() => {
-		  this.maker.window = false;
-		}, 400);
-	  },
-	  createInfoWindow: function (marker) {
-		this.maker = marker;
-		this.maker.window = true;
-		clearTimeout(this.timeout);
-		//if different marker set infowindow to open and reset current marker index
-
-	  },
-	  update(field, event) {
-		if (field === 'reportedCenter') {
-		  // console.log(event);
-
-		  // N.B. It is dangerous to update this.center
-		  // Because the center reported by Google Maps is not exactly
-		  // the same as the center you pass it.
-		  // Instead we update this.center only when the input field is changed.
-		  this.reportedCenter = {
-			lat: event.lat(),
-			lng: event.lng(),
-		  };
-		  // If you wish to test the problem out for yourself, uncomment the following
-		  // and see how your browser begins to hang:
-		  // this.center = _.clone(this.reportedCenter)
-		} else if (field === 'bounds') {
-		  // console.log(event);
-		  this.mapBounds = event;
-		} else {
-		  this.$set(this, field, event);
-		}
-	  },
-	  print(e) {
-		// console.log('se ejecuta');
-		if (this.lightbox) {
-		//   console.log('hola');
-		//   console.log(e.key);
-		}
-	  },
-	  getProperties: function () {
-		axios
-		  .get('/property', {
-			               params: {
-               type: this.search,
-             },
-		  })
-		  .then(response => {
-			if (response.data.length) {
-			  this.markers = [];
-			  this.markers = response.data
+	import { mapState, mapMutations } from 'vuex'
+	import axios from 'axios'
+	export default {
+		name: 'Map',
+		data() {
+			return {
+				styles: [
+					{
+						"featureType": "poi",
+						"elementType": "labels.text",
+						"stylers": [{"visibility": "off"}]
+					},
+					{
+						"featureType": "poi.business",
+						"stylers": [{"visibility": "off"}]
+					},
+					{
+						"featureType": "road",
+						"elementType": "labels.icon",
+						"stylers": [{"visibility": "off"}]
+					},
+					{
+						"featureType": "transit",
+						"stylers": [{"visibility": "off"}]
+					}
+				],
+				showModalStatus: true,
+				timeout: '',
+				selector1: null,
+				mapBounds: {},
+				lightbox: false,
+				dialog: false,
+				position: {
+					position: null
+				},
+				reportedCenter: {
+					lat: '',
+					lng: ''
+				},
+				maker: {},
+				markers: [],
+				lightBoxData: {
+					showImage: null,
+				}
 			}
-		  })
-		  .catch(error => {
-			console.log(error)
-		  })
-	  },
-	  geolocate: function () {
-		navigator.geolocation.getCurrentPosition(this.showPosition, console.log('false'), {
-		  enableHighAccuracy: true,
-		  maximumAge: 0,
-		});
-	  },
-	  showPosition: function (position) {
-	//	console.log('dragstap'); // when enter will start the same function that mouse drag stap
-		let latlong = {
-          lat: position.coords.latitude,
-		  lng: position.coords.longitude,
-		};
-		this.changeCenter(latlong)
-	  },
-	},
-		  computed: {
-		  ...mapState(['properTypes', 'buildForTypes', 'search', 'center'])
 		},
+		created() {
+			var myHtml = document.getElementsByTagName('html')[0];
+			myHtml.classList.add('overHidden');
 
-  }
+			if (!this.center.search) {
+				this.geolocate();
+			}
+
+			this.mapBounds = {}
+		},
+		mounted() {
+         
+		//
+		},
+		beforeDestroy() {
+			var myHtml = document.getElementsByTagName('html')[0];
+			myHtml.classList.remove('overHidden');
+		},
+		methods: {
+			...mapMutations(['changeCenter']),
+			gotoProperty(slug) {
+				this.$router.push({ path: '/mapa/'+slug })
+			},
+			delInfoWindow: function (marker) {
+				this.timeout = setTimeout(() => {
+					this.maker.window = false;
+				}, 400);
+			},
+			createInfoWindow: function (marker) {
+				this.maker = marker;
+				this.maker.window = true;
+				clearTimeout(this.timeout);
+				//if different marker set infowindow to open and reset current marker index
+			},
+			updateBounds(event) {
+				if (Object.keys(this.mapBounds).length == 0 && event) {
+					this.mapBounds = event;
+					this.getProperties()
+				}
+
+				if (event) {
+					this.mapBounds = event;
+				}
+			},
+			update(field, event) {
+				if (field === 'reportedCenter') {
+
+						this.reportedCenter = {
+							lat: event.lat(),
+							lng: event.lng(),
+						};
+
+				} else if (field === 'bounds') {
+
+console.log("TCL: update -> event", event)
+
+					 if (Object.keys(this.mapBounds).length == 0 && event) {
+					 	this.mapBounds = event;
+					 	this.getProperties()
+					 }
+
+					 if (event) {
+					 	this.mapBounds = event;
+					 }
+
+				} else {
+					console.log(event)
+					// this.$set(this, field, event);
+				}
+			},
+			print(event) {
+                console.log("TCL: print -> event2", event)
+				this.getProperties()
+			},
+			getProperties: function () {
+				axios
+				.get('/property', {
+					params: {
+						type: this.search,
+						bounds: this.mapBounds
+					},
+				})
+				.then(response => {
+					if (response.data.length) {
+						this.markers = [];
+						this.markers = response.data
+					}
+				})
+				.catch(error => {
+					console.log(error)
+				})
+			},
+			geolocate: function () {
+				navigator.geolocation.getCurrentPosition(this.showPosition, console.log('false'), {
+					enableHighAccuracy: true,
+					maximumAge: 0,
+				});
+			},
+			showPosition: function (position) {
+			//	console.log('dragstap'); // when enter will start the same function that mouse drag stap
+				let latlong = {
+					lat: position.coords.latitude,
+					lng: position.coords.longitude,
+				};
+				this.changeCenter(latlong)
+			},
+		},
+		computed: {
+			...mapState(['properTypes', 'buildForTypes', 'search', 'center'])
+		}
+	}
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
