@@ -1,100 +1,194 @@
 <template>
     <header style="z-index: 100" class="sticky-top">
-      <v-toolbar color="white" class="stinky">
-         <v-app-bar-nav-icon @click="changeDawner" class="nav-icon" v-if="$vuetify.breakpoint.mdAndDown"></v-app-bar-nav-icon>
-        <v-spacer></v-spacer>
-        <div class="header__logo" style="height: 60px; line-height: 60px;">
-            <img @click="goIndex" src="https://api.habitemos.com/images/LOGO-HABITEMOS-HORIZONTAL.png" class="img-fluid" style="vertical-align: webkit-baseline-middle !Important;" alt="">
-        </div>
-        <v-spacer></v-spacer>
-        <nav class="consult-nav">
-          <ul class="consult-menu">
-            <li>
-              <router-link class="router-links" to="/">Inicio</router-link>
-            </li>
-                        <li>
-              <router-link class="router-links" to="/mapa">Ver Mapa</router-link>
-            </li>
-            <li class="menu-item-has-children"><a href="#">COMPRAR</a>
-              <ul class="sub-menu">
-                <li><a href="comming-soon.html">Comming Soon</a>
-                </li>
-                <li><a href="404.html">404</a>
-                </li>
-                <li><a href="typography.html">Typography</a>
-                </li>
-              </ul>
-            </li>
-            <li class="menu-item-has-children"><a href="project.html">ARRENDAR</a>
-              <ul class="sub-menu">
-                <li><a href="project-detail.html">Project detail</a>
-                </li>
-              </ul>
-            </li>
-            <li>
-              <router-link class="router-links" to="/publicar-predio">PUBLICAR INMUEBLE</router-link>
-            </li>
-            <li>
-              <router-link class="router-links" to="/profile">
-                <i class="fa fa-user-circle-o pr-2" :style=" auth ? 'color: #B4D13D' : 'color: #848688'"></i>MI CUENTA
-              </router-link>
-              <ul class="sub-menu" v-if="auth">
-                <li>
-                  <router-link class="router-links" to="/profile">Mi Perfil</router-link>
-                </li>
-                <li>
-                  <a @click="logout($root)"><i class="fa fa-power-off pr-2 text-danger"></i>Cerrar Sesión</a>
-                </li>
-              </ul>
-              <ul class="sub-menu" v-else>
-                <li>
-                  <router-link class="router-links" to="/login">Iniciar Sesión</router-link>
-                </li>
-                <li>
-                  <router-link class="router-links" to="/register">Registrarse</router-link>
-                </li>
-              </ul>
-            </li>
-          </ul>
-        </nav>
-        <v-spacer></v-spacer>
-      </v-toolbar>
+        <v-toolbar color="white" class="stinky" style="z-index: 110">
+            <v-app-bar-nav-icon @click="changeDawner" class="nav-icon" v-if="$vuetify.breakpoint.mdAndDown"></v-app-bar-nav-icon>
+            <v-spacer></v-spacer>
+            <div class="header__logo" style="height: 60px; line-height: 60px;">
+                <img @click="goIndex" src="https://api.habitemos.com/images/LOGO-HABITEMOS-HORIZONTAL.png" class="img-fluid" style="vertical-align: webkit-baseline-middle !Important;" alt="">
+            </div>
+            <v-spacer></v-spacer>
+            <nav class="consult-nav">
+                <ul class="consult-menu">
+                    <li>
+                        <router-link class="router-links" to="/">Inicio</router-link>
+                    </li>
+                    <li>
+                        <router-link class="router-links" to="/mapa">Ver Mapa</router-link>
+                    </li>
+                    <li>
+                        <router-link class="router-links" to="/mapa">Comprar</router-link>
+                    </li>
+                    <li class="menu-item-has-children"><a href="project.html">ARRENDAR</a>
+                        <ul class="sub-menu">
+                            <li>
+                                <a href="project-detail.html">Project detail</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <router-link class="router-links" to="/publicar-predio">PUBLICAR INMUEBLE</router-link>
+                    </li>
+                    <li>
+                        <router-link class="router-links" to="/profile">
+                            <i class="fa fa-user-circle-o pr-2" :style=" auth ? 'color: #B4D13D' : 'color: #848688'"></i>MI CUENTA
+                        </router-link>
+                        <ul class="sub-menu" v-if="auth">
+                            <li>
+                                <router-link class="router-links" to="/profile">Mi Perfil</router-link>
+                            </li>
+                            <li>
+                                <a @click="logout($root)"><i class="fa fa-power-off pr-2 text-danger"></i>Cerrar Sesión</a>
+                            </li>
+                        </ul>
+                        <ul class="sub-menu" v-else>
+                            <li>
+                                <router-link class="router-links" to="/login">Iniciar Sesión</router-link>
+                            </li>
+                            <li>
+                                <router-link class="router-links" to="/register">Registrarse</router-link>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </nav>
+            <v-spacer></v-spacer>
+        </v-toolbar>
+
+        <v-toolbar dark class="h-filter w-75 mx-auto" dense :collapse="collapse" flat v-if="$route.meta.extend">
+            <v-btn icon @click="collapse = !collapse">
+                <v-icon>mdi-export-variant</v-icon>
+            </v-btn>
+            <v-toolbar-title>FILTRO</v-toolbar-title>
+            <v-spacer></v-spacer>
+            <v-toolbar-items v-if="$vuetify.breakpoint.smAndUp && !collapse">
+                <gmap-autocomplete class="form-control my-auto" placeholder="Bogotá" @place_changed="setPlace"  :options="{componentRestrictions: {country: 'co'}}"></gmap-autocomplete>
+            </v-toolbar-items>
+            <v-spacer></v-spacer>
+            <template v-if="$vuetify.breakpoint.smAndUp && !collapse">
+
+
+    <v-menu
+      v-model="value"
+      :close-on-click="closeOnClick"
+      :close-on-content-click="false"
+      :offset-y="offsetY"
+    >
+      <template v-slot:activator="{ on }">
+        <v-btn
+          color="primary"
+          dark
+          v-on="on"
+        >
+          Dropdown
+        </v-btn>
+      </template>
+      <v-list>
+           <v-list-item
+        >
+           <div class="row">
+    <div class="col">
+      <input type="text" class="form-control" v-model="search.price.from" @blur="getProperties" placeholder="Desde">
+    </div>
+    <div class="col">
+      <input type="text" class="form-control" v-model="search.price.to" @blur="getProperties" placeholder="Hasta">
+    </div>
+  </div>
+           </v-list-item>
+        <v-list-item
+          v-for="(item, index) in items"
+          :key="index"
+          @click=""
+        >
+          <v-list-item-title>{{ item.title }}</v-list-item-title>
+        </v-list-item>
+      </v-list>
+    </v-menu>
+    <v-spacer></v-spacer>
+
+
+                <v-btn icon>
+                    <v-icon>mdi-export-variant</v-icon>
+                </v-btn>
+                <v-btn icon>
+                    <v-icon>mdi-delete-circle</v-icon>
+                </v-btn>
+                <v-btn icon>
+                    <v-icon>mdi-plus-circle</v-icon>
+                </v-btn>
+            </template>
+        </v-toolbar>
     </header>
 </template>
 
 <script>
+import store from '../../store'
 import {mapState, mapActions, mapMutations} from 'vuex'
 import axios from 'axios'
 export default {
+    data() {
+        return {
+            collapse: false,
+                 items: [
+        { title: 'Click Me' },
+        { title: 'Click Me' },
+        { title: 'Click Me' },
+        { title: 'Click Me 2' },
+      ],
+      value: false,
+      closeOnClick: true,
+      closeOnContentClick: true,
+      offsetY: true,
+        }
+    },
   computed: {
-    ...mapState(['auth'])
+    ...mapState(['auth', 'search'])
   },
   methods: {
-    ...mapMutations(['loadUser', 'changeDawner']),
+    ...mapMutations(['loadUser', 'changeDawner', 'changeCenter', 'getProperties']),
     ...mapActions(['logOutUser']),
     goIndex() {
         this.$router.push('/')
     },
     logout: function (root) {
-    this.logOutUser().finally(() => { this.$router.push('/login'), this.loadUser(null) })
+        this.logOutUser().finally(() => { this.$router.push('/login'), this.loadUser(null) })
+        this.alertSwal('success', 'has cerrado sesión correctamente.')
+    },
+    alertSwal(type, title){
+        this.$swal({
+            title: title,
+            type: type,
+            confirmButtonText: 'Aceptar',
+            showConfirmButton: false,
+            timer: 2000
+        });
+    },
+    setPlace(place) {
 
-    this.alertSwal('success', 'has cerrado sesión correctamente.')
-  },
-          alertSwal(type, title){
-            // Use sweetalert2
-            this.$swal({
-                    title: title,
-                    type: type,
-                    confirmButtonText: 'Aceptar',
-                    showConfirmButton: false,
-                    timer: 2000
-                });
-        },
+        if (!place) return
+
+        store.state.mapBounds = {};
+
+        let latlong = {
+            lat: place.geometry.location.lat(),
+            lng: place.geometry.location.lng(),
+            search: true
+        };
+
+        this.changeCenter(latlong)
+    }
   },
 }
 </script>
 
-<style>
+<style lang="scss">
+
+.h-filter {
+    background-color: #00ADEF !important;
+    color: #FFFFFF !important;
+    border-bottom-right-radius: 1rem!important;
+    border-bottom-left-radius: 1rem!important;
+    margin-bottom: -48px;
+}
 
 .hr-active {
   border-top: 4px solid rgb(180, 209, 61);

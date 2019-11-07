@@ -76,8 +76,21 @@ export default {
           .catch(error => {
             console.log(error)
           })
+          .finally(
+            this.metaInfo()
+          )
       },
-  },
+       metaInfo () {
+    return {
+      title: this.property.name,
+      meta: [
+        { name: 'description', content: this.property.name }
+      ]
+    }
+  }
+
+      }
+
 }
 </script>
 

@@ -90,9 +90,18 @@
 </template>
 
 <script>
+import store from '../../store'
 	import { mapState, mapMutations } from 'vuex'
 	import axios from 'axios'
 	export default {
+		metaInfo: {
+			title: 'My Example App',
+			titleTemplate: '%s - Yay!',
+			htmlAttrs: {
+				lang: 'en',
+				amp: true
+			}
+		},
 		name: 'Map',
 		data() {
 			return {
@@ -119,7 +128,7 @@
 				showModalStatus: true,
 				timeout: '',
 				selector1: null,
-				mapBounds: {},
+				// mapBounds: {},
 				lightbox: false,
 				dialog: false,
 				position: {
@@ -130,7 +139,6 @@
 					lng: ''
 				},
 				maker: {},
-				markers: [],
 				lightBoxData: {
 					showImage: null,
 				}
@@ -144,7 +152,7 @@
 				this.geolocate();
 			}
 
-			this.mapBounds = {}
+			store.state.mapBounds = {}
 		},
 		mounted() {
          
@@ -155,7 +163,7 @@
 			myHtml.classList.remove('overHidden');
 		},
 		methods: {
-			...mapMutations(['changeCenter']),
+			...mapMutations(['changeCenter', 'getProperties']),
 			gotoProperty(slug) {
 				this.$router.push({ path: '/mapa/'+slug })
 			},
@@ -172,12 +180,12 @@
 			},
 			updateBounds(event) {
 				if (Object.keys(this.mapBounds).length == 0 && event) {
-					this.mapBounds = event;
+					store.state.mapBounds = event;
 					this.getProperties()
 				}
 
 				if (event) {
-					this.mapBounds = event;
+					store.state.mapBounds = event;
 				}
 			},
 			update(field, event) {
@@ -190,16 +198,16 @@
 
 				} else if (field === 'bounds') {
 
-console.log("TCL: update -> event", event)
+				console.log("TCL: update -> event", event)
 
-					 if (Object.keys(this.mapBounds).length == 0 && event) {
-					 	this.mapBounds = event;
-					 	this.getProperties()
-					 }
+					if (Object.keys(this.mapBounds).length == 0 && event) {
+						store.state.mapBounds = event;
+						this.getProperties()
+					}
 
-					 if (event) {
-					 	this.mapBounds = event;
-					 }
+					if (event) {
+						store.state.mapBounds = event;
+					}
 
 				} else {
 					console.log(event)
@@ -209,24 +217,6 @@ console.log("TCL: update -> event", event)
 			print(event) {
                 console.log("TCL: print -> event2", event)
 				this.getProperties()
-			},
-			getProperties: function () {
-				axios
-				.get('/property', {
-					params: {
-						type: this.search,
-						bounds: this.mapBounds
-					},
-				})
-				.then(response => {
-					if (response.data.length) {
-						this.markers = [];
-						this.markers = response.data
-					}
-				})
-				.catch(error => {
-					console.log(error)
-				})
 			},
 			geolocate: function () {
 				navigator.geolocation.getCurrentPosition(this.showPosition, console.log('false'), {
@@ -244,7 +234,7 @@ console.log("TCL: update -> event", event)
 			},
 		},
 		computed: {
-			...mapState(['properTypes', 'buildForTypes', 'search', 'center'])
+			...mapState(['properTypes', 'buildForTypes', 'search', 'center', 'mapBounds', 'markers'])
 		}
 	}
 </script>

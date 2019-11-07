@@ -13,26 +13,23 @@
                   <div class="card p-5">
 
                 <div class="col-12 row p-2">
-									<div class="py-2 col-4"><label for="buildArea" class="form-control-label">Municipio, ciudad ó barrio:</label></div>
-									<div class="py-2 col-8 text-left">
-                    <gmap-autocomplete class="form-control" placeholder="Bogotá" @place_changed="setPlace"  :options="{
-            componentRestrictions: {country: 'co'}
-          }">
-        </gmap-autocomplete>
+									<div class="py-2 col-12 col-md-4"><label for="buildArea" class="form-control-label">Municipio, ciudad ó barrio:</label></div>
+									<div class="py-2 col-12 col-md-8 text-left">
+                    <gmap-autocomplete class="form-control" placeholder="Bogotá" @place_changed="setPlace"  :options="{componentRestrictions: {country: 'co'}}"></gmap-autocomplete>
 									</div>
 								</div>
 
                     								<!-- Start BuildFor Zone -->
 								<div class="col-12 row p-2">
-									<div class="py-2 col-4"><label for="buildArea" class="form-control-label">Tipo de oferta:</label></div>
-									<div class="py-2 col-8 text-left">
+									<div class="py-2 col-12 col-md-4"><label for="buildArea" class="form-control-label">Tipo de oferta:</label></div>
+									<div class="py-2 col-12 col-md-8 text-left">
 										<v-select dense v-model="search.offer_id" hide-details multiple label="Todas" item-value="label" :items="buildForTypesSearch" item-text="label" solo></v-select>
 									</div>
 								</div>
 								<!-- Start Property Type Zone -->
 								<div class="col-12 row p-2">
-									<div class="py-2 col-4"><label for="buildArea" class="form-control-label">Tipo de propiedad:</label></div>
-									<div class="py-2 col-8 text-left">
+									<div class="py-2 col-12 col-md-4"><label for="buildArea" class="form-control-label">Tipo de propiedad:</label></div>
+									<div class="py-2 col-12 col-md-8 text-left">
 										<v-select dense v-model="search.type_id" hide-details multiple label="Todas" item-value="label" :items="properTypes" item-text="label" solo></v-select>
 									</div>
 								</div>

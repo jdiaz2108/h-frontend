@@ -7,6 +7,8 @@ Vue.use(Vuex, axios)
 export default new Vuex.Store({
   
   state: {
+    markers: [],
+    mapBounds: {},
     center: {
 		  lat: 4.7284735308193895,
       lng: -74.04891107444162,
@@ -25,6 +27,10 @@ export default new Vuex.Store({
     search: {
       offer_id: [],
       type_id: [],
+      price: {
+        from: null,
+        to: null
+      }
     },
     properTypes: [{
         value: 1,
@@ -240,7 +246,25 @@ export default new Vuex.Store({
         adminIncludedV: false,
         neighborhood: null
       }
-    }
+    },
+    getProperties(state, property) {
+      state.markers = [];
+      axios
+				.get('/property', {
+					params: {
+						type: state.search,
+						bounds: state.mapBounds
+					},
+				})
+				.then(response => {
+					if (response.data.length) {
+					  state.markers = response.data
+					}
+				})
+				.catch(error => {
+					console.log(error)
+				})
+    },
   },
   actions: {
     logOutUser({

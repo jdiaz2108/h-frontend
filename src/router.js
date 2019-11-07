@@ -43,6 +43,7 @@ export default new Router({
             page: showMap
           },
           meta: {
+            extend:true,
             showModal: false
           }
         },
@@ -70,7 +71,7 @@ export default new Router({
       ]
     },
     {
-      path: '/login',
+      path: 'login',
       name: 'login',
       component: login,
       meta: {
@@ -90,7 +91,7 @@ export default new Router({
       }
     },
     {
-      path: '/register',
+      path: 'register',
       name: 'register',
       component: register,
       meta: {

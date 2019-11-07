@@ -6,6 +6,13 @@ import './registerServiceWorker'
 import vuetify from './plugins/vuetify';
 import { mapState, mapMutations } from 'vuex';
 
+import VueMeta from 'vue-meta'
+
+Vue.use(VueMeta, {
+  // optional pluginOptions
+  refreshOnceOnNavigation: true
+})
+
 import VueSweetalert2 from 'vue-sweetalert2';
  
 import 'sweetalert2/dist/sweetalert2.min.css';
