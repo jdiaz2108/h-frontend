@@ -61,6 +61,14 @@
             <v-toolbar-title>FILTRO</v-toolbar-title>
             <v-spacer></v-spacer>
             <v-toolbar-items v-if="$vuetify.breakpoint.smAndUp && !collapse">
+                <v-select @blur="getProperties" class="my-auto" light dense v-model="search.offer_id" hide-details multiple label="Tipo de oferta" item-value="label" :items="buildForTypesSearch" item-text="label" solo></v-select>
+            </v-toolbar-items>
+            <v-spacer></v-spacer>
+            <v-toolbar-items v-if="$vuetify.breakpoint.smAndUp && !collapse">
+                <v-select :offset-y="offsetY" @blur="getProperties" class="my-auto" light dense v-model="search.type_id" hide-details multiple label="Clase de predio" item-value="label" :items="properTypes" item-text="label" solo></v-select>
+            </v-toolbar-items>
+            <v-spacer></v-spacer>
+            <v-toolbar-items v-if="$vuetify.breakpoint.smAndUp && !collapse">
                 <gmap-autocomplete class="form-control my-auto" placeholder="Bogotá" @place_changed="setPlace"  :options="{componentRestrictions: {country: 'co'}}"></gmap-autocomplete>
             </v-toolbar-items>
             <v-spacer></v-spacer>
@@ -79,7 +87,7 @@
           dark
           v-on="on"
         >
-          Dropdown
+          Precios
         </v-btn>
       </template>
       <v-list>
@@ -94,12 +102,8 @@
     </div>
   </div>
            </v-list-item>
-        <v-list-item
-          v-for="(item, index) in items"
-          :key="index"
-          @click=""
-        >
-          <v-list-item-title>{{ item.title }}</v-list-item-title>
+        <v-list-item @click="">
+          <v-list-item-title>Confirmar</v-list-item-title>
         </v-list-item>
       </v-list>
     </v-menu>
@@ -128,20 +132,14 @@ export default {
     data() {
         return {
             collapse: false,
-                 items: [
-        { title: 'Click Me' },
-        { title: 'Click Me' },
-        { title: 'Click Me' },
-        { title: 'Click Me 2' },
-      ],
-      value: false,
-      closeOnClick: true,
-      closeOnContentClick: true,
-      offsetY: true,
+            value: false,
+            closeOnClick: true,
+            closeOnContentClick: true,
+            offsetY: true,
         }
     },
   computed: {
-    ...mapState(['auth', 'search'])
+    ...mapState(['auth', 'search', 'properTypes', 'buildForTypesSearch'])
   },
   methods: {
     ...mapMutations(['loadUser', 'changeDawner', 'changeCenter', 'getProperties']),
