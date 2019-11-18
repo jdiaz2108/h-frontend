@@ -53,74 +53,87 @@
             </nav>
             <v-spacer></v-spacer>
         </v-toolbar>
-
-        <v-toolbar dark class="h-filter w-75 mx-auto" dense :collapse="collapse" flat v-if="$route.meta.extend">
-            <v-btn icon @click="collapse = !collapse">
-                <v-icon>mdi-export-variant</v-icon>
-            </v-btn>
-            <v-toolbar-title>FILTRO</v-toolbar-title>
-            <v-spacer></v-spacer>
-            <v-toolbar-items v-if="$vuetify.breakpoint.smAndUp && !collapse">
-                <v-select @blur="getProperties" class="my-auto" light dense v-model="search.offer_id" hide-details multiple label="Tipo de oferta" item-value="label" :items="buildForTypesSearch" item-text="label" solo></v-select>
-            </v-toolbar-items>
-            <v-spacer></v-spacer>
-            <v-toolbar-items v-if="$vuetify.breakpoint.smAndUp && !collapse">
-                <v-select :offset-y="offsetY" @blur="getProperties" class="my-auto" light dense v-model="search.type_id" hide-details multiple label="Clase de predio" item-value="label" :items="properTypes" item-text="label" solo></v-select>
-            </v-toolbar-items>
-            <v-spacer></v-spacer>
-            <v-toolbar-items v-if="$vuetify.breakpoint.smAndUp && !collapse">
-                <gmap-autocomplete class="form-control my-auto" placeholder="Bogotá" @place_changed="setPlace"  :options="{componentRestrictions: {country: 'co'}}"></gmap-autocomplete>
-            </v-toolbar-items>
-            <v-spacer></v-spacer>
-            <template v-if="$vuetify.breakpoint.smAndUp && !collapse">
-
-
-    <v-menu
-      v-model="value"
-      :close-on-click="closeOnClick"
-      :close-on-content-click="false"
-      :offset-y="offsetY"
-    >
-      <template v-slot:activator="{ on }">
-        <v-btn
-          color="primary"
-          dark
-          v-on="on"
-        >
-          Precios
-        </v-btn>
-      </template>
-      <v-list>
-           <v-list-item
-        >
-           <div class="row">
-    <div class="col">
-      <input type="text" class="form-control" v-model="search.price.from" @blur="getProperties" placeholder="Desde">
-    </div>
-    <div class="col">
-      <input type="text" class="form-control" v-model="search.price.to" @blur="getProperties" placeholder="Hasta">
-    </div>
-  </div>
-           </v-list-item>
-        <v-list-item @click="">
-          <v-list-item-title>Confirmar</v-list-item-title>
-        </v-list-item>
-      </v-list>
-    </v-menu>
-    <v-spacer></v-spacer>
-
-
-                <v-btn icon>
-                    <v-icon>mdi-export-variant</v-icon>
-                </v-btn>
-                <v-btn icon>
-                    <v-icon>mdi-delete-circle</v-icon>
-                </v-btn>
-                <v-btn icon>
-                    <v-icon>mdi-plus-circle</v-icon>
-                </v-btn>
-            </template>
-        </v-toolbar>
+        <div class="container-fluid">
+            <div class="row justify-content-center">
+                <div class="col-12 col-lg-10 p-0">
+                    <v-toolbar dark class=" h-filter mx-auto" dense :collapse="collapse" flat v-if="$route.meta.extend">
+                        <v-btn icon @click="collapse = !collapse">
+                            <v-icon>mdi-export-variant</v-icon>
+                        </v-btn>
+                        <v-toolbar-title>FILTRO</v-toolbar-title>
+                        <v-spacer></v-spacer>
+                        <v-toolbar-items v-if="$vuetify.breakpoint.smAndUp && !collapse">
+                            <v-select @blur="getProperties" class="my-auto" light dense v-model="search.offer_id" hide-details multiple label="Tipo de oferta" item-value="label" :items="buildForTypesSearch" item-text="label" solo></v-select>
+                        </v-toolbar-items>
+                        <v-spacer></v-spacer>
+                        <v-toolbar-items v-if="$vuetify.breakpoint.smAndUp && !collapse">
+                            <v-select :offset-y="offsetY" @blur="getProperties" class="my-auto" light dense v-model="search.type_id" hide-details multiple label="Clase de predio" item-value="label" :items="properTypes" item-text="label" solo></v-select>
+                        </v-toolbar-items>
+                        <v-spacer></v-spacer>
+                        <v-toolbar-items v-if="$vuetify.breakpoint.smAndUp && !collapse">
+                            <gmap-autocomplete class="form-control my-auto" placeholder="Bogotá" @place_changed="setPlace"  :options="{componentRestrictions: {country: 'co'}}"></gmap-autocomplete>
+                        </v-toolbar-items>
+                        <v-spacer></v-spacer>
+                        <template v-if="$vuetify.breakpoint.smAndUp && !collapse">
+                            <v-menu v-model="value" :close-on-click="closeOnClick" :close-on-content-click="false" :offset-y="offsetY">
+                            <template v-slot:activator="{ on }">
+                                <v-btn color="primary" dark v-on="on">Precios</v-btn>
+                            </template>
+                            <v-list>
+                                <v-list-item>
+                                    <div class="row">
+                                        <div class="col">
+                                            <input type="text" class="form-control" v-model="search.price.from" @blur="getProperties" placeholder="Desde">
+                                        </div>
+                                        <div class="col">
+                                            <input type="text" class="form-control" v-model="search.price.to" @blur="getProperties" placeholder="Hasta">
+                                        </div>
+                                    </div>
+                                </v-list-item>
+                                <v-list-item @click="value = false">
+                                    <v-list-item-title>Confirmar</v-list-item-title>
+                                </v-list-item>
+                            </v-list>
+                            </v-menu>
+                            <v-spacer></v-spacer>
+                        </template>
+                        <v-spacer></v-spacer>
+                        <template v-if="$vuetify.breakpoint.smAndUp && !collapse">
+                            <v-menu v-model="extra" :close-on-click="closeOnClick" :close-on-content-click="false" :offset-y="offsetY">
+                            <template v-slot:activator="{ on }">
+                                <v-btn color="primary" dark v-on="on">Más filtros</v-btn>
+                            </template>
+                            <v-list>
+                                <v-list-item>
+                                    <form>
+                                      <div class="form-group row mb-0">
+                                            <label class="col-6 col-form-label my-auto">Número de cuartos:</label>
+                                            <div class="col-6">
+                                                <v-select v-model="search.bedrooms" label="Seleccionar" hide-details :items="rooms" @blur="getProperties" item-text="value" solo></v-select>
+                                            </div>
+                                      </div>
+                                      <div class="form-group row mb-0">
+                                            <label class="col-6 col-form-label my-auto">Número de baños:</label>
+                                            <div class="col-6">
+                                                <v-select v-model="search.bathrooms" label="Seleccionar" hide-details :items="rooms" @blur="getProperties" item-text="value" solo></v-select>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </v-list-item>
+                                <v-list-item @click="extra = false">
+                                    <v-list-item-title>Confirmar</v-list-item-title>
+                                </v-list-item>
+                            </v-list>
+                            </v-menu>
+                            <v-spacer></v-spacer>
+                        </template>
+                        <v-btn icon>
+                            <v-icon>mdi-plus-circle</v-icon>
+                        </v-btn>
+                    </v-toolbar>
+                </div>
+            </div>
+        </div>
     </header>
 </template>
 
@@ -136,10 +149,11 @@ export default {
             closeOnClick: true,
             closeOnContentClick: true,
             offsetY: true,
+            extra: false
         }
     },
   computed: {
-    ...mapState(['auth', 'search', 'properTypes', 'buildForTypesSearch'])
+    ...mapState(['auth', 'search', 'properTypes', 'buildForTypesSearch', 'rooms'])
   },
   methods: {
     ...mapMutations(['loadUser', 'changeDawner', 'changeCenter', 'getProperties']),

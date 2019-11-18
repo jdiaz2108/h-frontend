@@ -33,7 +33,7 @@
 				@click="gotoProperty(m.slug)"></gmap-marker>
 
 			<gmap-info-window :options="{maxWidth: 220}" :position="maker.position" :opened="maker.window">
-				<div @mouseover="createInfoWindow(maker)" @mouseout="delInfoWindow(maker), print()" class="row m-0" @click="gotoProperty(maker.slug)">
+				<div @mouseover="createInfoWindow(maker)" @mouseout="delInfoWindow(maker)" class="row m-0" @click="gotoProperty(maker.slug)">
 					<div class="col-3 m-0 p-0">
 						<img class="img-fluid mb-2" style="height: 40px; width: 40px" :src="maker.image">
 					</div>
@@ -70,8 +70,8 @@
 								{{m.streetAddress}}
 							</h5>
 							<ul class="list-inline pl-0 mb-1 d-flex justify-content-between w-75 text-address">
-								<li class="list-inline-item"><span class="text-body">{{m.rooms}} </span><i class="fa fa-bed" aria-hidden="true"></i></li>
-								<li class="list-inline-item"><span class="text-body">{{m.Brooms}} </span><i class="fa fa-shower" aria-hidden="true"></i></li>
+								<li class="list-inline-item"><span class="text-body">{{m.bedrooms}} </span><i class="fa fa-bed" aria-hidden="true"></i></li>
+								<li class="list-inline-item"><span class="text-body">{{m.bathrooms}} </span><i class="fa fa-shower" aria-hidden="true"></i></li>
 								<li class="list-inline-item"><span class="text-body">1 </span><i class="fa fa-car" aria-hidden="true"></i></li>
 							</ul>
 							<p class="card-text"><span class="text-body">{{m.buildArea}} </span><i class="fa fa-square-o" aria-hidden="true"></i> Mts<sup>2</sup></p>

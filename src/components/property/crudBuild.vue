@@ -211,7 +211,7 @@
 								<div class="col-10 row p-2">
 									<div class="py-2 col-5"><label for="buildArea" class="form-control-label">*Numero de habitaciones:</label></div>
 									<div class="py-2 col-7">
-										<v-select v-model="property.rooms" label="Seleccionar" :items="rooms" item-text="value" :rules="[v => !!v || 'campo requerido']"
+										<v-select v-model="property.bedrooms" label="Seleccionar" :items="rooms" item-text="value" :rules="[v => !!v || 'campo requerido']"
 										solo :validate-on-blur="true"></v-select>
 									</div>
 								</div>
@@ -219,7 +219,7 @@
 								<div class="col-10 row p-2">
 									<div class="py-2 col-5"><label for="buildArea" class="form-control-label">*Numero de baños:</label></div>
 									<div class="py-2 col-7">
-										<v-select v-model="property.bRooms" label="Seleccionar" :items="rooms" item-text="value" :rules="[v => !!v || 'campo requerido']"
+										<v-select v-model="property.bathrooms" label="Seleccionar" :items="rooms" item-text="value" :rules="[v => !!v || 'campo requerido']"
 										solo :validate-on-blur="true"></v-select>
 									</div>
 								</div>

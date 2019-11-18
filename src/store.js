@@ -30,7 +30,9 @@ export default new Vuex.Store({
       price: {
         from: null,
         to: null
-      }
+      },
+      bathrooms: null,
+      bedrooms: null 
     },
     properTypes: [{
         value: 1,
@@ -65,15 +67,16 @@ export default new Vuex.Store({
         label: "Finca"
       }
     ],
-    buildForTypesSearch: [{
-      value: 1,
-      label: "Vender"
-    },
-    {
-      value: 2,
-      label: "Arrendar"
-    }
-  ],
+    buildForTypesSearch: [
+      {
+        value: 1,
+        label: "Vender"
+      },
+      {
+        value: 2,
+        label: "Arrendar"
+      }
+    ],
     buildForTypes: [{
       value: 1,
       label: "Vender"
@@ -87,7 +90,8 @@ export default new Vuex.Store({
       label: "Vender o Arrendar"
     }
   ],
-  rulersPH: [{
+  rulersPH: [
+    {
       value: 1,
       label: "Edificio"
     },
@@ -104,64 +108,32 @@ export default new Vuex.Store({
       label: "Condominio"
     },
   ],
-  stratums: [{
-    value: 6,
-    label: '6'
-  },
-  {
-    value: 5,
-    label: '5'
-  },
-  {
-    value: 4,
-    label: '4'
-  },
-  {
-    value: 3,
-    label: '3'
-  },
-  {
-    value: 2,
-      label: '2'
-    },
-    {
-      value: 1,
-      label: '1'
-    }
+  stratums: [
+    {value: 6,
+    label: '6'},
+    {value: 5,
+    label: '5'},
+    {value: 4,
+    label: '4'},
+    {value: 3,
+    label: '3'},
+    {value: 2,
+    label: '2'},
+    {value: 1,
+    label: '1'}
   ],
-  rooms: [{
-      value: 0
-    },
-    {
-      value: 1
-    },
-    {
-      value: 2
-    },
-    {
-      value: 3
-    },
-    {
-      value: 4
-    },
-    {
-      value: 5
-    },
-    {
-      value: 6
-    },
-    {
-      value: 7
-    },
-    {
-      value: 8
-    },
-    {
-      value: 9
-    },
-    {
-      value: 10
-    },
+  rooms: [
+    {value: 0},
+    {value: 1},
+    {value: 2},
+    {value: 3},
+    {value: 4},
+    {value: 5},
+    {value: 6},
+    {value: 7},
+    {value: 8},
+    {value: 9},
+    {value: 10},
   ],
   },
   mutations: {
@@ -238,8 +210,8 @@ export default new Vuex.Store({
         country_id: null,
         state_id: null,
         city_id: null,
-        bRooms: 1,
-        rooms: 1,
+        bathrooms: 1,
+        bedrooms: 1,
         rulePH: false,
         rulerPH: null,
         adminValue: 0,
