@@ -54,7 +54,7 @@
             <v-spacer></v-spacer>
         </v-toolbar>
         <div class="container-fluid">
-            <div class="row justify-content-center">
+            <div class="row m-0 justify-content-center">
                 <div class="col-12 col-lg-10 p-0">
                     <v-toolbar dark class=" h-filter mx-auto" dense :collapse="collapse" flat v-if="$route.meta.extend">
                         <v-btn icon @click="collapse = !collapse">
@@ -81,7 +81,7 @@
                             </template>
                             <v-list>
                                 <v-list-item>
-                                    <div class="row">
+                                    <div class="row m-0">
                                         <div class="col">
                                             <input type="text" class="form-control" v-model="search.price.from" @blur="getProperties" placeholder="Desde">
                                         </div>
@@ -107,15 +107,30 @@
                                 <v-list-item>
                                     <form>
                                       <div class="form-group row mb-0">
-                                            <label class="col-6 col-form-label my-auto">Número de cuartos:</label>
-                                            <div class="col-6">
-                                                <v-select v-model="search.bedrooms" label="Seleccionar" hide-details :items="rooms" @blur="getProperties" item-text="value" solo></v-select>
+                                            <label class="col-7 col-form-label my-auto">Número de cuartos:</label>
+                                            <div class="col-5">
+                                                <select v-model="search.bedrooms" class="custom-select" @blur="getProperties">
+                                                    <option :value="null" selected>Cualquier</option>
+                                                    <option v-for="(room, index) in rooms" :key="index" :value="room.value">{{room.value}}</option>
+                                                </select>
                                             </div>
                                       </div>
                                       <div class="form-group row mb-0">
-                                            <label class="col-6 col-form-label my-auto">Número de baños:</label>
-                                            <div class="col-6">
-                                                <v-select v-model="search.bathrooms" label="Seleccionar" hide-details :items="rooms" @blur="getProperties" item-text="value" solo></v-select>
+                                            <label class="col-7 col-form-label my-auto">Número de baños:</label>
+                                            <div class="col-5">
+                                                <select v-model="search.bathrooms" class="custom-select" @blur="getProperties">
+                                                    <option :value="null" selected>Cualquier</option>
+                                                    <option v-for="(room, index) in rooms" :key="index" :value="room.value">{{room.value}}</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row mb-0">
+                                            <label class="col-7 col-form-label my-auto">Estrato:</label>
+                                            <div class="col-5">
+                                                <select v-model="search.stratum" class="custom-select" value="Cualq" @blur="getProperties">
+                                                    <option :value="null" selected>Cualquier</option>
+                                                    <option v-for="(stratum, index) in stratums" :key="index" :value="stratum.value">{{stratum.label}}</option>
+                                                </select>
                                             </div>
                                         </div>
                                     </form>
@@ -153,7 +168,7 @@ export default {
         }
     },
   computed: {
-    ...mapState(['auth', 'search', 'properTypes', 'buildForTypesSearch', 'rooms'])
+    ...mapState(['auth', 'search', 'properTypes', 'buildForTypesSearch', 'rooms', 'stratums'])
   },
   methods: {
     ...mapMutations(['loadUser', 'changeDawner', 'changeCenter', 'getProperties']),

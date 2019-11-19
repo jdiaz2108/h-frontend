@@ -32,109 +32,56 @@ export default new Vuex.Store({
         to: null
       },
       bathrooms: null,
-      bedrooms: null 
+      bedrooms: null,
+      stratum: null
     },
-    properTypes: [{
-        value: 1,
-        label: "Apartamento"
-      },
-      {
-        value: 2,
-        label: "Casa"
-      },
-      {
-        value: 3,
-        label: "Oficina"
-      },
-      {
-        value: 4,
-        label: "Consultorio"
-      },
-      {
-        value: 5,
-        label: "Local"
-      },
-      {
-        value: 6,
-        label: "Bodega"
-      },
-      {
-        value: 7,
-        label: "Lote/Casalote"
-      },
-      {
-        value: 8,
-        label: "Finca"
-      }
+    properTypes: [
+      {value: 1, label: "Apartamento"},
+      {value: 2, label: "Casa"},
+      {value: 3, label: "Oficina"},
+      {value: 4, label: "Consultorio"},
+      {value: 5, label: "Local"},
+      {value: 6, label: "Bodega"},
+      {value: 7, label: "Lote/Casalote"},
+      {value: 8, label: "Finca"}
     ],
     buildForTypesSearch: [
-      {
-        value: 1,
-        label: "Vender"
-      },
-      {
-        value: 2,
-        label: "Arrendar"
-      }
+      {value: 1, label: "Vender"},
+      {value: 2, label: "Arrendar"}
     ],
-    buildForTypes: [{
-      value: 1,
-      label: "Vender"
-    },
-    {
-      value: 2,
-      label: "Arrendar"
-    },
-    {
-      value: 3,
-      label: "Vender o Arrendar"
-    }
-  ],
-  rulersPH: [
-    {
-      value: 1,
-      label: "Edificio"
-    },
-    {
-      value: 2,
-      label: "Bifamiliar"
-    },
-    {
-      value: 3,
-      label: "Conjunto"
-    },
-    {
-      value: 4,
-      label: "Condominio"
-    },
-  ],
-  stratums: [
-    {value: 6,
-    label: '6'},
-    {value: 5,
-    label: '5'},
-    {value: 4,
-    label: '4'},
-    {value: 3,
-    label: '3'},
-    {value: 2,
-    label: '2'},
-    {value: 1,
-    label: '1'}
-  ],
-  rooms: [
-    {value: 0},
-    {value: 1},
-    {value: 2},
-    {value: 3},
-    {value: 4},
-    {value: 5},
-    {value: 6},
-    {value: 7},
-    {value: 8},
-    {value: 9},
-    {value: 10},
-  ],
+    buildForTypes: [
+      {value: 1, label: "Vender"},
+      {value: 2, label: "Arrendar"},
+      {value: 3, label: "Vender o Arrendar"}
+    ],
+    rulersPH: [
+      {value: 1, label: "Edificio" },
+      {value: 2, label: "Bifamiliar"},
+      {value: 3, label: "Conjunto"},
+      {value: 4, label: "Condominio"},
+    ],
+    stratums: [
+      {value: 1, label: '1'},
+      {value: 2, label: '2'},
+      {value: 3, label: '3'},
+      {value: 4, label: '4'},
+      {value: 5, label: '5'},
+      {value: 6, label: '6'},
+      {value: 7, label: 'Campestre'},
+    ],
+    rooms: [
+      {value: 0},
+      {value: 1},
+      {value: 2},
+      {value: 3},
+      {value: 4},
+      {value: 5},
+      {value: 6},
+      {value: 7},
+      {value: 8},
+      {value: 9},
+      {value: 10},
+    ],
   },
   mutations: {
     changeCenter(state, latlng){
@@ -220,7 +167,6 @@ export default new Vuex.Store({
       }
     },
     getProperties(state, property) {
-      state.markers = [];
       axios
 				.get('/property', {
 					params: {
@@ -229,11 +175,15 @@ export default new Vuex.Store({
 					},
 				})
 				.then(response => {
+          state.markers = [];
 					if (response.data.length) {
 					  state.markers = response.data
-					}
+					} else {
+            //
+          }
 				})
 				.catch(error => {
+          state.markers = [];
 					console.log(error)
 				})
     },

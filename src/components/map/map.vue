@@ -1,7 +1,8 @@
 <template>
   <div class="container-fluid p-0">
-	<div class="row" style="overflow-y: scroll;">
-	  <div class="col-7 p-0">
+	<div class="row m-0" 
+	>
+	  <div class="col-7 p-0" :class="!$vuetify.breakpoint.smAndDown ? 'col-7' : 'col-12' ">
 		<gmap-map :options="{
 					zoomControl: true,
 					mapTypeControl: false,
@@ -19,7 +20,7 @@
 			:center="center"
 			ref="map"
 			:zoom="14"
-			:style="$vuetify.breakpoint.smAndDown ? 'width:100%; height: calc(100vh - 56px)' : ' width:100%; height: calc(100vh - 64px)'">
+			:style="$vuetify.breakpoint.smAndDown ? 'width:100%; height: calc(100vh - 322px)' : ' width:100%; height: calc(100vh - 64px)'">
 
 			<gmap-marker :icon="m.priceSale ? 'https://api.habitemos.com/images/icono1.png' : 'https://api.habitemos.com/images/icono2.png'" 
 				@mouseover="createInfoWindow(m)"
@@ -49,15 +50,14 @@
 			</gmap-info-window>
 		</gmap-map>
 	  </div>
-	<div class="col-5 p-0" :style="$vuetify.breakpoint.smAndDown ? 'overflow-y: auto; max-height: calc(100vh - 56px)' : ' overflow-y: auto; max-height: calc(100vh - 64px)'">
+	<div v-if="!$vuetify.breakpoint.smAndDown" class="col-5 p-0" :style="$vuetify.breakpoint.smAndDown ? 'overflow-y: auto; max-height: calc(100vh - 56px)' : ' overflow-y: auto; max-height: calc(100vh - 64px)'">
 		<div class="row m-0" v-if="markers.length == 0">
 			<div v-for="m in 6" :key="m" class="col-12 col-lg-6 p-2">
 				<v-skeleton-loader ref="skeleton" type="image, article" class="m-2"></v-skeleton-loader>
 			</div>
 		</div>
 		<div class="row m-0">
-			<div class="col-12 col-lg-6 p-2" @mouseover="createInfoWindow(m)" @mouseout="delInfoWindow(m)"
-			:key="index + '-card'" v-for="(m, index) in markers" @click="gotoProperty(m.slug)">
+			<div class="col-12 col-lg-6 p-2" @mouseover="createInfoWindow(m)" @mouseout="delInfoWindow(m)" :key="index + '-card'" v-for="(m, index) in markers" @click="gotoProperty(m.slug)">
 				<div class="card m-2 shadow h-100" style="cursor: pointer">
 					<v-img :src="m.image" class="grey lighten-2" lazy-src="https://api.habitemos.com/images/gray.png" max-width="500" max-height="300"></v-img>
 					<div class="row m-0">
@@ -84,7 +84,39 @@
 			</div>
 		</div>
 	</div>
+	<div class="col-12 p-0" v-else >
 
+    <v-sheet class="mx-auto">
+      <v-slide-group v-model="model" center-active>
+        <v-slide-item v-slot:default="{ active, toggle }" :key="index + '-test'"  v-for="(m, index) in markers">
+
+		  <div class="card m-2 shadow" style="cursor: pointer; max-width: 170px;" @click="gotoProperty(m.slug)">
+					<v-img :src="m.image" class="grey lighten-2" lazy-src="https://api.habitemos.com/images/gray.png" max-width="500" max-height="300"></v-img>
+					<div class="row m-0">
+						<div class="col-8 p-3 pb-0">
+							<h5 class="card-title mb-1 font-weight-bold">
+								{{(m.priceSale ? m.priceSale : m.priceRent)  | currency('$', 0, { thousandsSeparator: '.', spaceBetweenAmountAndSymbol: true }) }} 
+								<span :class="(m.priceSale ? 'text-for-sale' : 'text-for-rent')">{{(m.priceSale ? 'VENTA' : 'ARRIENDO')}}</span>
+							</h5>
+							<h5 class="card-title mb-1 text-address text-truncate">
+								{{m.streetAddress}}
+							</h5>
+							<ul class="list-inline pl-0 mb-1 d-flex justify-content-between w-75 text-address">
+								<li class="list-inline-item"><span class="text-body">{{m.bedrooms}} </span><i class="fa fa-bed" aria-hidden="true"></i></li>
+								<li class="list-inline-item"><span class="text-body">{{m.bathrooms}} </span><i class="fa fa-shower" aria-hidden="true"></i></li>
+								<li class="list-inline-item"><span class="text-body">1 </span><i class="fa fa-car" aria-hidden="true"></i></li>
+							</ul>
+							<p class="card-text"><span class="text-body">{{m.buildArea}} </span><i class="fa fa-square-o" aria-hidden="true"></i> Mts<sup>2</sup></p>
+						</div>
+						<div class="col-4 px-1 py-4 bg-fo">
+							<p class="text-center text-type text-truncate font-weight-bold">{{m.propertyType}}</p>
+						</div>
+					</div>
+				</div>
+        </v-slide-item>
+      </v-slide-group>
+    </v-sheet>
+	</div>
 	</div>
   </div>
 </template>
@@ -95,8 +127,8 @@ import store from '../../store'
 	import axios from 'axios'
 	export default {
 		metaInfo: {
-			title: 'My Example App',
-			titleTemplate: '%s - Yay!',
+			title: 'Encontrar predios para venta o arriendo',
+			titleTemplate: '%s - Habitemos',
 			htmlAttrs: {
 				lang: 'en',
 				amp: true
@@ -141,7 +173,8 @@ import store from '../../store'
 				maker: {},
 				lightBoxData: {
 					showImage: null,
-				}
+				},
+				model: null
 			}
 		},
 		created() {
