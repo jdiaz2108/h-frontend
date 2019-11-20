@@ -5,14 +5,14 @@
         <router-view name="rule" />
     </v-layout>
           <div class="container-fluid back-index h-100" v-if="(this.$route.path == '/')">
-        <div class="row h-100">
+        <div class="row m-0 h-100">
           <div class="col-12 my-auto">
             <div class="container">
-              <div class="row justify-content-center">
-                <div class="col-10">
-                  <div class="card p-5">
+              <div class="row m-0 justify-content-center">
+                <div class="col-12 col-md-10">
+                  <div class="card p-md-5 p-2">
 
-                <div class="col-12 row p-2">
+                <div class="col-12 row m-0 p-2">
 									<div class="py-2 col-12 col-md-4"><label for="buildArea" class="form-control-label">Municipio, ciudad ó barrio:</label></div>
 									<div class="py-2 col-12 col-md-8 text-left">
                     <gmap-autocomplete class="form-control" placeholder="Bogotá" @place_changed="setPlace"  :options="{componentRestrictions: {country: 'co'}}"></gmap-autocomplete>
@@ -20,20 +20,20 @@
 								</div>
 
                     								<!-- Start BuildFor Zone -->
-								<div class="col-12 row p-2">
+								<div class="col-12 row m-0 p-2">
 									<div class="py-2 col-12 col-md-4"><label for="buildArea" class="form-control-label">Tipo de oferta:</label></div>
 									<div class="py-2 col-12 col-md-8 text-left">
 										<v-select dense v-model="search.offer_id" hide-details multiple label="Todas" item-value="label" :items="buildForTypesSearch" item-text="label" solo></v-select>
 									</div>
 								</div>
 								<!-- Start Property Type Zone -->
-								<div class="col-12 row p-2">
+								<div class="col-12 row m-0 p-2">
 									<div class="py-2 col-12 col-md-4"><label for="buildArea" class="form-control-label">Tipo de propiedad:</label></div>
 									<div class="py-2 col-12 col-md-8 text-left">
 										<v-select dense v-model="search.type_id" hide-details multiple label="Todas" item-value="label" :items="properTypes" item-text="label" solo></v-select>
 									</div>
 								</div>
-                <div class="col-12 pt-2 justify-content-center row">
+                <div class="col-12 pt-2 justify-content-center row  m-0">
   <div class="col-6 p-0 m-0">
 
                 <button @click="searching" class="btn btn-lg btn-danger mt-5 btn-block">Buscar</button>

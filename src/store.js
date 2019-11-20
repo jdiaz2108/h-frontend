@@ -7,6 +7,7 @@ Vue.use(Vuex, axios)
 export default new Vuex.Store({
   
   state: {
+    skeleton: true,
     markers: [],
     mapBounds: {},
     center: {
@@ -31,10 +32,21 @@ export default new Vuex.Store({
         from: null,
         to: null
       },
+      area: {
+        from: null,
+        to: null
+      },
       bathrooms: null,
       bedrooms: null,
       stratum: null
     },
+    yearBuild: [
+      {value: 1, label: '1 a 10 años'},
+      {value: 2, label: '10 a 20 años'},
+      {value: 3, label: '20 a 30 años'},
+      {value: 4, label: '30 a 50 años'},
+      {value: 5, label: 'más de 50 años'},
+    ],
     properTypes: [
       {value: 1, label: "Apartamento"},
       {value: 2, label: "Casa"},
@@ -167,6 +179,7 @@ export default new Vuex.Store({
       }
     },
     getProperties(state, property) {
+      state.skeleton = true,
       axios
 				.get('/property', {
 					params: {
@@ -177,7 +190,8 @@ export default new Vuex.Store({
 				.then(response => {
           state.markers = [];
 					if (response.data.length) {
-					  state.markers = response.data
+            state.markers = response.data
+            
 					} else {
             //
           }
@@ -185,7 +199,8 @@ export default new Vuex.Store({
 				.catch(error => {
           state.markers = [];
 					console.log(error)
-				})
+        })
+        .finally(() => (state.skeleton = false));
     },
   },
   actions: {

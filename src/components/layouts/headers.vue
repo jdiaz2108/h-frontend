@@ -106,7 +106,7 @@
                             <v-list>
                                 <v-list-item>
                                     <form>
-                                      <div class="form-group row mb-0">
+                                        <div class="form-group row mb-0">
                                             <label class="col-7 col-form-label my-auto">Número de cuartos:</label>
                                             <div class="col-5">
                                                 <select v-model="search.bedrooms" class="custom-select" @blur="getProperties">
@@ -114,15 +114,15 @@
                                                     <option v-for="(room, index) in rooms" :key="index" :value="room.value">{{room.value}}</option>
                                                 </select>
                                             </div>
-                                      </div>
-                                      <div class="form-group row mb-0">
-                                            <label class="col-7 col-form-label my-auto">Número de baños:</label>
-                                            <div class="col-5">
-                                                <select v-model="search.bathrooms" class="custom-select" @blur="getProperties">
-                                                    <option :value="null" selected>Cualquier</option>
-                                                    <option v-for="(room, index) in rooms" :key="index" :value="room.value">{{room.value}}</option>
-                                                </select>
-                                            </div>
+                                        </div>
+                                        <div class="form-group row mb-0">
+                                        <label class="col-7 col-form-label my-auto">Número de baños:</label>
+                                        <div class="col-5">
+                                            <select v-model="search.bathrooms" class="custom-select" @blur="getProperties">
+                                                <option :value="null" selected>Cualquier</option>
+                                                <option v-for="(room, index) in rooms" :key="index" :value="room.value">{{room.value}}</option>
+                                            </select>
+                                        </div>
                                         </div>
                                         <div class="form-group row mb-0">
                                             <label class="col-7 col-form-label my-auto">Estrato:</label>
@@ -130,6 +130,23 @@
                                                 <select v-model="search.stratum" class="custom-select" value="Cualq" @blur="getProperties">
                                                     <option :value="null" selected>Cualquier</option>
                                                     <option v-for="(stratum, index) in stratums" :key="index" :value="stratum.value">{{stratum.label}}</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="row m-0">
+                                            <div class="col">
+                                                <input type="text" class="form-control" v-model="search.area.from" @blur="getProperties" placeholder="Desde">
+                                            </div>
+                                            <div class="col">
+                                                <input type="text" class="form-control" v-model="search.area.to" @blur="getProperties" placeholder="Hasta">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row mb-0">
+                                            <label class="col-7 col-form-label my-auto">Antiguedad:</label>
+                                            <div class="col-5">
+                                                <select v-model="search.stratum" class="custom-select" value="Cualq" @blur="getProperties">
+                                                    <option :value="null" selected>Cualquier</option>
+                                                    <option v-for="(year, index) in yearBuild" :key="index" :value="year.value">{{year.label}}</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -168,7 +185,7 @@ export default {
         }
     },
   computed: {
-    ...mapState(['auth', 'search', 'properTypes', 'buildForTypesSearch', 'rooms', 'stratums'])
+    ...mapState(['auth', 'search', 'properTypes', 'buildForTypesSearch', 'rooms', 'stratums', 'yearBuild'])
   },
   methods: {
     ...mapMutations(['loadUser', 'changeDawner', 'changeCenter', 'getProperties']),

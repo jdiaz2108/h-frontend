@@ -51,7 +51,7 @@
 		</gmap-map>
 	  </div>
 	<div v-if="!$vuetify.breakpoint.smAndDown" class="col-5 p-0" :style="$vuetify.breakpoint.smAndDown ? 'overflow-y: auto; max-height: calc(100vh - 56px)' : ' overflow-y: auto; max-height: calc(100vh - 64px)'">
-		<div class="row m-0" v-if="markers.length == 0">
+		<div class="row m-0" v-if="skeleton">
 			<div v-for="m in 6" :key="m" class="col-12 col-lg-6 p-2">
 				<v-skeleton-loader ref="skeleton" type="image, article" class="m-2"></v-skeleton-loader>
 			</div>
@@ -267,7 +267,7 @@ import store from '../../store'
 			},
 		},
 		computed: {
-			...mapState(['properTypes', 'buildForTypes', 'search', 'center', 'mapBounds', 'markers'])
+			...mapState(['properTypes', 'buildForTypes', 'search', 'center', 'mapBounds', 'markers', 'skeleton'])
 		}
 	}
 </script>
